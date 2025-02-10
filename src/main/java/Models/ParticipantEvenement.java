@@ -2,22 +2,34 @@ package Models;
 import java.util.Date;
 
 public class ParticipantEvenement {
+    private int id;
     private int idParticipant;
     private Date dateInscription;
-    private String etatPaiement;
+    private Models.etatPaiement etatPaiement;
     private int idEvenement;
 
     public ParticipantEvenement() {}
-    public ParticipantEvenement(int idParticipant, Date dateInscription, String etatPaiement, int idEvenement) {
+    public ParticipantEvenement(int idParticipant, Date dateInscription, Models.etatPaiement etatPaiement, int idEvenement) {
+
         this.idParticipant = idParticipant;
         this.dateInscription = dateInscription;
         this.etatPaiement = etatPaiement;
         this.idEvenement = idEvenement;
     }
-    public ParticipantEvenement(Date dateInscription, String etatPaiement, int idEvenement) {
+    public ParticipantEvenement(int id,int idParticipant,Date dateInscription, Models.etatPaiement etatPaiement, int idEvenement) {
+        this.id = id;
+        this.idParticipant = idParticipant;
         this.dateInscription = dateInscription;
         this.etatPaiement = etatPaiement;
         this.idEvenement = idEvenement;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getIdParticipant() {
@@ -36,11 +48,11 @@ public class ParticipantEvenement {
         this.dateInscription = dateInscription;
     }
 
-    public String getEtatPaiement() {
+    public Models.etatPaiement getEtatPaiement() {
         return etatPaiement;
     }
 
-    public void setEtatPaiement(String etatPaiement) {
+    public void setEtatPaiement(Models.etatPaiement etatPaiement) {
         this.etatPaiement = etatPaiement;
     }
 
@@ -55,9 +67,10 @@ public class ParticipantEvenement {
     @Override
     public String toString() {
         return "ParticipantEvenement{" +
-                "idParticipant=" + idParticipant +
+                "id=" + id +
+                ", idParticipant=" + idParticipant +
                 ", dateInscription=" + dateInscription +
-                ", etatPaiement='" + etatPaiement + '\'' +
+                ", etatPaiement=" + etatPaiement +
                 ", idEvenement=" + idEvenement +
                 '}';
     }

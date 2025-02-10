@@ -2,13 +2,10 @@ package Services;
 
 import Models.EtatEvenement;
 import Models.Evenement;
-import Models.User;
+
 import Utils.MyDb;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,15 +14,27 @@ public class EvenementService implements Crud <Evenement> {
     public EvenementService(){
         this.conn= MyDb.getInstance().getConn();
     }
-    @Override
-    public void create(Evenement obj) throws Exception {
-    String sql ="insert into evenement(titre,description,dateDebut,dateFin,lieu,etat,prix,image,type,organisateur,capaciteMaximale)" +
-            "values('"+obj.getTitre()+"','"+obj.getDescription()+"','"+obj.getDateDebut()+"','"+obj.getDateFin()+"'," +
-            "'"+obj.getLieu()+"','"+obj.getEtat()+"','"+obj.getPrix()+"','"+obj.getImage()+"','"+obj.getType()+"','"+obj.getOrganisateur()+"','"+obj.getCapaciteMaximale()+"')";
-        Statement st = conn.createStatement();
-        st.executeUpdate(sql);
-    }
 
+
+    @Override
+    public boolean create(Evenement obj) throws Exception {
+        String sql ="insert into evenement(titre,description,dateDebut,dateFin,lieu,etat,prix,image,type,organisateur,capaciteMaximale)" +
+                "values('"+obj.getTitre()+"','"+obj.getDescription()+"','"+obj.getDateDebut()+"','"+obj.getDateFin()+"'," +
+                "'"+obj.getLieu()+"','"+obj.getEtat()+"','"+obj.getPrix()+"','"+obj.getImage()+"','"+obj.getType()+"','"+obj.getOrganisateur()+"','"+obj.getCapaciteMaximale()+"')";
+        try{
+            Statement st = conn.createStatement();
+            int res = st.executeUpdate(sql);
+            if (res > 0) {
+                System.out.println("Ajout evenement avec succès !");
+                return true ;
+            } else {
+                System.out.println("Aucune ajout de evenement à effectuée ");
+            }}catch (Exception e){
+            System.out.println(e.getMessage());
+            return false ;
+        }
+        return false;
+    }
 
     @Override
     public void update(Evenement obj) throws Exception {
@@ -47,14 +56,26 @@ public class EvenementService implements Crud <Evenement> {
     }
 
 
-    @Override
-    public void delete(Evenement obj) throws Exception {
-        String sql = "DELETE FROM evenement WHERE id = ?";
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, obj.getId());
-        stmt.executeUpdate();
-    }
 
+@Override
+    public void delete(int id) throws Exception {
+        String req = "DELETE FROM evenement WHERE `id`=?";
+        try (PreparedStatement pstmt = conn.prepareStatement(req)) {
+
+            pstmt.setInt(1, id);
+            int rowsAffected = pstmt.executeUpdate();
+
+
+            if (rowsAffected > 0) {
+                System.out.println("Suppression evenement effectuée avec succès !");
+            } else {
+                System.out.println("Aucune ligne supprimée evenement. Vérifiez l'ID.");
+            }
+        } catch (SQLException e) {
+            // Handle the exception more gracefully, e.g., log the error or display a user-friendly message
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public List<Evenement> getAll() throws Exception {
@@ -80,5 +101,30 @@ public class EvenementService implements Crud <Evenement> {
         }
         return evenements;
     }
+//get by id
+    public Evenement getById(int id) throws Exception {
+        String sql = "select * from evenement where id=?";
+        Evenement obj = null;
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
 
+           String titre= rs.getString("titre");
+           String description= rs.getString("description");
+          Date dateDebut=  rs.getDate("dateDebut");
+           Date dateFin= rs.getDate("dateFin");
+          String lieu=  rs.getString("lieu");
+            Models.EtatEvenement etat=Models.EtatEvenement.valueOf(rs.getString("etat"));
+            Double prix =rs.getDouble("prix");
+           String image= rs.getString("image");
+           String type =rs.getString("type");
+           String organisateur=rs.getString("organisateur");
+            int capaciteMaximale=rs.getInt("capaciteMaximale");
+             obj=new Evenement(id,titre,description,dateDebut,dateFin,lieu, image,prix, etat,type,organisateur,capaciteMaximale);
+            return obj;
+
+        }
+        return obj;
+    }
 }

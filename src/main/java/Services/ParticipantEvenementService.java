@@ -114,7 +114,7 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
         }
         return participantEvenements;
     }
-
+    @Override
     public ParticipantEvenement getById(int id) {
         String req = "SELECT * FROM participantevenement WHERE id = ?";
         ParticipantEvenement post = null;

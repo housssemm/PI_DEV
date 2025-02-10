@@ -102,6 +102,7 @@ public class EvenementService implements Crud <Evenement> {
         return evenements;
     }
 //get by id
+    @Override
     public Evenement getById(int id) throws Exception {
         String sql = "select * from evenement where id=?";
         Evenement obj = null;

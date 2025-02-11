@@ -1,0 +1,111 @@
+package Services;
+
+import Models.Categorie;
+import Utils.MyDb;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class categorieService implements Crud<Categorie> {
+    Connection conn;
+    public categorieService() {
+        this.conn = MyDb.getInstance().getConn();
+    }
+    @Override
+    public boolean create(Categorie obj) throws Exception {
+        String sql = "insert into Categorie (nom) values ('" +
+                 obj.getNom() +"')";
+        Statement stmt = conn.createStatement();
+        stmt.executeUpdate(sql);
+        try{
+            Statement st = conn.createStatement();
+            int res = st.executeUpdate(sql);
+            if (res > 0) {
+                System.out.println("Ajout categorie avec succès !");
+                return true ;
+            } else {
+                System.out.println("Aucune ajout de categorie à effectuée ");
+            }}catch (Exception e){
+            System.out.println(e.getMessage());
+            return false ;
+        }
+        return false;
+    }
+
+    @Override
+    public void update(Categorie obj) throws Exception {
+        String sql = "update Categorie set nom = ? where id = ? ";
+        try (PreparedStatement stmt = conn.prepareStatement(sql);){
+        stmt.setString(1, obj.getNom());
+        stmt.setInt(2, obj.getId());
+
+        int rowsUpdated = stmt.executeUpdate();
+
+        if (rowsUpdated > 0) {
+            System.out.println("Modification nom categorie effectuée avec succès !");
+        } else {
+            System.out.println("Vérifier l' id de categorie");
+        }
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+    }
+
+    //    @Override
+//    public void delete(User obj) throws Exception {
+//    String sql="delete from user where id = ? ";
+//    PreparedStatement stmt = conn.prepareStatement(sql);
+//    stmt.setInt(1, obj.getId());
+//    stmt.executeUpdate();
+//        stmt.close();
+//    }
+    @Override
+    public void delete(int id) throws Exception {
+        String sql = "DELETE FROM Categorie WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1,id);
+
+            // Vérifier si un categorie a été supprimé
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new Exception("Aucun Categorie trouvé avec l'ID "+ id);
+            }
+            System.out.println("categorie supprimé avec succès !");
+        } catch (SQLException e) {
+            throw new Exception("Erreur lors de la suppression de categorie: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Categorie> getAll() throws Exception {
+        String sql = "select * from Categorie";
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        List<Categorie> categs = new ArrayList<>();
+        while (rs.next()) {
+            Categorie categ = new Categorie();
+            categ.setId(rs.getInt("id"));
+            categ.setNom(rs.getString("nom"));
+            categs.add(categ);
+        }
+        return categs;
+    }
+    @Override
+    public Categorie getById(int id) throws Exception
+    {
+        String sql = "select * from Categorie where id=?";
+        Categorie obj = null;
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+
+            String nom= rs.getString("nom");
+            obj=new Categorie(id,nom);
+            return obj;
+
+        }
+        return obj;
+    }
+}
+

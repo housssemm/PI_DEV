@@ -123,7 +123,7 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
             ResultSet res = ps.executeQuery();
 
             if (res.next()) {
-                int a;
+
 
                 int idParticipant = res.getInt("userId");
                 Models.etatPaiement etatPaiement   = Models.etatPaiement.valueOf(res.getString("etat_paiement"));

@@ -124,6 +124,7 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
 
             if (res.next()) {
 
+
                 int idParticipant = res.getInt("userId");
                 Models.etatPaiement etatPaiement   = Models.etatPaiement.valueOf(res.getString("etat_paiement"));
                 Date  dateInscription     = res.getDate("date_inscription");

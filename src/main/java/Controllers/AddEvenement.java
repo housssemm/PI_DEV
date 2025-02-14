@@ -108,27 +108,9 @@ public class AddEvenement {
         }
     }
 
-    // Display events (called by another button to show events list)
-//    public void Afficher(ActionEvent event) {
-//        try {
-//            // Assuming an 'EvenementService' method to fetch all events
-//            List<Evenement> evenements = evenementService.getAll();
-//            if (evenements.isEmpty()) {
-//                showAlert(AlertType.INFORMATION, "Aucun événement", "Aucun événement à afficher.");
-//            } else {
-//                // Handle displaying the list of events (could open another window or list)
-//                // Example: Pass the event list to another scene or table view
-//                System.out.println(evenements);  // Debug output for the event list
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            showAlert(AlertType.ERROR, "Erreur de récupération", "Une erreur est survenue lors de la récupération des événements.");
-//        }
-//    }
-
 
     @FXML
-void Afficher(ActionEvent event) throws IOException {
+void goToEventList(ActionEvent event) throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/event_list.fxml"));
     Parent root = loader.load();
     idTitle.getScene().setRoot(root);

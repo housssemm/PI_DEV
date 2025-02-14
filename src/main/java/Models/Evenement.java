@@ -1,15 +1,18 @@
-package Models;
-import java.util.Date;
 
+package Models;
+
+
+
+import java.time.LocalDate;
 
 public class Evenement {
     private int id;
     private String titre;
     private String description;
-    private Date dateDebut;
-    private Date dateFin;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
     private String lieu;
-    private String image;
+    private byte[] image;
     private double prix;
     private EtatEvenement etat;
     private String type;
@@ -19,7 +22,7 @@ public class Evenement {
     public Evenement() {
     }
 
-    public Evenement(int id, String titre, String description, Date dateDebut, Date dateFin, String lieu, String image, double prix, EtatEvenement etat, String type, String organisateur, int capaciteMaximale) {
+    public Evenement(int id, String titre, String description, LocalDate dateDebut, LocalDate dateFin, String lieu, byte[] image, double prix, EtatEvenement etat, String type, String organisateur, int capaciteMaximale) {
         this.id = id;
         this.titre = titre;
         this.description = description;
@@ -34,7 +37,7 @@ public class Evenement {
         this.capaciteMaximale = capaciteMaximale;
     }
 
-    public Evenement(String titre, String description, Date dateDebut, Date dateFin, String lieu, String image, double prix, EtatEvenement etat, String type, String organisateur, int capaciteMaximale) {
+    public Evenement(String titre, String description, LocalDate dateDebut, LocalDate dateFin, String lieu, byte[] image, double prix, EtatEvenement etat, String type, String organisateur, int capaciteMaximale) {
         this.titre = titre;
         this.description = description;
         this.dateDebut = dateDebut;
@@ -72,19 +75,19 @@ public class Evenement {
         this.description = description;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
     }
 
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
@@ -101,15 +104,17 @@ public class Evenement {
     }
 
     public void setPrix(double prix) {
+        if (prix < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
         this.prix = prix;
     }
-
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage(byte[] image) {
+       this.image = image;
     }
 
     public EtatEvenement getEtat() {
@@ -144,6 +149,7 @@ public class Evenement {
         this.capaciteMaximale = capaciteMaximale;
     }
 
+
     @Override
     public String toString() {
         return "Evenement{" +
@@ -153,7 +159,7 @@ public class Evenement {
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +
                 ", lieu='" + lieu + '\'' +
-                ", image='" + image + '\'' +
+                ", image=" + image +
                 ", prix=" + prix +
                 ", etat=" + etat +
                 ", type='" + type + '\'' +
@@ -162,7 +168,3 @@ public class Evenement {
                 '}';
     }
 }
-
-
-
-

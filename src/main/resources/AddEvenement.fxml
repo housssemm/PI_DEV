@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="810.0" prefWidth="1315.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddEvenement">
+   <children>
+      <Label layoutX="301.0" layoutY="177.0" text="titre :" />
+      <Label layoutX="260.0" layoutY="208.0" text="description :" />
+      <Label layoutX="261.0" layoutY="239.0" text="date Debut :" />
+      <Label layoutX="277.0" layoutY="273.0" text="date Fin :" />
+      <Label layoutX="301.0" layoutY="307.0" text="lieu :" />
+      <Label layoutX="287.0" layoutY="338.0" text="image :" />
+      <Label layoutX="300.0" layoutY="367.0" text="prix :" />
+      <Label layoutX="299.0" layoutY="401.0" text="etat :" />
+      <Label layoutX="295.0" layoutY="435.0" text="type :" />
+      <Label layoutX="253.0" layoutY="473.0" text="organisateur :" />
+      <Label layoutX="223.0" layoutY="514.0" text="capacite Maximale :" />
+      <TextField fx:id="idTitle" layoutX="352.0" layoutY="173.0" />
+      <TextField fx:id="idDescription" layoutX="352.0" layoutY="204.0" />
+      <TextField fx:id="idLieu" layoutX="354.0" layoutY="303.0" />
+      <TextField fx:id="idPrix" layoutX="354.0" layoutY="363.0" />
+      <TextField fx:id="idCaoMax" layoutX="355.0" layoutY="510.0" />
+      <TextField fx:id="idOrganisateur" layoutX="354.0" layoutY="469.0" />
+      <TextField fx:id="idType" layoutX="354.0" layoutY="431.0" />
+      <DatePicker fx:id="idDateD" layoutX="352.0" layoutY="235.0" prefHeight="26.0" prefWidth="150.0" />
+      <DatePicker fx:id="idDateF" layoutX="352.0" layoutY="269.0" prefHeight="26.0" prefWidth="150.0" />
+      <Button fx:id="idButton" layoutX="450.0" layoutY="549.0" mnemonicParsing="false" onAction="#handleButtonClick" text="Enregistrer" />
+      <ChoiceBox id="idEtat" fx:id="idEtat" layoutX="354.0" layoutY="397.0" prefWidth="150.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+
+            </FXCollections>
+         </items>
+      </ChoiceBox>
+      <!-- Bouton pour choisir une image -->
+      <Button fx:id="idImgButton" layoutX="353.0" layoutY="333.0" onAction="#handleImageUpload" prefHeight="26.0" prefWidth="150.0" text="Choisir une image" />
+
+      <!-- Label pour afficher le nom du fichier -->
+      <Label fx:id="idImgLabel" layoutX="542.0" layoutY="338.0" text="Aucune image sélectionnée" />
+      <Button fx:id="idButton2" layoutX="554.0" layoutY="549.0" mnemonicParsing="false" onAction="#goToEventList" text="consulter les Evenement" />
+      <Label layoutX="62.0" layoutY="57.0" text="créer un nouveau evenement :">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

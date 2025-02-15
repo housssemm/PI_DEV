@@ -24,5 +24,4 @@ public class MainFx extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 }

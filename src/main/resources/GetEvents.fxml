@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="542.0" prefWidth="952.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GetEvents">
    <children>
       <HBox prefHeight="810.0" prefWidth="261.0">
@@ -23,7 +22,7 @@
                         <Image url="@img/logor.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="home" mnemonicParsing="false" onAction="#goToHome" prefHeight="42.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
+                  <Button fx:id="home" mnemonicParsing="false" prefHeight="42.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -39,7 +38,7 @@
                      </padding>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="seance" mnemonicParsing="false" onAction="#goToSeance" prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
+                  <Button fx:id="seance" mnemonicParsing="false" prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -55,7 +54,7 @@
                      </padding>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="produit" mnemonicParsing="false" onAction="#goToProduit" prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
+                  <Button fx:id="produit" mnemonicParsing="false" prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -71,7 +70,7 @@
                      </padding>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="offre" mnemonicParsing="false" onAction="#goToOffre" prefHeight="44.0" prefWidth="300.0" style="-fx-background-color: F58400;" text="Offres" textFill="WHITE">
+                  <Button fx:id="offre" mnemonicParsing="false" prefHeight="44.0" prefWidth="300.0" style="-fx-background-color: F58400;" text="Offres" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -90,7 +89,7 @@
                      </padding>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="event" mnemonicParsing="false" onAction="#goToEvent" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
+                  <Button fx:id="event" mnemonicParsing="false" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -109,7 +108,7 @@
                      </padding>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="reclamation" mnemonicParsing="false" onAction="#goToReclamtion" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58500;" text="Reclamations" textFill="#f7f7f7">
+                  <Button fx:id="reclamation" mnemonicParsing="false" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58500;" text="Reclamations" textFill="#f7f7f7">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -122,7 +121,7 @@
                      </graphic>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button fx:id="parametre" minHeight="0.0" mnemonicParsing="false" onAction="#goToParametre" prefHeight="42.0" prefWidth="362.0" style="-fx-background-color: F58400;" text="Paramètres" textFill="WHITE">
+                  <Button fx:id="parametre" minHeight="0.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="362.0" style="-fx-background-color: F58400;" text="Paramètres" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -138,12 +137,12 @@
                      </padding>
                   </Button>
                   <Separator prefWidth="200.0" />
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE">
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE" translateY="200.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                      <graphic>
-                        <ImageView fx:id="logout" fitHeight="40.0" fitWidth="43.0" nodeOrientation="RIGHT_TO_LEFT" onDragDetected="#logout" pickOnBounds="true" preserveRatio="true" translateY="200.0">
+                        <ImageView fx:id="logout" fitHeight="40.0" fitWidth="43.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@img/sortie.png" />
                            </image>
@@ -171,7 +170,7 @@
                               <Insets />
                            </HBox.margin>
                         </TextField>
-                        <ImageView fx:id="isearch" fitHeight="42.0" fitWidth="38.0" nodeOrientation="RIGHT_TO_LEFT" onDragDetected="#search" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="isearch" fitHeight="42.0" fitWidth="38.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@img/cherche.png" />
                            </image>

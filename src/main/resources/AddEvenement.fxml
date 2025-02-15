@@ -7,6 +7,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -15,297 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<!--<?xml version="1.0" encoding="UTF-8"?>-->
-<!--<?import javafx.collections.FXCollections?>-->
-<!--<?import javafx.geometry.Insets?>-->
-<!--<?import javafx.scene.control.Button?>-->
-<!--<?import javafx.scene.control.ChoiceBox?>-->
-<!--<?import javafx.scene.control.DatePicker?>-->
-<!--<?import javafx.scene.control.Label?>-->
-<!--<?import javafx.scene.control.Separator?>-->
-<!--<?import javafx.scene.control.TextField?>-->
-<!--<?import javafx.scene.image.Image?>-->
-<!--<?import javafx.scene.image.ImageView?>-->
-<!--<?import javafx.scene.layout.AnchorPane?>-->
-<!--<?import javafx.scene.layout.HBox?>-->
-<!--<?import javafx.scene.layout.VBox?>-->
-<!--<?import javafx.scene.text.Font?>-->
-<!--<AnchorPane prefHeight="810.0" prefWidth="1315.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddEvenement">-->
-<!--   <children>-->
-<!--      <AnchorPane layoutY="-4.0" prefHeight="542.0" prefWidth="952.0" stylesheets="@css/style.css">-->
-<!--         <children>-->
-<!--            <HBox prefHeight="810.0" prefWidth="261.0">-->
-<!--               <children>-->
-<!--                  <VBox alignment="TOP_CENTER" prefHeight="810.0" prefWidth="341.0" styleClass="bg">-->
-<!--                     <children>-->
-<!--                        <ImageView fitHeight="199.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                           <image>-->
-<!--                              <Image url="@img/logor.png" />-->
-<!--                           </image>-->
-<!--                        </ImageView>-->
-<!--                        <Button fx:id="home" mnemonicParsing="false" prefHeight="42.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="33.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/home.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <padding>-->
-<!--                              <Insets right="50.0" />-->
-<!--                           </padding>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button fx:id="seance" mnemonicParsing="false"  prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="31.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/calendrier.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <padding>-->
-<!--                              <Insets right="40.0" />-->
-<!--                           </padding>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button fx:id="produit" mnemonicParsing="false"  prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="33.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/produit.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <padding>-->
-<!--                              <Insets right="40.0" />-->
-<!--                           </padding>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button fx:id="offre" mnemonicParsing="false"  prefHeight="44.0" prefWidth="300.0" style="-fx-background-color: F58400;" text="Offres" textFill="WHITE">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="31.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/offre.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <VBox.margin>-->
-<!--                              <Insets />-->
-<!--                           </VBox.margin>-->
-<!--                           <padding>-->
-<!--                              <Insets right="60.0" />-->
-<!--                           </padding>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button fx:id="event" mnemonicParsing="false" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="38.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/event.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <VBox.margin>-->
-<!--                              <Insets />-->
-<!--                           </VBox.margin>-->
-<!--                           <padding>-->
-<!--                              <Insets right="15.0" />-->
-<!--                           </padding>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button fx:id="reclamation" mnemonicParsing="false"  prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58500;" text="Reclamations" textFill="#f7f7f7">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="34.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/plainte.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button fx:id="parametre" minHeight="0.0" mnemonicParsing="false"  prefHeight="42.0" prefWidth="362.0" style="-fx-background-color: F58400;" text="Paramètres" textFill="WHITE">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fitHeight="29.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/paramètre.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <padding>-->
-<!--                              <Insets right="20.0" />-->
-<!--                           </padding>-->
-<!--                        </Button>-->
-<!--                        <Separator prefWidth="200.0" />-->
-<!--                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE">-->
-<!--                           <font>-->
-<!--                              <Font size="18.0" />-->
-<!--                           </font>-->
-<!--                           <graphic>-->
-<!--                              <ImageView fx:id="logout" fitHeight="40.0" fitWidth="43.0" nodeOrientation="RIGHT_TO_LEFT"  pickOnBounds="true" preserveRatio="true" translateY="200.0">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/sortie.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </graphic>-->
-<!--                           <VBox.margin>-->
-<!--                              <Insets />-->
-<!--                           </VBox.margin>-->
-<!--                        </Button>-->
-<!--                     </children>-->
-<!--                  </VBox>-->
-<!--               </children>-->
-<!--            </HBox>-->
-<!--            <VBox layoutX="262.0" layoutY="67.0" prefHeight="745.0" prefWidth="1054.0">-->
-<!--               <children>-->
-<!--                  <Label text="créer un nouveau evenement :">-->
-<!--                     <font>-->
-<!--                        <Font size="24.0" />-->
-<!--                     </font>-->
-<!--                  </Label>-->
-<!--               </children>-->
-<!--            </VBox>-->
-<!--            <VBox layoutX="262.0" prefHeight="67.0" prefWidth="1054.0" style="-fx-background-color: #808080;">-->
-<!--               <children>-->
-<!--                  <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="842.0">-->
-<!--                     <children>-->
-<!--                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="974.0">-->
-<!--                           <children>-->
-<!--                              <TextField fx:id="search" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">-->
-<!--                                 <font>-->
-<!--                                    <Font name="Cambria" size="14.0" />-->
-<!--                                 </font>-->
-<!--                                 <HBox.margin>-->
-<!--                                    <Insets />-->
-<!--                                 </HBox.margin>-->
-<!--                              </TextField>-->
-<!--                              <ImageView fx:id="isearch" fitHeight="42.0" fitWidth="38.0" nodeOrientation="RIGHT_TO_LEFT"  pickOnBounds="true" preserveRatio="true">-->
-<!--                                 <image>-->
-<!--                                    <Image url="@img/cherche.png" />-->
-<!--                                 </image>-->
-<!--                              </ImageView>-->
-<!--                           </children>-->
-<!--                        </HBox>-->
-<!--                        <ImageView fitHeight="57.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                           <image>-->
-<!--                              <Image url="@img/notification.png" />-->
-<!--                           </image>-->
-<!--                           <HBox.margin>-->
-<!--                              <Insets right="22.0" />-->
-<!--                           </HBox.margin>-->
-<!--                        </ImageView>-->
-<!--                        <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                           <image>-->
-<!--                              <Image url="@img/profile.png" />-->
-<!--                           </image>-->
-<!--                           <HBox.margin>-->
-<!--                              <Insets right="22.0" />-->
-<!--                           </HBox.margin>-->
-<!--                        </ImageView>-->
-<!--                     </children>-->
-<!--                  </HBox>-->
-<!--               </children>-->
-<!--            </VBox>-->
-<!--            <Label layoutX="609.0" layoutY="190.0" text="titre :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="568.0" layoutY="221.0" text="description :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="569.0" layoutY="252.0" text="date Debut :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="585.0" layoutY="286.0" text="date Fin :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="609.0" layoutY="320.0" text="lieu :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="595.0" layoutY="351.0" text="image :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="608.0" layoutY="380.0" text="prix :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="607.0" layoutY="414.0" text="etat :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="603.0" layoutY="448.0" text="type :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="561.0" layoutY="486.0" text="organisateur :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <Label layoutX="531.0" layoutY="527.0" text="capacite Maximale :">-->
-<!--               <font>-->
-<!--                  <Font name="Cambria" size="14.0" />-->
-<!--               </font>-->
-<!--            </Label>-->
-<!--            <TextField fx:id="idTitle" layoutX="660.0" layoutY="186.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <TextField fx:id="idDescription" layoutX="660.0" layoutY="217.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <TextField fx:id="idLieu" layoutX="662.0" layoutY="316.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <TextField fx:id="idPrix" layoutX="662.0" layoutY="376.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <TextField fx:id="idCaoMax" layoutX="663.0" layoutY="523.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <TextField fx:id="idOrganisateur" layoutX="662.0" layoutY="482.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <TextField fx:id="idType" layoutX="662.0" layoutY="444.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <DatePicker fx:id="idDateD" layoutX="660.0" layoutY="248.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <DatePicker fx:id="idDateF" layoutX="660.0" layoutY="282.0" prefHeight="26.0" prefWidth="234.0" />-->
-<!--            <Button fx:id="idButton" layoutX="821.0" layoutY="586.0" mnemonicParsing="false" onAction="#handleButtonClick" text="Enregistrer" />-->
-<!--            <ChoiceBox id="idEtat" fx:id="idEtat" layoutX="662.0" layoutY="410.0" prefHeight="26.0" prefWidth="234.0">-->
-<!--               <items>-->
-<!--                  <FXCollections fx:factory="observableArrayList" />-->
-<!--               </items>-->
-<!--            </ChoiceBox>-->
-<!--            <Button fx:id="idImgButton" layoutX="661.0" layoutY="346.0" onAction="#handleImageUpload" prefHeight="26.0" prefWidth="234.0" text="Choisir une image" />-->
-<!--            <Label fx:id="idImgLabel" layoutX="931.0" layoutY="351.0" text="Aucune image sélectionnée" />-->
-<!--            <Button fx:id="idButton2" layoutX="939.0" layoutY="586.0" mnemonicParsing="false" onAction="#goToEventList" text="consulter les Evenement" />-->
-<!--         </children>-->
-<!--      </AnchorPane>-->
-<!--   </children>-->
-<!--</AnchorPane>-->
-
-<AnchorPane prefHeight="810.0" prefWidth="1315.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddEvenement">
+<AnchorPane prefHeight="700.0" prefWidth="1550.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddEvenement">
    <children>
       <AnchorPane layoutY="-4.0" prefHeight="542.0" prefWidth="952.0" stylesheets="@css/style.css">
          <children>
@@ -433,12 +144,12 @@
                            </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE" translateY="200.0">
                            <font>
                               <Font size="18.0" />
                            </font>
                            <graphic>
-                              <ImageView fx:id="logout" fitHeight="40.0" fitWidth="43.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true" translateY="200.0">
+                              <ImageView fx:id="logout" fitHeight="40.0" fitWidth="43.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@img/sortie.png" />
                                  </image>
@@ -452,16 +163,16 @@
                   </VBox>
                </children>
             </HBox>
-            <VBox layoutX="262.0" layoutY="67.0" prefHeight="745.0" prefWidth="1054.0">
+            <VBox layoutX="262.0" layoutY="69.0" prefHeight="746.0" prefWidth="1277.0">
                <children>
-                  <Label text="créer un nouveau evenement :" translateX="22.0" translateY="22.0">
+                  <Label fx:id="labelT" text="créer un nouveau evenement :" translateX="22.0" translateY="22.0">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
                </children>
             </VBox>
-            <VBox layoutX="262.0" prefHeight="67.0" prefWidth="1054.0" style="-fx-background-color: #808080;">
+            <VBox layoutX="262.0" prefHeight="67.0" prefWidth="1288.0" style="-fx-background-color: #808080;">
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="842.0">
                      <children>
@@ -502,79 +213,79 @@
                   </HBox>
                </children>
             </VBox>
-            <Label layoutX="609.0" layoutY="190.0" text="titre :">
+            <Label layoutX="744.0" layoutY="181.0" text="titre :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="568.0" layoutY="221.0" text="description :">
+            <Label layoutX="700.0" layoutY="220.0" text="description :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="569.0" layoutY="252.0" text="date Debut :">
+            <Label layoutX="700.0" layoutY="298.0" text="date Debut :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="585.0" layoutY="286.0" text="date Fin :">
+            <Label layoutX="720.0" layoutY="348.0" text="date Fin :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="609.0" layoutY="320.0" text="lieu :">
+            <Label layoutX="747.0" layoutY="390.0" text="lieu :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="595.0" layoutY="351.0" text="image :">
+            <Label layoutX="731.0" layoutY="437.0" text="image :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="608.0" layoutY="380.0" text="prix :">
+            <Label layoutX="746.0" layoutY="483.0" text="prix :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="607.0" layoutY="414.0" text="etat :">
+            <Label layoutX="744.0" layoutY="527.0" text="etat :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="603.0" layoutY="448.0" text="type :">
+            <Label layoutX="741.0" layoutY="567.0" text="type :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="561.0" layoutY="486.0" text="organisateur :">
+            <Label layoutX="692.0" layoutY="602.0" text="organisateur :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="531.0" layoutY="527.0" text="capacite Maximale :">
+            <Label layoutX="655.0" layoutY="634.0" text="capacite Maximale :">
                <font>
                   <Font name="Cambria" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="idTitle" layoutX="660.0" layoutY="186.0" prefHeight="26.0" prefWidth="234.0" />
-            <TextField fx:id="idDescription" layoutX="660.0" layoutY="217.0" prefHeight="26.0" prefWidth="234.0" />
-            <TextField fx:id="idLieu" layoutX="662.0" layoutY="316.0" prefHeight="26.0" prefWidth="234.0" />
-            <TextField fx:id="idPrix" layoutX="662.0" layoutY="376.0" prefHeight="26.0" prefWidth="234.0" />
-            <TextField fx:id="idCaoMax" layoutX="663.0" layoutY="523.0" prefHeight="26.0" prefWidth="234.0" />
-            <TextField fx:id="idOrganisateur" layoutX="662.0" layoutY="482.0" prefHeight="26.0" prefWidth="234.0" />
-            <TextField fx:id="idType" layoutX="662.0" layoutY="444.0" prefHeight="26.0" prefWidth="234.0" />
-            <DatePicker fx:id="idDateD" layoutX="660.0" layoutY="248.0" prefHeight="26.0" prefWidth="234.0" />
-            <DatePicker fx:id="idDateF" layoutX="660.0" layoutY="282.0" prefHeight="26.0" prefWidth="234.0" />
-            <Button fx:id="idButton" layoutX="821.0" layoutY="586.0" mnemonicParsing="false" onAction="#handleButtonClick" text="Enregistrer" />
-            <ChoiceBox id="idEtat" fx:id="idEtat" layoutX="662.0" layoutY="410.0" prefHeight="26.0" prefWidth="234.0">
+            <TextField fx:id="idTitle" layoutX="789.0" layoutY="176.0" prefHeight="26.0" prefWidth="234.0" />
+            <TextField fx:id="idLieu" layoutX="791.0" layoutY="386.0" prefHeight="26.0" prefWidth="234.0" />
+            <TextField fx:id="idPrix" layoutX="791.0" layoutY="480.0" prefHeight="26.0" prefWidth="234.0" />
+            <TextField fx:id="idCaoMax" layoutX="792.0" layoutY="630.0" prefHeight="26.0" prefWidth="234.0" />
+            <TextField fx:id="idOrganisateur" layoutX="791.0" layoutY="597.0" prefHeight="26.0" prefWidth="234.0" />
+            <TextField fx:id="idType" layoutX="791.0" layoutY="563.0" prefHeight="26.0" prefWidth="234.0" />
+            <DatePicker fx:id="idDateD" layoutX="789.0" layoutY="288.0" prefHeight="26.0" prefWidth="234.0" />
+            <DatePicker fx:id="idDateF" layoutX="790.0" layoutY="337.0" prefHeight="26.0" prefWidth="234.0" />
+            <Button fx:id="idButton" layoutX="898.0" layoutY="675.0" mnemonicParsing="false" onAction="#handleButtonClick" styleClass="buttonn" text="Enregistrer" />
+            <ChoiceBox id="idEtat" fx:id="idEtat" layoutX="791.0" layoutY="515.0" prefHeight="26.0" prefWidth="234.0">
                <items>
                   <FXCollections fx:factory="observableArrayList" />
                </items>
             </ChoiceBox>
-            <Button fx:id="idImgButton" layoutX="661.0" layoutY="346.0" onAction="#handleImageUpload" prefHeight="26.0" prefWidth="234.0" text="Choisir une image" />
-            <Label fx:id="idImgLabel" layoutX="931.0" layoutY="351.0" text="Aucune image sélectionnée" />
-            <Button fx:id="idButton2" layoutX="939.0" layoutY="586.0" mnemonicParsing="false" onAction="#goToEventList" text="consulter les Evenement" />
+            <Button fx:id="idImgButton" layoutX="791.0" layoutY="425.0" onAction="#handleImageUpload" prefHeight="26.0" prefWidth="234.0" styleClass="buttonn" text="Choisir une image" />
+            <Label fx:id="idImgLabel" layoutX="1060.0" layoutY="440.0" text="Aucune image sélectionnée" />
+            <Button fx:id="idButton2" layoutX="1050.0" layoutY="678.0" mnemonicParsing="false" onAction="#goToEventList" styleClass="buttonn" text="consulter les Evenement" />
+            <TextArea fx:id="idDescription" layoutX="789.0" layoutY="210.0" prefHeight="74.0" prefWidth="234.0" />
          </children>
       </AnchorPane>
    </children>

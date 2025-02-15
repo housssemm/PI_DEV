@@ -218,7 +218,7 @@ public class AddEvenement {
     private DatePicker idDateF;
 
     @FXML
-    private TextField idDescription;
+    private TextArea idDescription;
 
     @FXML
     private ChoiceBox<String> idEtat;
@@ -276,55 +276,158 @@ public class AddEvenement {
         idEtat.getItems().addAll("ACTIF", "EXPIRE");
         idEtat.setValue("ACTIF");
     }
+//
+//    // Handle button click to save the event
+//    public void handleButtonClick(ActionEvent event) {
+//        String title = idTitle.getText();
+//        String description = idDescription.getText();
+//        LocalDate dateDebut = idDateD.getValue();
+//        LocalDate dateFin = idDateF.getValue();
+//        String lieu = idLieu.getText();
+//        double prix = Double.parseDouble(idPrix.getText());
+//        int capaciteMaximale = Integer.parseInt(idCaoMax.getText());
+//        String organisateur = idOrganisateur.getText();
+//        String type = idType.getText();
+//        String etat = (String) idEtat.getValue();
+//
+//        // Validate required fields
+//        if (title.isEmpty() || description.isEmpty() || dateDebut == null || dateFin == null || lieu.isEmpty()) {
+//            showAlert(Alert.AlertType.ERROR, "Formulaire incomplet", "Veuillez remplir tous les champs obligatoires.");
+//            return;
+//        }
+//
+//        // Convert the image file to byte[] (if selected)
+//        byte[] imageBytes = null;
+//        if (imageFile != null) {
+//            try (FileInputStream fis = new FileInputStream(imageFile)) {
+//                imageBytes = fis.readAllBytes();  // Convert image to byte[]
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                showAlert(Alert.AlertType.ERROR, "Erreur d'image", "Erreur lors du traitement de l'image.");
+//                return; // Exit if image processing fails
+//            }
+//        }
+//
+//        // Create the event object with byte[] for image
+//        Evenement evenement = new Evenement(
+//                title, description, dateDebut, dateFin, lieu, imageBytes, prix,
+//                EtatEvenement.valueOf(etat), type, organisateur, capaciteMaximale
+//        );
+//
+//        // Save the event to the database
+//        try {
+//            if (evenementService.create(evenement)) {
+//                showAlert(Alert.AlertType.INFORMATION, "Événement enregistré", "L'événement a été ajouté avec succès.");
+//                clearForm();
+//            } else {
+//                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ajouter l'événement.");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            showAlert(Alert.AlertType.ERROR, "Erreur de base de données", "Une erreur est survenue lors de l'enregistrement.");
+//        }
+//    }
 
-    // Handle button click to save the event
+
     public void handleButtonClick(ActionEvent event) {
-        String title = idTitle.getText();
-        String description = idDescription.getText();
-        LocalDate dateDebut = idDateD.getValue();
-        LocalDate dateFin = idDateF.getValue();
-        String lieu = idLieu.getText();
-        double prix = Double.parseDouble(idPrix.getText());
-        int capaciteMaximale = Integer.parseInt(idCaoMax.getText());
-        String organisateur = idOrganisateur.getText();
-        String type = idType.getText();
-        String etat = (String) idEtat.getValue();
-
-        // Validate required fields
-        if (title.isEmpty() || description.isEmpty() || dateDebut == null || dateFin == null || lieu.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Formulaire incomplet", "Veuillez remplir tous les champs obligatoires.");
-            return;
-        }
-
-        // Convert the image file to byte[] (if selected)
-        byte[] imageBytes = null;
-        if (imageFile != null) {
-            try (FileInputStream fis = new FileInputStream(imageFile)) {
-                imageBytes = fis.readAllBytes();  // Convert image to byte[]
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Erreur d'image", "Erreur lors du traitement de l'image.");
-                return; // Exit if image processing fails
-            }
-        }
-
-        // Create the event object with byte[] for image
-        Evenement evenement = new Evenement(
-                title, description, dateDebut, dateFin, lieu, imageBytes, prix,
-                EtatEvenement.valueOf(etat), type, organisateur, capaciteMaximale
-        );
-
-        // Save the event to the database
         try {
+            String title = idTitle.getText().trim();
+            String description = idDescription.getText().trim();
+            LocalDate dateDebut = idDateD.getValue();
+            LocalDate dateFin = idDateF.getValue();
+            String lieu = idLieu.getText().trim();
+            String organisateur = idOrganisateur.getText().trim();
+            String type = idType.getText().trim();
+            String etat = idEtat.getValue();
+
+            // Vérifier si les champs obligatoires sont vides
+            if (title.isEmpty() || description.isEmpty() || dateDebut == null || dateFin == null || lieu.isEmpty() || organisateur.isEmpty() || type.isEmpty()) {
+                showAlert(AlertType.ERROR, "Formulaire incomplet", "Tous les champs sont obligatoires.");
+                return;
+            }
+
+            // Vérifier la longueur des textes
+            if (title.length() > 100) {
+                showAlert(AlertType.ERROR, "Titre trop long", "Le titre ne doit pas dépasser 100 caractères.");
+                return;
+            }
+            if (description.length() > 500) {
+                showAlert(AlertType.ERROR, "Description trop longue", "La description ne doit pas dépasser 500 caractères.");
+                return;
+            }
+            // Vérifier que la date de début n'est pas dans le passé
+            if (dateDebut.isBefore(LocalDate.now())) {
+                showAlert(AlertType.ERROR, "Date invalide", "La date de début doit être aujourd'hui ou plus tard.");
+                return;
+            }
+            // Vérifier que la date de fin est après la date de début
+            if (dateFin.isBefore(dateDebut)) {
+                showAlert(AlertType.ERROR, "Erreur de date", "La date de fin doit être après la date de début.");
+                return;
+            }
+
+            // Vérifier les valeurs numériques
+            double prix;
+            int capaciteMaximale;
+            try {
+                prix = Double.parseDouble(idPrix.getText().trim());
+                if (prix < 0) {
+                    showAlert(AlertType.ERROR, "Prix invalide", "Le prix doit être un nombre positif.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert(AlertType.ERROR, "Prix invalide", "Veuillez entrer un prix valide.");
+                return;
+            }
+
+            try {
+                capaciteMaximale = Integer.parseInt(idCaoMax.getText().trim());
+                if (capaciteMaximale <= 0) {
+                    showAlert(AlertType.ERROR, "Capacité invalide", "La capacité maximale doit être un nombre positif.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showAlert(AlertType.ERROR, "Capacité invalide", "Veuillez entrer une capacité valide.");
+                return;
+            }
+
+            // Vérifier l'état de l'événement
+            EtatEvenement etatEnum;
+            try {
+                etatEnum = EtatEvenement.valueOf(etat);
+            } catch (IllegalArgumentException e) {
+                showAlert(AlertType.ERROR, "Erreur d'état", "L'état sélectionné est invalide.");
+                return;
+            }
+
+            // Vérifier l'image
+            byte[] imageBytes = null;
+            if (imageFile != null) {
+                try (FileInputStream fis = new FileInputStream(imageFile)) {
+                    imageBytes = fis.readAllBytes();
+                } catch (IOException e) {
+                    showAlert(AlertType.ERROR, "Erreur d'image", "Impossible de lire l'image sélectionnée.");
+                    return;
+                }
+            }
+
+            // Création de l'événement
+            Evenement evenement = new Evenement(
+                    title, description, dateDebut, dateFin, lieu, imageBytes, prix,
+                    etatEnum, type, organisateur, capaciteMaximale
+            );
+
+            // Sauvegarde dans la base de données
             if (evenementService.create(evenement)) {
-                showAlert(Alert.AlertType.INFORMATION, "Événement enregistré", "L'événement a été ajouté avec succès.");
+                showAlert(AlertType.INFORMATION, "Succès", "L'événement a été ajouté avec succès.");
                 clearForm();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ajouter l'événement.");
+                showAlert(AlertType.ERROR, "Erreur", "Impossible d'ajouter l'événement.");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur de base de données", "Une erreur est survenue lors de l'enregistrement.");
+            showAlert(AlertType.ERROR, "Erreur interne", "Une erreur inattendue s'est produite.");
         }
     }
 
@@ -344,7 +447,7 @@ public class AddEvenement {
 
     @FXML
     void goToEventList(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/event_list.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
         Parent root = loader.load();
         idTitle.getScene().setRoot(root);
 

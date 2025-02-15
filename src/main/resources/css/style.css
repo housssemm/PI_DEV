@@ -13,3 +13,73 @@
     -fx-background-color: #F58400;
 }
 
+.event-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+}
+
+.event-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.event-detail {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+.event-image {
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.details-button {
+    -fx-background-color: #F58400;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.details-button:hover {
+    -fx-background-color: #FF9900;
+}
+
+
+
+
+
+.root {
+    -fx-background-color: #f4f4f4;
+    -fx-font-family: "Arial";
+}
+
+.buttonn {
+    -fx-background-color: linear-gradient(to right, #FF914D, #FF6600);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: #E57300;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.text-field, .choice-box, .date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-padding: 5px;
+}

@@ -83,3 +83,65 @@
     -fx-border-radius: 5;
     -fx-padding: 5px;
 }
+
+
+
+/* Overall event card styling */
+.event-cardd {
+    -fx-background-color: #2c3e50;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+/* Image styling */
+.event-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.0, 2, 2);
+    -fx-background-radius: 10;
+}
+
+/* Title label styling */
+.event-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ecf0f1;
+    -fx-padding: 5;
+}
+
+/* Type label styling */
+.event-type {
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+    -fx-text-fill: #95a5a6;
+    -fx-padding: 5;
+}
+
+/* Description styling */
+.event-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #bdc3c7;
+    -fx-padding: 5;
+}
+
+/* Location, price, date, and other labels styling */
+.event-location, .event-price, .event-date, .event-status, .event-organizer, .event-max {
+    -fx-font-size: 12px;
+    -fx-text-fill: #bdc3c7;
+    -fx-padding: 3;
+}
+
+/* Adding hover effects */
+.event-card:hover {
+    -fx-background-color: #34495e;
+    -fx-cursor: hand;
+}
+
+
+.etat-actif {
+    -fx-background-color: #4CAF50;
+}
+
+.etat-inactif {
+    -fx-background-color: #F44336;
+}

@@ -71,11 +71,11 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
 }
 
-/*.button:hover {*/
-/*    -fx-background-color: #E57300;*/
-/*    -fx-scale-x: 1.05;*/
-/*    -fx-scale-y: 1.05;*/
-/*}*/
+.button:hover {
+
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
 
 /*.text-field, .choice-box, .date-picker {*/
 /*    -fx-background-color: white;*/
@@ -85,25 +85,25 @@
 /*}*/
 
 
-.delete-button {
-    -fx-background-color: #c9b9a9;
+.update-button {
+    -fx-background-color: #FE9E57;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5;
     -fx-padding: 8 15;}
-.delete-button:hover {
-    -fx-background-color: #c0392b;
+.update-button:hover {
+    -fx-background-color: #FE8528;
 }
-.update-button {
-    -fx-background-color: #e4dbd3;
+.delete-button {
+    -fx-background-color: #FE8578;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 5;
     -fx-padding: 8 15;
 
 }
-.update-button:hover {
-    -fx-background-color: #d4ac0d;
+.delete-button:hover {
+    -fx-background-color: #FF7364;
 }
 
 
@@ -144,12 +144,12 @@
 
 
 
-.choice-box {
-    -fx-background-color: white;
-    -fx-border-color: #bdc3c7;
-    -fx-border-radius: 4px;
-    -fx-padding: 6px;
-}
+/*.choice-box {*/
+/*    -fx-background-color: white;*/
+/*    -fx-border-color: #bdc3c7;*/
+/*    -fx-border-radius: 4px;*/
+/*    -fx-padding: 6px;*/
+/*}*/
 
 
 
@@ -195,14 +195,58 @@
     -fx-scale-y: 1.05;
     -fx-cursor: hand;
 }
+.tr{
+    -fx-background-color: #CF4B36;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.tr:hover {
+    -fx-background-color: #D13922;
+    fx-opacity: 0.9;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-cursor: hand;
+}
 
 
 
 
 
 
+ .text-field ,.choice-box,#idDescription{
+     -fx-background-color: #f5f5f5;
+     -fx-background-radius: 5;
+     -fx-border-radius: 5;
+     -fx-border-color: #e0e0e0;
+     -fx-border-width: 1;
+     -fx-padding: 8 12;
+     -fx-font-family: 'Segoe UI';
+     -fx-font-size: 14px;
+     -fx-text-fill: #333333;
+ }
 
+.text-field:focused {
+    -fx-border-color: #2196F3;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.2), 10, 0, 0, 0);
+}
 
+.text-field:disabled {
+    -fx-opacity: 0.7;
+}
+
+.text-field .prompt-text {
+    -fx-text-fill: #999999;
+    -fx-font-style: italic;
+}
+
+/* Specific style for small fields like CVC and expiration */
+.small-field {
+    -fx-pref-width: 80;
+    -fx-font-size: 13px;
+}
 
 
 

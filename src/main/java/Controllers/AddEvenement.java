@@ -248,6 +248,14 @@ public class AddEvenement {
         idImgLabel.setText("Aucune image sélectionnée");
         imageFile = null;
     }
+    @FXML
+    public void goToMyEvent(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MyEvents.fxml"));
+        Parent root = loader.load();
+        idTitle.getScene().setRoot(root);
+    }
+
+
 }
 
 

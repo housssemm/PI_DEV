@@ -280,8 +280,8 @@
                                     <!-- Row 6: Price & State -->
                         <Label styleClass="form-label" text="Prix:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                         <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                           <TextField fx:id="idPrix" prefWidth="120" styleClass="input-field" />
-                           <ChoiceBox fx:id="idEtat" prefWidth="160" styleClass="choice-box" />
+                           <TextField fx:id="idPrix" prefHeight="44.0" prefWidth="120" styleClass="input-field" />
+                           <ChoiceBox fx:id="idEtat" prefHeight="28.0" prefWidth="160" styleClass="choice-box" />
                         </HBox>
       
                                     <!-- Row 7: Type & Organizer -->
@@ -316,6 +316,7 @@
                                     <Button fx:id="idButton" onAction="#handleButtonClick" styleClass="primary" text="Enregistrer" translateX="470.0" />
 
                                     <Button fx:id="idButton2" onAction="#goToEventList" styleClass="secondary" text="Consulter les Evenements" translateX="470.0" />
+                                    <Button fx:id="idButton3" onAction="#goToMyEvent" styleClass="tr" text="Consulter mes Evenements" translateX="470.0" />
                                  </HBox>
                   </VBox>
                </children>

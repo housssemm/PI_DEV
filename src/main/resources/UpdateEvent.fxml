@@ -292,7 +292,7 @@
                         <Label styleClass="form-label" text="Prix:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                         <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <children>
-                              <TextField fx:id="prixField" prefWidth="120" styleClass="input-field" />
+                              <TextField fx:id="prixField" prefHeight="50.0" prefWidth="120" styleClass="input-field" />
                               <ChoiceBox fx:id="etatField" prefWidth="160" styleClass="choice-box" />
                            </children>
                         </HBox>

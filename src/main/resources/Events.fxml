@@ -15,7 +15,7 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Events">
     <children>
-        <HBox prefHeight="810.0" prefWidth="261.0">
+        <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
                 <VBox alignment="TOP_CENTER" prefHeight="810.0" prefWidth="341.0" styleClass="bg">
                     <children>
@@ -24,7 +24,7 @@
                                 <Image url="@img/logor.png" />
                             </image>
                         </ImageView>
-                        <Button fx:id="home" mnemonicParsing="false" prefHeight="42.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
+                        <Button fx:id="home" mnemonicParsing="false" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -40,7 +40,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="seance" mnemonicParsing="false" prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
+                        <Button fx:id="seance" mnemonicParsing="false" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -56,7 +56,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="produit" mnemonicParsing="false" prefHeight="42.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
+                        <Button fx:id="produit" mnemonicParsing="false" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -72,7 +72,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="offre" mnemonicParsing="false" prefHeight="44.0" prefWidth="300.0" style="-fx-background-color: F58400;" text="Offres" textFill="WHITE">
+                        <Button fx:id="offre" mnemonicParsing="false" prefHeight="67.0" prefWidth="300.0" style="-fx-background-color: F58400;" text="Offres" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -91,7 +91,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="event" mnemonicParsing="false" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
+                        <Button fx:id="event" mnemonicParsing="false" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -110,7 +110,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="reclamation" mnemonicParsing="false" prefHeight="42.0" prefWidth="306.0" style="-fx-background-color: F58500;" text="Reclamations" textFill="#f7f7f7">
+                        <Button fx:id="reclamation" mnemonicParsing="false" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58500;" text="Reclamations" textFill="#f7f7f7">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -123,7 +123,7 @@
                             </graphic>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="parametre" minHeight="0.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="362.0" style="-fx-background-color: F58400;" text="Paramètres" textFill="WHITE">
+                        <Button fx:id="parametre" minHeight="0.0" mnemonicParsing="false" prefHeight="67.0" prefWidth="362.0" style="-fx-background-color: F58400;" text="Paramètres" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -139,7 +139,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE" translateY="200.0">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE" translateY="50.0">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -158,9 +158,9 @@
                 </VBox>
             </children>
         </HBox>
-        <VBox layoutX="262.0" prefHeight="67.0" prefWidth="1286.0" style="-fx-background-color: #808080;">
+        <VBox layoutX="288.0" prefHeight="67.0" prefWidth="1260.0" style="-fx-background-color: #708090;">
             <children>
-                <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1117.0">
+                <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1246.0">
                     <children>
                         <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
                             <children>
@@ -199,18 +199,19 @@
                 </HBox>
             </children>
         </VBox>
-<!--        <VBox layoutX="340.0" layoutY="176.0" prefHeight="311.0" prefWidth="338.0">-->
-<!--              <children>-->
-<!--                        &lt;!&ndash; This VBox will hold all event HBoxes dynamically &ndash;&gt;-->
-<!--                  <VBox fx:id="eventList" spacing="10" />-->
-<!--              </children>-->
-<!--         </VBox>-->
-        <ScrollPane layoutX="377.0" layoutY="175.0" prefHeight="635.0" prefWidth="1039.0">
+
+<!--        <ScrollPane layoutX="377.0" layoutY="175.0" prefHeight="635.0" prefWidth="1039.0">-->
+<!--            <content>-->
+<!--                <VBox fx:id="eventList" spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 20;" />-->
+<!--            </content>-->
+<!--        </ScrollPane>-->
+        <ScrollPane hbarPolicy="NEVER" layoutX="457.0" layoutY="165.0" prefHeight="635.0" prefWidth="850.0" vbarPolicy="NEVER">
             <content>
                 <VBox fx:id="eventList" spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 20;" />
             </content>
         </ScrollPane>
-      <Label layoutX="293.0" layoutY="80.0" text="Liste des Événements :">
+
+        <Label layoutX="318.0" layoutY="80.0" text="Liste des Événements :">
          <font>
             <Font name="Cambria" size="24.0" />
          </font>

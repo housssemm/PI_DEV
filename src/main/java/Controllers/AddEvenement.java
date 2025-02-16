@@ -98,61 +98,8 @@ public class AddEvenement {
     @FXML
     public void initialize() {
         idEtat.getItems().addAll("ACTIF", "EXPIRE");
-        idEtat.setValue("ACTIF");
+        idEtat.setValue("Etat:");
     }
-//
-//    // Handle button click to save the event
-//    public void handleButtonClick(ActionEvent event) {
-//        String title = idTitle.getText();
-//        String description = idDescription.getText();
-//        LocalDate dateDebut = idDateD.getValue();
-//        LocalDate dateFin = idDateF.getValue();
-//        String lieu = idLieu.getText();
-//        double prix = Double.parseDouble(idPrix.getText());
-//        int capaciteMaximale = Integer.parseInt(idCaoMax.getText());
-//        String organisateur = idOrganisateur.getText();
-//        String type = idType.getText();
-//        String etat = (String) idEtat.getValue();
-//
-//        // Validate required fields
-//        if (title.isEmpty() || description.isEmpty() || dateDebut == null || dateFin == null || lieu.isEmpty()) {
-//            showAlert(Alert.AlertType.ERROR, "Formulaire incomplet", "Veuillez remplir tous les champs obligatoires.");
-//            return;
-//        }
-//
-//        // Convert the image file to byte[] (if selected)
-//        byte[] imageBytes = null;
-//        if (imageFile != null) {
-//            try (FileInputStream fis = new FileInputStream(imageFile)) {
-//                imageBytes = fis.readAllBytes();  // Convert image to byte[]
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                showAlert(Alert.AlertType.ERROR, "Erreur d'image", "Erreur lors du traitement de l'image.");
-//                return; // Exit if image processing fails
-//            }
-//        }
-//
-//        // Create the event object with byte[] for image
-//        Evenement evenement = new Evenement(
-//                title, description, dateDebut, dateFin, lieu, imageBytes, prix,
-//                EtatEvenement.valueOf(etat), type, organisateur, capaciteMaximale
-//        );
-//
-//        // Save the event to the database
-//        try {
-//            if (evenementService.create(evenement)) {
-//                showAlert(Alert.AlertType.INFORMATION, "Événement enregistré", "L'événement a été ajouté avec succès.");
-//                clearForm();
-//            } else {
-//                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ajouter l'événement.");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            showAlert(Alert.AlertType.ERROR, "Erreur de base de données", "Une erreur est survenue lors de l'enregistrement.");
-//        }
-//    }
-
-
     public void handleButtonClick(ActionEvent event) {
         try {
             String title = idTitle.getText().trim();

@@ -21,6 +21,10 @@ public class Planning {
         this.titre = titre;
         this.idCoach = id_coach;
     }
+    public Planning(String titre, double tarif) {
+        this.tarif = tarif;
+        this.titre = titre;
+    }
 
     public int getIdPlanning() {
         return this.id;

@@ -89,7 +89,7 @@ public class SeanceService implements Crud<Seance> {
         List<Seance> seances = new ArrayList();
 
         while(rs.next()) {
-            Seance seance = new Seance(1, "Séance de Relaxation - meditation", "Rejoignez cette séance de 30 minutes : étirements pour une récupération optimale !", Date.valueOf("2025-05-17"), 2, 3, Type.EN_DIRECT, "lien live directe", 1, Time.valueOf("10:00:00"), Time.valueOf("10:30:00"));
+            Seance seance = new Seance();
             seance.setId(rs.getInt("id"));
             seance.setTitre(rs.getString("Titre"));
             seance.setDescription(rs.getString("Description"));
@@ -130,5 +130,34 @@ public class SeanceService implements Crud<Seance> {
             return obj;
         }
     }
+
+    public List<Seance> getSeancesByPlanningId(int idPlanning) {
+        List<Seance> seances = new ArrayList<>();
+        String query = "SELECT * FROM seance WHERE Planning_id = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, idPlanning);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Seance seance = new Seance(
+                        resultSet.getString("titre"),
+                        resultSet.getString("description"),
+                        resultSet.getDate("date"),
+                        resultSet.getInt("idCoach"),
+                        resultSet.getInt("idAdherent"),
+                        Type.valueOf(resultSet.getString("type")),
+                        resultSet.getString("lienVideo"),
+                        resultSet.getInt("Planning_id"),
+                        resultSet.getTime("heureDebut"),
+                        resultSet.getTime("heureFin")
+                );
+                seances.add(seance);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return seances;
     }
+
+}
 

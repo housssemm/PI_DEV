@@ -269,6 +269,9 @@ public class Events {
                 detailsGrid.addRow(1, new Label("Date:"), dateLabel);
                 detailsGrid.addRow(2, new Label("Prix:"), priceLabel);
 
+
+
+                priceLabel.setStyle("-fx-text-fill: #2196F3; -fx-font-weight: 700;");
                 // Séparateur
                 Separator separator = new Separator();
                 separator.setStyle("-fx-padding: 10 0;");

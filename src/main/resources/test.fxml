@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="740.0" prefWidth="1587.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.payementController">
+    <children>
+        <AnchorPane layoutX="-1.0" layoutY="-1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1587.0" style="-fx-background-color: #2F2B43;">
+            <children>
+                <Pane id="button1" layoutX="238.0" prefHeight="740.0" prefWidth="1358.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="238.0" AnchorPane.rightAnchor="-9.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <Pane layoutX="42.0" layoutY="-233.0" prefHeight="303.0" prefWidth="467.0" rotate="41.6" style="-fx-background-color: #FA2C56; -fx-background-radius: 70;">
+                            <children>
+                                <Label layoutX="242.0" layoutY="271.0" text="Espace Inscription" textFill="WHITE">
+                                    <font>
+                                        <Font name="Arial Bold" size="19.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </Pane>
+                        <Pane layoutX="76.0" layoutY="106.0" />
+                        <TableView fx:id="table" layoutX="555.0" layoutY="128.0" prefHeight="277.0" prefWidth="398.0" style="-fx-background-color: #FA2C56;" stylesheets="@fullpackstyling.css">
+                            <columns>
+                                <TableColumn fx:id="nEnfant" prefWidth="117.0" text="NomEnfant" />
+                                <TableColumn fx:id="Penfant" prefWidth="138.0" text="Prenom enfant" />
+                                <TableColumn fx:id="etat" prefWidth="140.0" text="Etat" />
+                            </columns>
+                        </TableView>
+                        <Label layoutX="553.0" layoutY="85.0" prefHeight="21.0" prefWidth="272.0" text="Mes Inscription" textFill="#fa2c56">
+                            <font>
+                                <Font name="Arial Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="alert" layoutX="547.0" layoutY="38.0" prefHeight="33.0" prefWidth="235.0" textFill="#ff1414" />
+                        <Button fx:id="paye" layoutX="732.0" layoutY="423.0" mnemonicParsing="false" onAction="#payer" prefHeight="31.0" prefWidth="186.0" text="payer" textFill="WHITE">
+                            <font>
+                                <Font name="Arial Bold" size="17.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </Pane>
+                <CheckBox fx:id="edinar" layoutX="426.0" layoutY="112.0" mnemonicParsing="false" onAction="#onedinarclicked" text="e-DINAR" textFill="#0bcbf2">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                </CheckBox>
+                <CheckBox fx:id="cartebancaire" layoutX="283.0" layoutY="112.0" mnemonicParsing="false" onAction="#oncartebancaireclick" text="carte bancaire" textFill="#0bcbf2">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                </CheckBox>
+                <TextField fx:id="montant" layoutX="370.0" layoutY="252.0" />
+                <Label fx:id="montant2" layoutX="292.0" layoutY="260.0" text="Montant" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Button fx:id="valider" layoutX="357.0" layoutY="311.0" mnemonicParsing="false" onAction="#validerlepaiement" prefHeight="31.0" prefWidth="186.0" text="valider" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="17.0" />
+                    </font>
+                </Button>
+                <TextField fx:id="codeCarte" layoutX="367.0" layoutY="193.0" />
+                <Label fx:id="codeCarte2" layoutX="287.0" layoutY="198.0" text="Code carte" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Label layoutX="37.0" layoutY="336.0" prefHeight="21.0" prefWidth="126.0" text="Inscription" textFill="#fa2c56">
+                    <font>
+                        <Font name="Arial Bold" size="24.0" />
+                    </font>
+                </Label>
+                <Label layoutX="37.0" layoutY="144.0" prefHeight="21.0" prefWidth="126.0" text="Inscription" textFill="#fa2c56">
+                    <font>
+                        <Font name="Arial Bold" size="24.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutY="-1.0" prefHeight="740.0" prefWidth="235.0" style="-fx-background-color: #393351;">
+            <children>
+                <Pane layoutX="-4.0" layoutY="66.0" prefHeight="61.0" prefWidth="235.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
+                    <children>
+                        <Label layoutX="25.0" layoutY="17.0" text="Espace Parent" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Button fx:id="inscri" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="-1.0" layoutY="241.0" mnemonicParsing="false" onAction="#nouvelinscri" prefHeight="49.0" prefWidth="235.0" styleClass="button1" stylesheets="@../css/fullpackstyling.css" text="Nouvelle Inscription" textFill="WHITE">
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/inscri.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <padding>
+                        <Insets left="40.0" />
+                    </padding>
+                </Button>
+                <Button fx:id="payement" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="-1.0" layoutY="163.0" mnemonicParsing="false" onAction="#pagepayement" prefHeight="49.0" prefWidth="235.0" styleClass="button1" stylesheets="@../css/fullpackstyling.css" text="Payé Frait d'inscription" textFill="WHITE">
+                    <padding>
+                        <Insets left="40.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../resources/paye.jpg" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>

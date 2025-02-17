@@ -13,10 +13,8 @@ public class categorieService implements Crud<Categorie> {
     }
     @Override
     public boolean create(Categorie obj) throws Exception {
-        String sql = "insert into Categorie (nom) values ('" +
-                 obj.getNom() +"')";
-        Statement stmt = conn.createStatement();
-        stmt.executeUpdate(sql);
+        String sql = "insert into Categorie (nom,image) values ('" +
+                 obj.getNom() + "','" + obj.getImage() +"')";
         try{
             Statement st = conn.createStatement();
             int res = st.executeUpdate(sql);
@@ -34,15 +32,16 @@ public class categorieService implements Crud<Categorie> {
 
     @Override
     public void update(Categorie obj) throws Exception {
-        String sql = "update Categorie set nom = ? where id = ? ";
+        String sql = "update Categorie set nom = ?,image= ? where id = ? ";
         try (PreparedStatement stmt = conn.prepareStatement(sql);){
         stmt.setString(1, obj.getNom());
-        stmt.setInt(2, obj.getId());
+        stmt.setString(2, obj.getImage());
+        stmt.setInt(3, obj.getId());
 
         int rowsUpdated = stmt.executeUpdate();
 
         if (rowsUpdated > 0) {
-            System.out.println("Modification nom categorie effectuée avec succès !");
+            System.out.println("Modification categorie effectuée avec succès !");
         } else {
             System.out.println("Vérifier l' id de categorie");
         }
@@ -51,14 +50,6 @@ public class categorieService implements Crud<Categorie> {
     }
     }
 
-    //    @Override
-//    public void delete(User obj) throws Exception {
-//    String sql="delete from user where id = ? ";
-//    PreparedStatement stmt = conn.prepareStatement(sql);
-//    stmt.setInt(1, obj.getId());
-//    stmt.executeUpdate();
-//        stmt.close();
-//    }
     @Override
     public void delete(int id) throws Exception {
         String sql = "DELETE FROM Categorie WHERE id = ?";
@@ -86,6 +77,8 @@ public class categorieService implements Crud<Categorie> {
             Categorie categ = new Categorie();
             categ.setId(rs.getInt("id"));
             categ.setNom(rs.getString("nom"));
+            categ.setImage(rs.getString("image"));
+            System.out.println("Categorie chargée : " + categ.getId() + ", " + categ.getNom() + ", " + categ.getImage());
             categs.add(categ);
         }
         return categs;
@@ -99,9 +92,9 @@ public class categorieService implements Crud<Categorie> {
         stmt.setInt(1, id);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-
             String nom= rs.getString("nom");
-            obj=new Categorie(id,nom);
+            String image = rs.getString("image");
+            obj=new Categorie(id,nom,image);
             return obj;
 
         }

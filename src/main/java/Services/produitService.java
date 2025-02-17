@@ -1,6 +1,4 @@
 package Services;
-
-import Models.Categorie;
 import Models.etat;
 import Models.produit;
 import Utils.MyDb;
@@ -15,11 +13,11 @@ public class produitService implements Crud<produit>{
     }
     @Override
     public boolean create(produit obj) throws Exception {
-        String sql = "insert into produit (idInvestisseur,nom,description,image,etat,categorieId,quantite) values ('" +
+        String sql = "insert into produit (idInvestisseur,nom,description,image,etat,categorieId,quantite,prix) values ('" +
                 obj.getIdInvestisseur() + "','" + obj.getNom() + "','" +
                 obj.getDescription() + "','" + obj.getImage() + "','" +
                 obj.getEtat() + "','" + obj.getCategorieId() + "','" +
-                obj.getQuantite() +"')";
+                obj.getQuantite()+ "','" + obj.getPrix() +"')";
         try{
             Statement st = conn.createStatement();
             int res = st.executeUpdate(sql);
@@ -37,15 +35,15 @@ public class produitService implements Crud<produit>{
 
     @Override
     public void update(produit obj) throws Exception {
-        String sql = "update produit set idInvestisseur = ?,nom = ?,description = ?,image= ?,etat= ?,categorieId= ?,quantite= ? where id = ? ";
+        String sql = "update produit set nom = ?,description = ?,image= ?,etat= ?,categorieId= ?,quantite= ?,prix= ? where id = ? ";
         try(PreparedStatement stmt = conn.prepareStatement(sql)){
-        stmt.setInt(1, obj.getIdInvestisseur());
-        stmt.setString(2, obj.getNom());
-        stmt.setString(3, obj.getDescription());
-        stmt.setString(4, obj.getImage());
-        stmt.setString(5, obj.getEtat().name());
-        stmt.setInt(6, obj.getCategorieId());
-        stmt.setInt(7, obj.getQuantite());
+        stmt.setString(1, obj.getNom());
+        stmt.setString(2, obj.getDescription());
+        stmt.setString(3, obj.getImage());
+        stmt.setString(4, obj.getEtat().name());
+        stmt.setInt(5, obj.getCategorieId());
+        stmt.setInt(6, obj.getQuantite());
+        stmt.setFloat(7, obj.getPrix());
         stmt.setInt(8, obj.getId());
         int rowsUpdated = stmt.executeUpdate();
 
@@ -91,6 +89,7 @@ public class produitService implements Crud<produit>{
             prod.setEtat(etat.valueOf(rs.getString("etat")));
             prod.setCategorieId(rs.getInt("categorieId"));
             prod.setQuantite(rs.getInt("quantite"));
+            prod.setPrix(rs.getFloat("prix"));
             produits.add(prod);
         }
         return produits;
@@ -111,7 +110,8 @@ public class produitService implements Crud<produit>{
             Models.etat etat=Models.etat.valueOf(rs.getString("etat"));
             int categorieId = rs.getInt("categorieId");
             int quantite = rs.getInt("quantite");
-            obj=new produit(id,idInvestisseur,nom,description,image,etat,categorieId,quantite);
+            float prix = rs.getFloat("prix");
+            obj=new produit(id,idInvestisseur,nom,description,image,etat,categorieId,quantite,prix);
             return obj;
         }
         return obj;

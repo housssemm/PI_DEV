@@ -36,112 +36,6 @@ public class MyEvents {
 
 
 
-
-
-
-
-
-//    void loadEvents() {
-//        try {
-//            List<Evenement> events = evenementService.getAll();  // Fetch all events
-//            for (Evenement event : events) {
-//                // Create main card container
-//                VBox eventCard = new VBox();
-//                eventCard.getStyleClass().add("event-card");
-//                eventCard.setSpacing(10);
-//                eventCard.setPadding(new Insets(15));
-//                eventCard.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
-//
-//                // Image section
-//                ImageView imageView = new ImageView();
-//                if (event.getImage() != null && event.getImage().length > 0) {
-//                    imageView.setImage(new Image(new ByteArrayInputStream(event.getImage())));
-//                } else {
-//                    imageView.setImage(new Image(getClass().getResourceAsStream("/path/to/default-image.jpg")));
-//                }
-//                imageView.setFitHeight(200);
-//                imageView.setFitWidth(350);
-//                imageView.setPreserveRatio(true);
-//                imageView.getStyleClass().add("event-image");
-//
-//                // Text content section
-//                VBox textContent = new VBox(5);
-//                Label titleLabel = new Label(event.getTitre());
-//                titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #333333;");
-//
-//                Label typeLabel = new Label("Type: " + event.getType());
-//                typeLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
-//
-//                Label locationLabel = new Label("Lieu: " + event.getLieu());
-//                locationLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
-//
-//                Label dateLabel = new Label("Du " + event.getDateDebut() + " au " + event.getDateFin());
-//                dateLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
-//
-//                // Etat label (status)
-//                Label etatLabel = new Label("Etat: " + event.getEtat());
-//                if ("ACTIF".equals(event.getEtat())) {
-//                    etatLabel.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 7; -fx-background-radius: 5;");
-//                } else if ("EXPIRE".equals(event.getEtat())) {
-//                    etatLabel.setStyle("-fx-background-color: #F44336; -fx-text-fill: white; -fx-padding: 5 7; -fx-background-radius: 5;");
-//                } else {
-//                    etatLabel.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black; -fx-padding: 5 7; -fx-background-radius: 5;");
-//                }
-//
-//                Label descriptionLabel = new Label(event.getDescription());
-//                descriptionLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666; -fx-line-spacing: 3px;");
-//                descriptionLabel.setWrapText(true);
-//
-//                Label priceLabel = new Label(event.getPrix() + " DT");
-//                priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #2196F3; -fx-font-weight: 700;");
-//
-//
-//
-//                Button deleteButton = new Button("Supprimer");
-//                deleteButton.getStyleClass().add("delete-button");
-//                deleteButton.setOnAction(e -> deleteEvent(event));
-//
-//                Button updateButton = new Button("Modifier");
-//                updateButton.getStyleClass().add("update-button");
-//                updateButton.setOnAction(e -> {
-//                    try {
-//                        updateEvent(event);
-//                    } catch (IOException ex) {
-//                        throw new RuntimeException(ex);
-//                    }
-//                });
-//
-//                // Add all the labels and buttons to the textContent VBox
-//                textContent.getChildren().addAll(
-//                        titleLabel,
-//                        typeLabel,
-//                        locationLabel,
-//                        dateLabel,
-//                        etatLabel,
-//                        descriptionLabel,
-//                        priceLabel,
-//                        deleteButton,
-//                        updateButton
-//                );
-//
-//                // Create a container to hold the image and textContent side by side
-//                HBox contentRow = new HBox(15);
-//                contentRow.getChildren().addAll(imageView, textContent);
-//
-//                // Add the contentRow to the eventCard VBox
-//                eventCard.getChildren().add(contentRow);
-//
-//                // Add the eventCard to the VBox holding the list of events
-//                eventList.getChildren().add(eventCard);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//
 void loadEvents() {
     try {
         List<Evenement> events = evenementService.getAll();  // Fetch all events
@@ -176,8 +70,20 @@ void loadEvents() {
             Label locationLabel = new Label("Lieu: " + event.getLieu());
             locationLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
 
-            Label dateLabel = new Label("Du " + event.getDateDebut() + " au " + event.getDateFin());
+            Label dateLabel = new Label("Date :Du " + event.getDateDebut() + " au " + event.getDateFin());
             dateLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
+
+            Label decLabel = new Label("Description: "+event.getDescription());
+            decLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
+
+            Label priceLabel = new Label("Prix: "+event.getPrix() + " DT");
+            priceLabel.setStyle("-fx-text-fill: #2196F3; -fx-font-weight: 700;");
+
+            // Organisateur et Capacité maximale
+            HBox organizerBox = new HBox(15);
+            Label organizerLabel = new Label("👤 " + event.getOrganisateur());
+            Label maxLabel = new Label("👥 " + event.getCapaciteMaximale());
+            organizerBox.getChildren().addAll(organizerLabel, maxLabel);
 
             // Etat label (status)
             Label etatLabel = new Label("Etat: " + event.getEtat());
@@ -193,12 +99,16 @@ void loadEvents() {
             // Remove the separate VBox (typeStatusBox) as you are directly adding it to the textContent
             textContent.getChildren().addAll(
                     titleLabel,
+                    decLabel,
                     typeLabel,
                     locationLabel,
                     dateLabel,
+                    priceLabel,
                     etatLabel,
-                    new Label(event.getDescription()),
-                    new Label(event.getPrix() + " DT")
+                    organizerBox
+//                    organizerLabel,
+//                    maxLabel
+
             );
 
             // Create an HBox for the buttons "Supprimer" and "Modifier"

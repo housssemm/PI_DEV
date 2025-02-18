@@ -2,127 +2,214 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="740.0" prefWidth="1587.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.payementController">
+<AnchorPane id="AnchorPane" prefHeight="740.0" prefWidth="1587.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <AnchorPane layoutX="-1.0" layoutY="-1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1587.0" style="-fx-background-color: #2F2B43;">
+        <!-- Sidebar -->
+        <AnchorPane layoutX="0.0" layoutY="0.0" prefHeight="740.0" prefWidth="235.0" style="-fx-background-color: #393351;">
             <children>
-                <Pane id="button1" layoutX="238.0" prefHeight="740.0" prefWidth="1358.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="238.0" AnchorPane.rightAnchor="-9.0" AnchorPane.topAnchor="0.0">
+                <!-- Logo Section -->
+                <Pane layoutX="0.0" layoutY="66.0" prefHeight="61.0" prefWidth="235.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
                     <children>
-                        <Pane layoutX="42.0" layoutY="-233.0" prefHeight="303.0" prefWidth="467.0" rotate="41.6" style="-fx-background-color: #FA2C56; -fx-background-radius: 70;">
-                            <children>
-                                <Label layoutX="242.0" layoutY="271.0" text="Espace Inscription" textFill="WHITE">
-                                    <font>
-                                        <Font name="Arial Bold" size="19.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </Pane>
-                        <Pane layoutX="76.0" layoutY="106.0" />
-                        <TableView fx:id="table" layoutX="555.0" layoutY="128.0" prefHeight="277.0" prefWidth="398.0" style="-fx-background-color: #FA2C56;" stylesheets="@fullpackstyling.css">
-                            <columns>
-                                <TableColumn fx:id="nEnfant" prefWidth="117.0" text="NomEnfant" />
-                                <TableColumn fx:id="Penfant" prefWidth="138.0" text="Prenom enfant" />
-                                <TableColumn fx:id="etat" prefWidth="140.0" text="Etat" />
-                            </columns>
-                        </TableView>
-                        <Label layoutX="553.0" layoutY="85.0" prefHeight="21.0" prefWidth="272.0" text="Mes Inscription" textFill="#fa2c56">
-                            <font>
-                                <Font name="Arial Bold" size="18.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="alert" layoutX="547.0" layoutY="38.0" prefHeight="33.0" prefWidth="235.0" textFill="#ff1414" />
-                        <Button fx:id="paye" layoutX="732.0" layoutY="423.0" mnemonicParsing="false" onAction="#payer" prefHeight="31.0" prefWidth="186.0" text="payer" textFill="WHITE">
-                            <font>
-                                <Font name="Arial Bold" size="17.0" />
-                            </font>
-                        </Button>
-                    </children>
-                </Pane>
-                <CheckBox fx:id="edinar" layoutX="426.0" layoutY="112.0" mnemonicParsing="false" onAction="#onedinarclicked" text="e-DINAR" textFill="#0bcbf2">
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
-                </CheckBox>
-                <CheckBox fx:id="cartebancaire" layoutX="283.0" layoutY="112.0" mnemonicParsing="false" onAction="#oncartebancaireclick" text="carte bancaire" textFill="#0bcbf2">
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
-                </CheckBox>
-                <TextField fx:id="montant" layoutX="370.0" layoutY="252.0" />
-                <Label fx:id="montant2" layoutX="292.0" layoutY="260.0" text="Montant" textFill="WHITE">
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
-                </Label>
-                <Button fx:id="valider" layoutX="357.0" layoutY="311.0" mnemonicParsing="false" onAction="#validerlepaiement" prefHeight="31.0" prefWidth="186.0" text="valider" textFill="WHITE">
-                    <font>
-                        <Font name="Arial Bold" size="17.0" />
-                    </font>
-                </Button>
-                <TextField fx:id="codeCarte" layoutX="367.0" layoutY="193.0" />
-                <Label fx:id="codeCarte2" layoutX="287.0" layoutY="198.0" text="Code carte" textFill="WHITE">
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
-                </Label>
-                <Label layoutX="37.0" layoutY="336.0" prefHeight="21.0" prefWidth="126.0" text="Inscription" textFill="#fa2c56">
-                    <font>
-                        <Font name="Arial Bold" size="24.0" />
-                    </font>
-                </Label>
-                <Label layoutX="37.0" layoutY="144.0" prefHeight="21.0" prefWidth="126.0" text="Inscription" textFill="#fa2c56">
-                    <font>
-                        <Font name="Arial Bold" size="24.0" />
-                    </font>
-                </Label>
-            </children>
-        </AnchorPane>
-        <AnchorPane layoutY="-1.0" prefHeight="740.0" prefWidth="235.0" style="-fx-background-color: #393351;">
-            <children>
-                <Pane layoutX="-4.0" layoutY="66.0" prefHeight="61.0" prefWidth="235.0" style="-fx-background-color: #FA2C56; -fx-background-radius: 5;">
-                    <children>
-                        <Label layoutX="25.0" layoutY="17.0" text="Espace Parent" textFill="WHITE">
+                        <Label layoutX="25.0" layoutY="17.0" text="Coachini" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
                     </children>
                 </Pane>
-                <Button fx:id="inscri" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="-1.0" layoutY="241.0" mnemonicParsing="false" onAction="#nouvelinscri" prefHeight="49.0" prefWidth="235.0" styleClass="button1" stylesheets="@../css/fullpackstyling.css" text="Nouvelle Inscription" textFill="WHITE">
-                    <graphic>
-                        <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../resources/inscri.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <padding>
-                        <Insets left="40.0" />
-                    </padding>
-                </Button>
-                <Button fx:id="payement" alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="-1.0" layoutY="163.0" mnemonicParsing="false" onAction="#pagepayement" prefHeight="49.0" prefWidth="235.0" styleClass="button1" stylesheets="@../css/fullpackstyling.css" text="Payé Frait d'inscription" textFill="WHITE">
+
+                <!-- Navigation Buttons -->
+                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="0.0" layoutY="163.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="235.0" styleClass="button1"  text="Home" textFill="WHITE">
                     <padding>
                         <Insets left="40.0" />
                     </padding>
                     <graphic>
                         <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../resources/paye.jpg" />
+                                <Image url="@/img/home.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Button>
+
+                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="0.0" layoutY="241.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="235.0" styleClass="button1"  text="Coaches" textFill="WHITE">
+                    <padding>
+                        <Insets left="40.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@img/coach.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="0.0" layoutY="319.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="235.0" styleClass="button1"  text="Products" textFill="WHITE">
+                    <padding>
+                        <Insets left="40.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@img/product.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="0.0" layoutY="397.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="235.0" styleClass="button1"  text="Events" textFill="WHITE">
+                    <padding>
+                        <Insets left="40.0" />
+                    </padding>
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@img/event1.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </AnchorPane>
+
+        <!-- Main Content Area -->
+        <AnchorPane layoutX="235.0" layoutY="0.0" prefHeight="740.0" prefWidth="1352.0" style="-fx-background-color: #f5f5f5;">
+            <children>
+                <!-- Hero Section -->
+                <VBox layoutX="10.0" layoutY="10.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Label text="Bienvenue chez Coachini !" textFill="#FA2C56">
+                            <font>
+                                <Font name="Arial Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Label text="Votre destination ultime pour le coaching en ligne et les équipements sportifs." textFill="#333333">
+                            <font>
+                                <Font name="Arial" size="16.0" />
+                            </font>
+                        </Label>
+                        <Button style="-fx-background-color: #FA2C56; -fx-text-fill: WHITE;" styleClass="button1" text="Explorez maintenant">
+                            <font>
+                                <Font name="Arial Bold" size="14.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </VBox>
+
+                <!-- Featured Coaches Section -->
+                <VBox layoutX="10.0" layoutY="200.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Label text="Entraîneurs en vedette" textFill="#333333">
+                            <font>
+                                <Font name="Arial Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="20.0">
+                            <!-- Example Coach Card -->
+                            <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
+                                <children>
+                                    <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@img/coach.png" />
+                                        </image>
+                                    </ImageView>
+                                    <Label text="John Doe" textFill="#333333">
+                                        <font>
+                                            <Font name="Arial Bold" size="16.0" />
+                                        </font>
+                                    </Label>
+                                    <Label text="Fitness Coach" textFill="#666666">
+                                        <font>
+                                            <Font name="Arial" size="14.0" />
+                                        </font>
+                                    </Label>
+                                </children>
+                            </VBox>
+
+                            <!-- Add more coach cards here -->
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Popular Products Section -->
+                <VBox layoutX="10.0" layoutY="450.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Label text="Produits populaires" textFill="#333333">
+                            <font>
+                                <Font name="Arial Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="20.0">
+                            <!-- Example Product Card -->
+                            <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
+                                <children>
+                                    <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@img/product.png" />
+                                        </image>
+                                    </ImageView>
+                                    <Label text="Running Shoes" textFill="#333333">
+                                        <font>
+                                            <Font name="Arial Bold" size="16.0" />
+                                        </font>
+                                    </Label>
+                                    <Label text="99 DT" textFill="#FA2C56">
+                                        <font>
+                                            <Font name="Arial" size="16.0" />
+                                        </font>
+                                    </Label>
+                                </children>
+                            </VBox>
+
+                            <!-- Add more product cards here -->
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Upcoming Events Section -->
+                <VBox layoutX="10.0" layoutY="600.0" spacing="20.0" style="-fx-padding: 20;">
+                    <children>
+                        <Label text="Événements à venir" textFill="#333333">
+                            <font>
+                                <Font name="Arial Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="20.0">
+                            <!-- Example Event Card -->
+                            <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
+                                <children>
+                                    <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@img/event1.png" />
+                                        </image>
+                                    </ImageView>
+                                    <Label text="Fitness Workshop" textFill="#333333">
+                                        <font>
+                                            <Font name="Arial Bold" size="16.0" />
+                                        </font>
+                                    </Label>
+                                    <Label text="June 15, 2023" textFill="#666666">
+                                        <font>
+                                            <Font name="Arial" size="14.0" />
+                                        </font>
+                                    </Label>
+                                </children>
+                            </VBox>
+
+                            <!-- Add more event cards here -->
+                        </HBox>
+                    </children>
+                </VBox>
             </children>
         </AnchorPane>
     </children>

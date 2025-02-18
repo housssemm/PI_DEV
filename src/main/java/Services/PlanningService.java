@@ -20,7 +20,7 @@ public class PlanningService implements Crud<Planning> {
     public boolean create(Planning obj) {
         String sql = "INSERT INTO Planning (titre, tarif, idCoach) VALUES (?, ?, ?)";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, obj.getTitre());
             pstmt.setDouble(2, obj.getTarif());
             pstmt.setInt(3, obj.getIdcoach());
@@ -28,7 +28,12 @@ public class PlanningService implements Crud<Planning> {
             int res = pstmt.executeUpdate();
 
             if (res > 0) {
-                System.out.println("Ajout de planning avec succès !");
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        obj.setIdPlanning(generatedKeys.getInt(1)); // Assigner l'ID généré à l'objet
+                        System.out.println("Ajout de planning avec succès ! ID : " + obj.getIdPlanning());
+                    }
+                }
                 return true;
             } else {
                 System.out.println("Aucun planning ajouté.");
@@ -102,4 +107,25 @@ public class PlanningService implements Crud<Planning> {
             return obj;
         }
     }
+    public Planning getPlanningByCoachId(int idCoach) {
+        String sql = "SELECT * FROM planning WHERE idCoach = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCoach);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Planning(
+                            rs.getInt("id"),
+                            rs.getInt("idCoach"),
+                            rs.getString("titre"),
+                            rs.getDouble("tarif")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du planning : " + e.getMessage());
+        }
+        return null; // Aucun planning trouvé
+    }
+
 }

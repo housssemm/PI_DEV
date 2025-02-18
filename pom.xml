@@ -30,11 +30,24 @@
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>de.jensd</groupId>-->
-<!--            <artifactId>fontawesomefx</artifactId>-->
-<!--            <version>8.9</version>-->
-<!--        </dependency>-->
+        <!-- Ikonli Core -->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-core</artifactId>
+            <version>12.3.1</version>
+        </dependency>
+        <!-- Ikonli JavaFX -->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-javafx</artifactId>
+            <version>12.3.1</version>
+        </dependency>
+        <!-- Ikonli FontAwesome5 Pack -->
+        <dependency>
+            <groupId>org.kordamp.ikonli</groupId>
+            <artifactId>ikonli-fontawesome5-pack</artifactId>
+            <version>12.3.1</version>
+        </dependency>
 
     </dependencies>
     <build>

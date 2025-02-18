@@ -3,17 +3,19 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Events">
+<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MesParticpent">
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
@@ -199,14 +201,29 @@
                 </HBox>
             </children>
         </VBox>
+      <VBox fx:id="cardContainer" layoutX="410.0" layoutY="159.0" prefHeight="109.0" prefWidth="894.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
+         <children>
+            <GridPane hgap="10" vgap="8">
+               <columnConstraints>
+                  <ColumnConstraints prefWidth="100" />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="locationLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" />
+                  <Label fx:id="dateLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="priceLabel" style="-fx-text-fill: #2196F3; -fx-font-weight: 700;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+      <Label layoutX="328.0" layoutY="103.0" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Les Participant a Mon Evénement :" />
 
 
-        <ScrollPane hbarPolicy="NEVER" layoutX="457.0" layoutY="165.0" prefHeight="635.0" prefWidth="894.0" vbarPolicy="NEVER">
-            <content>
-                <VBox fx:id="eventList" spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 20;" />
-            </content>
-        </ScrollPane>
-      <Label layoutX="317.0" layoutY="92.0" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Liste des Événements :" />
 
     </children>
 </AnchorPane>

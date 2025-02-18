@@ -5,20 +5,20 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EventDetailsController">    <children>
-        <HBox prefHeight="810.0" prefWidth="288">
+<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ajoutplanningController">
+    <children>
+        <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
-                <VBox alignment="TOP_CENTER" prefHeight="810.0" prefWidth="341.0" style="-fx-background-color: F58400;" styleClass="bg">
+                <VBox alignment="TOP_CENTER" prefHeight="810.0" prefWidth="341.0" styleClass="bg">
                     <children>
                         <ImageView fitHeight="199.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -159,11 +159,11 @@
                 </VBox>
             </children>
         </HBox>
-        <VBox layoutX="286.0" prefHeight="67.0" prefWidth="1266.0" style="-fx-background-color: #708090;">
+        <VBox layoutX="288.0" prefHeight="67.0" prefWidth="1260.0" style="-fx-background-color: #708090;">
             <children>
-                <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1248.0">
+                <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1246.0">
                     <children>
-                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="974.0">
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
                             <children>
                                 <TextField fx:id="search" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
                                     <font>
@@ -200,137 +200,49 @@
                 </HBox>
             </children>
         </VBox>
-<!--    layoutY="236.0"-->
-    <VBox fx:id="cardContainer" layoutX="400.0" layoutY="149.0" prefHeight="309.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
-        <children>
-            <ImageView fx:id="img" fitWidth="350.0" preserveRatio="true" style="-fx-background-radius: 15 15 0 0; -fx-cursor: hand;">
-                <VBox.margin>
-                    <Insets bottom="15" />
-                </VBox.margin>
-            </ImageView>
 
-            <Label fx:id="titleLabel" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #333333;">
-                <VBox.margin>
-                    <Insets bottom="5" />
-                </VBox.margin>
-            </Label>
+        <VBox alignment="CENTER" layoutX="391.0" layoutY="176.0" prefHeight="349.0" prefWidth="360.0" spacing="15" style="-fx-background-color: #F0F0F0; -fx-padding: 20px; -fx-border-radius: 10; -fx-background-radius: 10;">
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Ajouter un Planning" textFill="#f58400">
+            <font>
+               <Font size="17.0" />
+            </font></Label>
 
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label fx:id="typeLabel" style="-fx-font-size: 12px; -fx-text-fill: #666666; -fx-padding: 5 7; -fx-background-radius: 5; -fx-background-color: #e0e0e0;" />
-                <Label fx:id="etatLabel" style="-fx-font-size: 12px; -fx-text-fill: white; -fx-padding: 5 7; -fx-background-radius: 5; -fx-background-color: #4CAF50;" />
-            </HBox>
+            <Label style="-fx-font-weight: bold;" text="Titre" />
+            <TextField fx:id="titreplan" promptText="Saisir le titre" />
 
-            <Label fx:id="descriptionLabel" style="-fx-font-size: 14px; -fx-text-fill: #666666; -fx-line-spacing: 3px;" wrapText="true">
-                <VBox.margin>
-                    <Insets bottom="10" top="5" />
-                </VBox.margin>
-            </Label>
+            <Label style="-fx-font-weight: bold;" text="Tarif" />
+            <TextField fx:id="tarifplan" promptText="Saisir le tarif" />
+
+            <Label style="-fx-font-weight: bold;" text="ID Coach" />
+            <TextField fx:id="idcoachplan" promptText="Saisir ID Coach" />
+
+            <Button onAction="#ajouterPlanning" style="-fx-background-color: F58400; -fx-text-fill: white;" text="Ajouter Planning">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font></Button>
+         <effect>
+            <DropShadow offsetX="5.0" offsetY="5.0">
+               <color>
+                  <Color red="0.501960813999176" green="0.501960813999176" blue="0.501960813999176" />
+               </color>
+            </DropShadow>
+         </effect>
+        </VBox>
+        <VBox fx:id="planningVBox" alignment="TOP_CENTER" layoutX="844.0" layoutY="201.0" prefHeight="122.0" prefWidth="547.0" style="-fx-background-color: #F0F0F0; -fx-padding: 20px; -fx-border-radius: 10; -fx-background-radius: 10;">
+
+        </VBox>
+      <Label layoutX="924.0" layoutY="160.0" />
+      <Label layoutX="1025.0" layoutY="145.0" text="Afficher Planning" textFill="#f58400">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Button layoutX="1007.0" layoutY="431.0" mnemonicParsing="false" onAction="#consulterplan" prefHeight="40.0" prefWidth="216.0" style="-fx-background-color: f58400;" text="consulter mon planning" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Button>
 
 
-            <GridPane hgap="10" vgap="8">
-                <columnConstraints>
-                    <ColumnConstraints prefWidth="100" />
-                    <ColumnConstraints />
-                </columnConstraints>
-
-                <rowConstraints>
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                </rowConstraints>
-
-                <children>
-                    <Label style="-fx-text-fill: #999999;" text="Lieu:" />
-                    <Label fx:id="locationLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" />
-
-                    <Label style="-fx-text-fill: #999999;" text="Date:" GridPane.rowIndex="1" />
-                    <Label fx:id="dateLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-                    <Label style="-fx-text-fill: #999999;" text="Prix:" GridPane.rowIndex="2" />
-                    <Label fx:id="priceLabel" style="-fx-text-fill: #2196F3; -fx-font-weight: 700;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                </children>
-            </GridPane>
-
-            <Separator style="-fx-padding: 10 0;">
-                <VBox.margin>
-                    <Insets bottom="10" top="15" />
-                </VBox.margin>
-            </Separator>
-
-            <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label fx:id="organisateurLabel">
-                    <graphic>
-                        <Label style="-fx-font-family: 'Material Design Icons'; -fx-font-size: 14;" text="👤" />
-                    </graphic>
-
-                </Label>
-                <Label fx:id="maxLabel">
-                    <graphic>
-                        <Label style="-fx-font-size: 14;" text="👥" />
-                    </graphic>
-                </Label>
-            </HBox>
-        </children>
-    </VBox>
-      <Separator layoutX="935.0" layoutY="196.0" orientation="VERTICAL" prefHeight="426.0" prefWidth="14.0" />
-    <VBox fx:id="cardContainer1" layoutX="1008.0" layoutY="149.0" prefHeight="371.0" prefWidth="382.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
-        <children>
-            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Détails du paiement" />
-
-            <!-- Price Display -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label style="-fx-text-fill: #999999; -fx-font-size: 16px;" text="Montant total:" />
-                <Label fx:id="priceLabel1" style="-fx-text-fill: #2196F3; -fx-font-size: 24px; -fx-font-weight: bold;" />
-            </HBox>
-
-            <Separator style="-fx-padding: 10 0;" />
-
-            <!-- Payment Form -->
-            <GridPane hgap="10" vgap="15">
-                <columnConstraints>
-                    <ColumnConstraints maxWidth="143.199951171875" minWidth="105.5999755859375" prefWidth="124.0" />
-                    <ColumnConstraints maxWidth="194.40002441406247" minWidth="156.80004882812497" prefWidth="175.99999999999997" />
-                </columnConstraints>
-
-                <rowConstraints>
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                </rowConstraints>
-
-                <children>
-                    <Label style="-fx-text-fill: #666666;" text="Numéro de carte" GridPane.rowIndex="0" />
-                    <TextField prefHeight="36.0" prefWidth="200.0" promptText="1234 5678 9012 3456" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-                    <Label style="-fx-text-fill: #666666;" text="Date d'expiration" GridPane.rowIndex="1" />
-                    <HBox prefHeight="26.0" prefWidth="229.0" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                        <TextField promptText="MM" style="-fx-pref-width: 60;" />
-                        <TextField promptText="YYYY" style="-fx-pref-width: 80;" />
-                    </HBox>
-
-                    <Label style="-fx-text-fill: #666666;" text="CVC" GridPane.rowIndex="2" />
-                    <TextField promptText="123" style="-fx-pref-width: 80;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-                    <Label style="-fx-text-fill: #666666;" text="Titulaire de la carte" GridPane.rowIndex="3" />
-                    <TextField promptText="John Doe" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                </children>
-            </GridPane>
-
-            <!-- Security Info -->
-            <HBox alignment="CENTER" spacing="5" translateY="20.0">
-   
-               <!-- Pay Button -->
-               <Button style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 10 20;" text="Payez maintenant" translateX="-30.0" />
-                <ImageView fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@img/lock.png" />
-                    </image>
-                </ImageView>
-                <Label style="-fx-text-fill: #666666; -fx-font-size: 12px;" text="Paiement sécurisé" />
-            </HBox>
-        </children>
-    </VBox>
-
-</children>
+    </children>
 </AnchorPane>

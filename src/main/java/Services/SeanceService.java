@@ -3,13 +3,7 @@ package Services;
 import Models.Seance;
 import Models.Type;
 import Utils.MyDb;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +15,6 @@ public class SeanceService implements Crud<Seance> {
     @Override
     public boolean create(Seance obj) {
         String sql = "INSERT INTO seance (Titre, Description, Date, LienVideo, Type, heureDebut, heureFin, idCoach, idAdherent, Planning_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
-
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, obj.getTitre());
             pstmt.setString(2, obj.getDescription());
@@ -49,29 +42,34 @@ public class SeanceService implements Crud<Seance> {
         }
     }
 
-            @Override
+    @Override
     public void update(Seance obj) throws Exception {
         String sql = "UPDATE Seance SET Titre= ?, Description= ?, Date= ?, LienVideo= ?, Type= ?, heureDebut= ?, heureFin= ? WHERE id = ?";
-        PreparedStatement stmt = this.conn.prepareStatement(sql);
-        stmt.setString(1, obj.getTitre());
-        stmt.setString(2, obj.getDescription());
-        stmt.setDate(3, obj.getDate());
-        stmt.setString(4, obj.getLienVideo());
-        stmt.setString(5, obj.getType().toString());
-        stmt.setTime(6, obj.getHeureDebut());
-        stmt.setTime(7, obj.getHeureFin());
-        stmt.setInt(8, obj.getId());
-        stmt.executeUpdate();
+        try (PreparedStatement stmt = this.conn.prepareStatement(sql)) {
+            stmt.setString(1, obj.getTitre());
+            stmt.setString(2, obj.getDescription());
+            stmt.setDate(3, obj.getDate());
+            stmt.setString(4, obj.getLienVideo());
+            stmt.setString(5, obj.getType().toString());
+            stmt.setTime(6, obj.getHeureDebut());
+            stmt.setTime(7, obj.getHeureFin());
+            stmt.setInt(8, obj.getId());  // Assurez-vous que l'ID est bien passé ici.
+
+            // Vérification des paramètres avant l'exécution
+            System.out.println("Exécution de la requête de mise à jour avec ID: " + obj.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour de la séance : " + e.getMessage());
+        }
     }
+
+
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM Seance WHERE id = ?";
-
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-
             int rowsAffected = stmt.executeUpdate();
-
             if (rowsAffected > 0) {
                 System.out.println("Séance supprimée avec succès !");
             } else {
@@ -81,54 +79,88 @@ public class SeanceService implements Crud<Seance> {
             System.out.println("Erreur lors de la suppression de la séance : " + e.getMessage());
         }
     }
-            @Override
+
+    @Override
     public List<Seance> getAll() throws Exception {
-        String sql = "select * from Seance";
-        Statement stmt = this.conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-        List<Seance> seances = new ArrayList();
-
-        while(rs.next()) {
-            Seance seance = new Seance(1, "Séance de Relaxation - meditation", "Rejoignez cette séance de 30 minutes : étirements pour une récupération optimale !", Date.valueOf("2025-05-17"), 2, 3, Type.EN_DIRECT, "lien live directe", 1, Time.valueOf("10:00:00"), Time.valueOf("10:30:00"));
-            seance.setId(rs.getInt("id"));
-            seance.setTitre(rs.getString("Titre"));
-            seance.setDescription(rs.getString("Description"));
-            seance.setDate(rs.getDate("Date"));
-            seance.setType(Type.valueOf(rs.getString("Type")));
-            seance.setLienVideo(rs.getString("LienVideo"));
-            seance.setHeureDebut(rs.getTime("HeureDebut"));
-            seance.setHeureFin(rs.getTime("HeureFin"));
-            seance.setIdCoach(rs.getInt("idCoach"));
-            seance.setIdAdherent(rs.getInt("idAdherent"));
-            seance.setPlanningId(rs.getInt("planning_id"));
-            seances.add(seance);
+        String sql = "SELECT * FROM Seance";
+        List<Seance> seances = new ArrayList<>();
+        try (Statement stmt = this.conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Seance seance = new Seance();
+                seance.setId(rs.getInt("id"));  // Ensure that the id is properly set
+                seance.setTitre(rs.getString("Titre"));
+                seance.setDescription(rs.getString("Description"));
+                seance.setDate(rs.getDate("Date"));
+                seance.setType(Type.valueOf(rs.getString("Type")));
+                seance.setLienVideo(rs.getString("LienVideo"));
+                seance.setHeureDebut(rs.getTime("HeureDebut"));
+                seance.setHeureFin(rs.getTime("HeureFin"));
+                seance.setIdCoach(rs.getInt("idCoach"));
+                seance.setIdAdherent(rs.getInt("idAdherent"));
+                seance.setPlanningId(rs.getInt("planning_id"));
+                System.out.println("Seance ID: " + seance.getId());  // Debugging line to verify ID
+                seances.add(seance);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des séances : " + e.getMessage());
         }
-
         return seances;
     }
+
     @Override
     public Seance getById(int id) throws Exception {
-        String sql = "select * from seance where id=?";
+        String sql = "SELECT * FROM Seance WHERE id=?";
         Seance obj = null;
-        PreparedStatement stmt = this.conn.prepareStatement(sql);
-        stmt.setInt(1, id);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            String Titre = rs.getString("Titre");
-            String Description = rs.getString("Description");
-            Date date = rs.getDate("Date");
-            String LienVideo = rs.getString("LienVideo");
-            Time HeureDebut = rs.getTime("HeureDebut");
-            Time HeureFin = rs.getTime("HeureFin");
-            Type Type = Models.Type.valueOf(rs.getString("Type"));
-            int idCoach = rs.getInt("idCoach");
-            int idAdherent = rs.getInt("idAdherent");
-            int planning_id = rs.getInt("planning_id");
-            obj = new Seance(id, Titre, Description, date, idCoach, idAdherent, Type, LienVideo, planning_id, HeureDebut, HeureFin);
-            return obj;
-        } else {
-            return obj;
+        try (PreparedStatement stmt = this.conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    obj = new Seance(
+                            rs.getInt("id"),
+                            rs.getString("Titre"),
+                            rs.getString("Description"),
+                            rs.getDate("Date"),
+                            rs.getInt("idCoach"),
+                            rs.getInt("idAdherent"),
+                            Type.valueOf(rs.getString("Type")),
+                            rs.getString("LienVideo"),
+                            rs.getInt("planning_id"),
+                            rs.getTime("HeureDebut"),
+                            rs.getTime("HeureFin")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de la séance par ID : " + e.getMessage());
         }
-    }
+        return obj;
     }
 
+    public List<Seance> getSeancesByPlanningId(int idPlanning) {
+        List<Seance> seances = new ArrayList<>();
+        String query = "SELECT * FROM Seance WHERE planning_id = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, idPlanning);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Seance seance = new Seance();
+                    seance.setId(resultSet.getInt("id"));  // Make sure to set ID properly
+                    seance.setTitre(resultSet.getString("Titre"));
+                    seance.setDescription(resultSet.getString("Description"));
+                    seance.setDate(resultSet.getDate("Date"));
+                    seance.setType(Type.valueOf(resultSet.getString("Type")));
+                    seance.setLienVideo(resultSet.getString("LienVideo"));
+                    seance.setHeureDebut(resultSet.getTime("HeureDebut"));
+                    seance.setHeureFin(resultSet.getTime("HeureFin"));
+                    seance.setIdCoach(resultSet.getInt("idCoach"));
+                    seance.setIdAdherent(resultSet.getInt("idAdherent"));
+                    seance.setPlanningId(resultSet.getInt("planning_id"));
+                    seances.add(seance);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des séances par planning ID : " + e.getMessage());
+        }
+        return seances;
+    }
+}

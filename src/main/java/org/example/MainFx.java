@@ -18,8 +18,8 @@ public class MainFx extends Application {
         // Load FXML file (adjust path to match your FXML location)
 
 
-     Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
-//       Parent root = FXMLLoader.load(getClass().getResource("/ajoutplanning.fxml"));
+         Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
+        //    Parent root = FXMLLoader.load(getClass().getResource("/UserReclamation.fxml"));
 
         // Set up the scene and stage
         Scene scene = new Scene(root);

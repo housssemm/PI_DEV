@@ -57,7 +57,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="produit" mnemonicParsing="false" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
+                        <Button fx:id="produit" mnemonicParsing="false" onAction="#GoToProduit" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
                             <font>
                                 <Font size="18.0" />
                             </font>

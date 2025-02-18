@@ -275,7 +275,16 @@ public class AddEvenement {
             e.printStackTrace();
         }
     }
-
+    @FXML
+    void GoToProduit(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Produit.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 

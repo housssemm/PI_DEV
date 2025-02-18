@@ -16,3 +16,4 @@ public interface Crud<T> {
     T getById(int id) throws Exception;
 
 }
+

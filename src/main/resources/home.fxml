@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="815.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MyEvents">
+<AnchorPane prefHeight="815.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Home">
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
@@ -24,7 +24,7 @@
                                 <Image url="@img/logor.png" />
                             </image>
                         </ImageView>
-                        <Button fx:id="home" mnemonicParsing="false" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
+                        <Button fx:id="home" mnemonicParsing="false" onAction="#GoToHome" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -56,7 +56,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="produit" mnemonicParsing="false" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
+                        <Button fx:id="produit" mnemonicParsing="false" onAction="#GoToProduit" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -91,7 +91,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="event" mnemonicParsing="false" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
+                        <Button fx:id="event" mnemonicParsing="false" onAction="#GoToEvent" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
                             <font>
                                 <Font size="18.0" />
                             </font>

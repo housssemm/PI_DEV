@@ -124,7 +124,7 @@ public class PanierProduitService implements Crud<panierProduit> {
             int quantite = rs.getInt("Quantite");
             LocalDateTime date=rs.getTimestamp("date").toLocalDateTime();
             float montant = rs.getFloat("montant");
-            Models.etatP etat_paiement=Models.etatP.valueOf(rs.getString("etat"));
+            etatP etat_paiement= etatP.valueOf(rs.getString("etat"));
             obj=new panierProduit(id,idproduit,idpanier,quantite,date,montant,etat_paiement);
             return obj;
         }

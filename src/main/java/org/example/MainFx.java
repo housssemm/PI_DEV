@@ -17,7 +17,8 @@ public class MainFx extends Application {
     public void start(Stage primaryStage) throws Exception {
         // Load FXML file (adjust path to match your FXML location)
 
-       Parent root = FXMLLoader.load(getClass().getResource("/AddEvenement.fxml"));
+//       Parent root = FXMLLoader.load(getClass().getResource("/AddEvenement.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
 
         // Set up the scene and stage
         Scene scene = new Scene(root);

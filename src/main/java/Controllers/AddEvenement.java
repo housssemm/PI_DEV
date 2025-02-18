@@ -254,6 +254,27 @@ public class AddEvenement {
         Parent root = loader.load();
         idTitle.getScene().setRoot(root);
     }
+    //ROOT
+    @FXML
+    void GoToEvent(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToHome(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/home.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

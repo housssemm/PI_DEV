@@ -1,7 +1,11 @@
 package Controllers;
 
 import Models.Evenement;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,31 +28,6 @@ public class EventDetailsController {
     public void initialize() {
         // Empty initialize method, will be populated when event is passed.
     }
-
-//    public void setEventDetails(Evenement event) {
-//
-//            // Check if the event image is available
-//            if (event.getImage() != null && event.getImage().length > 0) {
-//                Image image = new Image(new ByteArrayInputStream(event.getImage()));
-//                img.setImage(image);  // Set the image in the ImageView
-//            } else {
-//                // If there's no image, set a default image
-//                img.setImage(new Image(getClass().getResourceAsStream("/path/to/default-image.jpg")));
-//            }
-//        // Set the details of the event to the corresponding labels
-//
-//        titleLabel.setText("Title: " + event.getTitre());
-//        descriptionLabel.setText("Description: " + event.getDescription());
-//        locationLabel.setText("Location: " + event.getLieu());
-//        priceLabel.setText("prix: " + event.getPrix());
-//        dateLabel.setText("Dates: " + event.getDateDebut() + " à " + event.getDateFin());
-//        typeLabel.setText("Type: " + event.getType());
-//        etatLabel.setText("Etat: " + event.getEtat());
-//        organisateurLabel.setText("Organisateur: " + event.getOrganisateur());
-//        maxLabel.setText("capacite Maximale : " + event.getCapaciteMaximale());
-//
-//    }
-
 
     public void setEventDetails(Evenement event) {
         // Check if the event image is available
@@ -88,8 +67,27 @@ public class EventDetailsController {
             etatLabel.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");  // Default gray color
         }
     }
-
-
+//ROOT
+    @FXML
+    void GoToEvent(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToHome(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/home.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

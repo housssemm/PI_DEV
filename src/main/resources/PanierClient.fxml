@@ -43,7 +43,7 @@
                         </padding>
                     </Button>
                     <Separator prefWidth="200.0" />
-                    <Button fx:id="seance" mnemonicParsing="false" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
+                    <Button fx:id="seance" mnemonicParsing="false" onAction="#GoToSeance" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
                         <font>
                             <Font size="18.0" />
                         </font>

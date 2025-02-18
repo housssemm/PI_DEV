@@ -98,6 +98,16 @@ public class EventDetailsController {
             e.printStackTrace();
         }
     }
+    @FXML
+    void GoToSeance(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ajoutplanning.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

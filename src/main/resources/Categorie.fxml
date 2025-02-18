@@ -11,11 +11,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MesParticpent">
+<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AjoutercategorieController">
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
@@ -26,7 +27,7 @@
                                 <Image url="@img/logor.png" />
                             </image>
                         </ImageView>
-                        <Button fx:id="home" mnemonicParsing="false" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
+                        <Button fx:id="home" mnemonicParsing="false" onAction="#GoToHome" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -93,7 +94,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="event" mnemonicParsing="false" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
+                        <Button fx:id="event" mnemonicParsing="false" onAction="#GoToEvent" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -162,7 +163,7 @@
         </HBox>
         <VBox layoutX="288.0" prefHeight="67.0" prefWidth="1260.0" style="-fx-background-color: #708090;">
             <children>
-                <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1246.0">
+                <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1274.0">
                     <children>
                         <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
                             <children>
@@ -201,29 +202,84 @@
                 </HBox>
             </children>
         </VBox>
-      <VBox fx:id="cardContainer" layoutX="410.0" layoutY="159.0" prefHeight="109.0" prefWidth="894.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
-         <children>
-            <GridPane hgap="10" vgap="8">
-               <columnConstraints>
-                  <ColumnConstraints prefWidth="100" />
-                  <ColumnConstraints />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
-               <children>
-                  <Label fx:id="locationLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" />
-                  <Label fx:id="dateLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="priceLabel" style="-fx-text-fill: #2196F3; -fx-font-weight: 700;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               </children>
-            </GridPane>
-         </children>
-      </VBox>
-      <Label layoutX="328.0" layoutY="103.0" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Les Participant a Mon Evénement :" />
-
-
-
+                <Label layoutX="778.0" layoutY="389.0" style="-fx-text-fill: F58400;" text="Listes des Categories">
+                    <font>
+                        <Font name="System Bold" size="22.0" />
+                    </font>
+                </Label>
+                <Label layoutX="350.0" layoutY="151.0" prefHeight="27.0" prefWidth="158.0" text=" Nom Categorie :">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="531.0" layoutY="151.0" prefHeight="27.0" prefWidth="187.0" text=" Image Categorie  :">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="label_Nom_categ" layoutX="339.0" layoutY="202.0" prefHeight="34.0" prefWidth="169.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
+                <Button layoutX="369.0" layoutY="325.0" mnemonicParsing="false" onAction="#AjouterCategorie" prefHeight="39.0" prefWidth="112.0" style="-fx-background-color: F58400; -fx-border-color: black;" text="Ajouter" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="17.0" />
+                    </font>
+                </Button>
+                <Button layoutX="536.0" layoutY="325.0" mnemonicParsing="false" onAction="#upload_Image" prefHeight="39.0" prefWidth="161.0" style="-fx-background-color: F58400; -fx-border-color: black;" text="Charger Image" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="17.0" />
+                    </font></Button>
+                <Pane layoutX="541.0" layoutY="196.0" prefHeight="108.0" prefWidth="140.0" style="-fx-border-color: gray;">
+                    <children>
+                        <ImageView fx:id="imageView" fitHeight="106.0" fitWidth="149.0" layoutX="18.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                    </children>
+                </Pane>
+                <Label layoutX="1055.0" layoutY="102.0" style="-fx-text-fill: F58400;" text=" Modifier des Categories">
+                    <font>
+                        <Font name="System Bold" size="23.0" />
+                    </font>
+                </Label>
+                <GridPane fx:id="GridPane" hgap="25.0" layoutX="322.0" layoutY="442.0" prefHeight="347.0" prefWidth="1182.0" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="170.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="170.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                </GridPane>
+                <Label layoutX="397.0" layoutY="101.0" style="-fx-text-fill: F58400;" text="Ajouter des Categories">
+                    <font>
+                        <Font name="System Bold" size="23.0" />
+                    </font>
+                </Label>
+                <Label layoutX="1017.0" layoutY="150.0" prefHeight="27.0" prefWidth="158.0" text=" Nom Categorie :">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+                <Label layoutX="1234.0" layoutY="151.0" prefHeight="27.0" prefWidth="187.0" text=" Image Categorie  :">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="Nom_categ" layoutX="1013.0" layoutY="201.0" prefHeight="34.0" prefWidth="169.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
+                <Pane layoutX="1257.0" layoutY="195.0" prefHeight="108.0" prefWidth="140.0" style="-fx-border-color: gray;">
+                    <children>
+                        <ImageView fx:id="imgView" fitHeight="98.0" fitWidth="122.0" layoutX="15.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                    </children>
+                </Pane>
+            <Button layoutX="1248.0" layoutY="326.0" mnemonicParsing="false" onAction="#upload_new_image" prefHeight="39.0" prefWidth="161.0" style="-fx-background-color: F58400; -fx-border-color: black;" text="Charger Image" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Button>
+            <Button layoutX="1041.0" layoutY="325.0" mnemonicParsing="false" onAction="#Modifier" prefHeight="39.0" prefWidth="127.0" style="-fx-background-color: F58400; -fx-border-color: black;" text="Modifier" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Button>
     </children>
 </AnchorPane>

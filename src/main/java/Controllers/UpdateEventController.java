@@ -4,6 +4,7 @@ package Controllers;
 import Models.EtatEvenement;
 import Models.Evenement;
 import Services.EvenementService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -319,5 +320,36 @@ public class UpdateEventController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    //ROOT
+    @FXML
+    void GoToEvent(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToHome(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/home.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToProduit(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Produit.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

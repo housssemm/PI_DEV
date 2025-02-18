@@ -1,5 +1,7 @@
 package Models;
 
+import Services.produitService;
+
 public class produit {
     private int id;
     private int idInvestisseur;
@@ -9,8 +11,9 @@ public class produit {
     private etat etat;
     private int categorieId;
     private int quantite;
+    private float prix;
     public produit() {}
-    public produit(int id,int idInvestisseur,String nom, String description, String image, etat etat, int categorieId,int quantite) {
+    public produit(int id,int idInvestisseur,String nom, String description, String image, etat etat, int categorieId,int quantite,float prix) {
         this.id = id;
         this.idInvestisseur = idInvestisseur;
         this.nom = nom;
@@ -19,8 +22,9 @@ public class produit {
         this.etat = etat;
         this.categorieId = categorieId;
         this.quantite = quantite;
+        this.prix = prix;
     }
-    public produit(int idInvestisseur,String nom, String description, String image, etat etat, int categorieId,int quantite) {
+    public produit(int idInvestisseur,String nom, String description, String image, etat etat, int categorieId,int quantite,float prix) {
         this.idInvestisseur = idInvestisseur;
         this.nom = nom;
         this.description = description;
@@ -28,6 +32,16 @@ public class produit {
         this.etat = etat;
         this.categorieId = categorieId;
         this.quantite = quantite;
+        this.prix = prix;
+    }
+    public produit(String nom, String description, String image, etat etat, int categorieId,int quantite,float prix) {
+        this.nom = nom;
+        this.description = description;
+        this.image = image;
+        this.etat = etat;
+        this.categorieId = categorieId;
+        this.quantite = quantite;
+        this.prix = prix;
     }
 
     public int getId() {
@@ -88,10 +102,19 @@ public class produit {
     public int getQuantite() {
         return quantite;
     }
-
     public void setQuantite(int quantite) {
+
         this.quantite = quantite;
     }
+
+    public float getPrix() {
+        return prix;
+    }
+
+    public void setPrix(float prix) {
+        this.prix = prix;
+    }
+
     @Override
     public String toString() {
         return "produit{" +
@@ -100,9 +123,10 @@ public class produit {
                 ", nom='" + nom + '\'' +
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
-                ", etat='" + etat + '\'' +
+                ", etat=" + etat +
                 ", categorieId=" + categorieId +
                 ", quantite=" + quantite +
+                ", prix=" + prix +
                 '}';
     }
 

@@ -176,6 +176,8 @@
 
 package Controllers;
 
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
@@ -319,6 +321,35 @@ public class Events {
             e.printStackTrace();
         }
     }
-
-
+//ROOT
+    @FXML
+    void GoToEvent(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToHome(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/home.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToProduit(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Produit.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

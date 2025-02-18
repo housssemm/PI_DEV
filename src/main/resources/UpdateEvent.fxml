@@ -71,7 +71,7 @@
                                 <Image url="@img/logor.png" />
                             </image>
                         </ImageView>
-                        <Button fx:id="home" mnemonicParsing="false" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
+                        <Button fx:id="home" mnemonicParsing="false" onAction="#GoToHome" prefHeight="67.0" prefWidth="298.0" style="-fx-background-color: F58400;" text="Home" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -103,7 +103,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="produit" mnemonicParsing="false" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
+                        <Button fx:id="produit" mnemonicParsing="false" onAction="#GoToProduit" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Produits" textFill="#fafafa">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -138,7 +138,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="event" mnemonicParsing="false" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
+                        <Button fx:id="event" mnemonicParsing="false" onAction="#GoToEvent" prefHeight="67.0" prefWidth="306.0" style="-fx-background-color: F58400;" text="Evénements" textFill="#f7f7f7">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -308,6 +308,70 @@
                   <HBox prefHeight="36.0" prefWidth="577.0" spacing="15" style="-fx-padding: 10 0 0 0;">
                      <children>
                         <Button fx:id="saveButton" onAction="#saveEvent" prefWidth="150" styleClass="primary" text="Enregistrer" translateX="500.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="10.0" prefHeight="752.0" prefWidth="1181.0" spacing="20" style="-fx-padding: 30; -fx-background-color: #f5f6fa;">
+               <children>
+                  <Label style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Mise à Jour d'un Evenement :" />
+                  <GridPane hgap="15" prefHeight="515.0" prefWidth="888.0" translateX="300.0" vgap="15">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" prefWidth="150.0" />
+                        <ColumnConstraints prefWidth="300.0" />
+                        <ColumnConstraints prefWidth="300.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                     <children>
+                        <Label styleClass="form-label" text="Titre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="titreField1" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label styleClass="form-label" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextArea fx:id="descriptionField1" prefRowCount="3" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label styleClass="form-label" text="Dates:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <children>
+                              <DatePicker fx:id="dateD1" promptText="Start Date" styleClass="date-picker" />
+                              <DatePicker fx:id="dateF1" promptText="End Date" styleClass="date-picker" />
+                           </children>
+                        </HBox>
+                        <Label styleClass="form-label" text="Lieu:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="lieuField1" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label styleClass="form-label" text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                           <children>
+                              <Button fx:id="uploadButton1" onAction="#uploadImage" prefHeight="36.0" prefWidth="206.0" styleClass="form-button" text="Upload Image" translateY="55.0" />
+                              <Label fx:id="idImgLabel1" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;" />
+                           </children>
+                        </VBox>
+                        <Label styleClass="form-label" text="Prix:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <children>
+                              <TextField fx:id="prixField1" prefHeight="50.0" prefWidth="120" styleClass="input-field" />
+                              <ChoiceBox fx:id="etatField1" prefWidth="160" styleClass="choice-box" />
+                           </children>
+                        </HBox>
+                        <Label styleClass="form-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                        <TextField fx:id="typeField1" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label styleClass="form-label" text="Organisateur:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                        <TextField fx:id="organisateurField1" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Label styleClass="form-label" text="Capacite Maximale:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                        <TextField fx:id="mxField1" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <ImageView fx:id="IMG1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                     </children>
+                  </GridPane>
+                  <HBox prefHeight="36.0" prefWidth="577.0" spacing="15" style="-fx-padding: 10 0 0 0;">
+                     <children>
+                        <Button fx:id="saveButton1" onAction="#saveEvent" prefWidth="150" styleClass="primary" text="Enregistrer" translateX="500.0" />
                      </children>
                   </HBox>
                </children>

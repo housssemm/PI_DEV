@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane stylesheets="@css/style2.css" xmlns="http://javafx.com/javafx/21.0.6" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.Gestion_Rec" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" 
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+            prefHeight="700.0" prefWidth="1000.0">
+    <children>
+        <!-- Update the main HBox to be responsive -->
+        <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" 
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <!-- Sidebar -->
+            <VBox minWidth="220.0" maxWidth="220.0" styleClass="bg" HBox.hgrow="NEVER">
+                <children>
+                    <!-- Make logo bigger and center it -->
+                    <VBox alignment="CENTER" minHeight="150">
+                        <ImageView fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@img/logor.png" />
+                            </image>
+                        </ImageView>
+                    </VBox>
+
+                    <Separator prefWidth="200.0" />
+                    
+                    <!-- Update all navigation buttons to have consistent styling -->
+                    <Button fx:id="home" styleClass="nav-button" text="Home">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-home" iconSize="20"/>
+                        </graphic>
+                    </Button>
+
+                    <Separator prefWidth="200.0" />
+                    <Button fx:id="seance" styleClass="nav-button" text="Séances">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-calendar-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    
+                    <Separator prefWidth="200.0" />
+                    
+                    <Button fx:id="produit" styleClass="nav-button" text="Produits">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-shopping-cart" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    
+                    <Separator prefWidth="200.0" />
+                    
+                    <Button fx:id="offre" styleClass="nav-button" text="Offres">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-gift" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    
+                    <Separator prefWidth="200.0" />
+                    
+                    <Button fx:id="event" styleClass="nav-button" text="Evénements">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-calendar-check" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    
+                    <Separator prefWidth="200.0" />
+                    
+                    <Button fx:id="reclamation" styleClass="nav-button, active" text="Reclamations">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-comment-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Separator prefWidth="200.0" />
+
+                    <Button fx:id="reclamationU" styleClass="nav-button, active" text="User Reclamations">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-comment-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Separator prefWidth="200.0" />
+                    
+                    <Button fx:id="parametre" styleClass="nav-button" text="Paramètres">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-cog" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    
+                    <Separator prefWidth="200.0" />
+                    
+                    <!-- Logout button at the bottom -->
+                    <Region VBox.vgrow="ALWAYS" />
+                    
+                    <Button fx:id="logout" styleClass="nav-button, logout-button">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-sign-out-alt" iconSize="24"/>
+                        </graphic>
+                    </Button>
+                </children>
+            </VBox>
+            
+            <!-- Main Content -->
+            <VBox HBox.hgrow="ALWAYS">
+                <!-- Top Bar -->
+                <VBox styleClass="modern-top-bar" minHeight="70.0" maxHeight="70.0">
+                    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar-content">
+                        <padding>
+                            <Insets right="30" left="30"/>
+                        </padding>
+                        <!-- Left side with icon and title -->
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <StackPane styleClass="header-icon-container">
+                                <FontIcon iconLiteral="fas-clipboard-list" iconSize="24" styleClass="header-icon"/>
+                            </StackPane>
+                            <VBox spacing="2">
+                                <Label text="Gestion des Réclamations" styleClass="modern-header-title"/>
+                                <Label text="Administration et suivi" styleClass="header-subtitle"/>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Spacer -->
+                        <Region HBox.hgrow="ALWAYS"/>
+                        
+                        <!-- Search container -->
+                        <HBox styleClass="modern-search-container" alignment="CENTER_LEFT">
+                            <children>
+                                <StackPane styleClass="search-icon-container">
+                                    <FontIcon fx:id="searchIcon" iconLiteral="fas-search" iconSize="16" styleClass="search-icon"/>
+                                </StackPane>
+                                <TextField fx:id="search" promptText="Rechercher une réclamation..." 
+                                         styleClass="modern-search-field"/>
+                            </children>
+                        </HBox>
+                        
+                        <!-- Action Buttons -->
+                        <Button fx:id="refreshButton" styleClass="modern-refresh-button">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-sync-alt" iconSize="16"/>
+                            </graphic>
+                        </Button>
+                        <Button styleClass="modern-profile-button">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-user-circle" iconSize="20"/>
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </VBox>
+                
+                <!-- Content Area -->
+                <VBox styleClass="content-area" spacing="20" VBox.vgrow="ALWAYS">
+                    <!-- Form Card -->
+                    <VBox styleClass="form-card" spacing="15">
+                        <padding>
+                            <Insets top="20" right="30" bottom="20" left="30"/>
+                        </padding>
+                        <Label text="Nouvelle Réclamation" styleClass="form-title"/>
+                        <Separator/>
+                        
+                        <GridPane hgap="20" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="50"/>
+                                <ColumnConstraints percentWidth="50"/>
+                            </columnConstraints>
+                            
+                            <!-- Left Column -->
+                            <VBox spacing="10" GridPane.columnIndex="0">
+                                <Label fx:id="descriptionLabel" text="Description" styleClass="field-label"/>
+                                <TextArea fx:id="descriptionField" promptText="Entrez la description..." 
+                                          prefRowCount="3" wrapText="true" styleClass="text-area-field"/>
+                                
+                                <Label fx:id="typeLabel" text="Type de Réclamation" styleClass="field-label"/>
+                                <ComboBox fx:id="typeComboBox" promptText="Sélectionnez le type" 
+                                         styleClass="modern-combo-box" maxWidth="Infinity">
+                                    <HBox.margin>
+                                        <Insets top="5" bottom="5"/>
+                                    </HBox.margin>
+                                </ComboBox>
+                            </VBox>
+                            
+                            <!-- Right Column -->
+                            <VBox spacing="15" GridPane.columnIndex="1" styleClass="form-field-vbox">
+                                <!-- Coach ID field -->
+                                <VBox spacing="5" styleClass="form-field-group">
+                                    <Label fx:id="coachIdLabel" text="ID Coach" styleClass="field-label">
+                                        <graphic>
+                                            <FontIcon iconLiteral="fas-user-tie" iconSize="16" styleClass="field-icon"/>
+                                        </graphic>
+                                    </Label>
+                                    <TextField fx:id="coachIdField" promptText="Entrez l'ID du coach" 
+                                              styleClass="text-input-field, coach-id-field"/>
+                                </VBox>
+                                
+                                <!-- Adherent ID field -->
+                                <VBox spacing="5" styleClass="form-field-group">
+                                    <Label fx:id="adherentIdLabel" text="ID Adherent" styleClass="field-label">
+                                        <graphic>
+                                            <FontIcon iconLiteral="fas-user" iconSize="16" styleClass="field-icon"/>
+                                        </graphic>
+                                    </Label>
+                                    <TextField fx:id="adherentIdField" promptText="Entrez l'ID de l'adhérent" 
+                                              styleClass="text-input-field"/>
+                                </VBox>
+                                
+                                <!-- Info about automatic date -->
+                                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="info-box">
+                                    <FontIcon iconLiteral="fas-info-circle" iconSize="16" styleClass="info-icon"/>
+                                    <Label text="La date sera automatiquement ajoutée" styleClass="info-text"/>
+                                </HBox>
+                            </VBox>
+                        </GridPane>
+                        
+                        <!-- Buttons Container -->
+                        <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="button-container">
+                            <Button fx:id="clearButton" text="Effacer" styleClass="clear-button">
+                                <graphic>
+                                    <FontIcon iconLiteral="fas-eraser" iconSize="16" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+                            <Button fx:id="addButton" text="Ajouter" styleClass="add-button">
+                                <graphic>
+                                    <FontIcon iconLiteral="fas-plus-circle" iconSize="16" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+                            <Button fx:id="updateButton" text="Modifier" styleClass="update-button">
+                                <graphic>
+                                    <FontIcon iconLiteral="fas-edit" iconSize="16" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+                            <Button fx:id="deleteButton" text="Supprimer" styleClass="delete-button">
+                                <graphic>
+                                    <FontIcon iconLiteral="fas-trash-alt" iconSize="16" styleClass="button-icon"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                    </VBox>
+                    
+                    <!-- Table Card -->
+                    <VBox styleClass="modern-table-card" VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets top="25" right="25" bottom="25" left="25"/>
+                        </padding>
+                        
+                        <HBox alignment="CENTER_LEFT" spacing="15" styleClass="modern-table-header">
+                            <FontIcon iconLiteral="fas-list-alt" iconSize="24" styleClass="table-icon"/>
+                            <VBox spacing="5">
+                                <Label text="Liste des Réclamations" styleClass="modern-table-title"/>
+                                <Label text="Gérez et suivez toutes les réclamations" styleClass="table-subtitle"/>
+                            </VBox>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="exportButton" styleClass="modern-export-button">
+                                <graphic>
+                                    <FontIcon iconLiteral="fas-file-export" iconSize="16"/>
+                                </graphic>
+                            </Button>
+                            <Button fx:id="refreshTableButton" styleClass="modern-refresh-button">
+                                <graphic>
+                                    <FontIcon iconLiteral="fas-sync-alt" iconSize="16"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        
+                        <TableView fx:id="reclamationTable" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="60" styleClass="centered-column"/>
+                                <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250"/>
+                                <TableColumn fx:id="typeColumn" text="Type" prefWidth="120" styleClass="centered-column"/>
+                                <TableColumn fx:id="coachColumn" text="Coach ID" prefWidth="100" styleClass="centered-column"/>
+                                <TableColumn fx:id="adherentColumn" text="Adherent ID" prefWidth="100" styleClass="centered-column"/>
+                                <TableColumn fx:id="dateColumn" text="Date" prefWidth="120" styleClass="centered-column"/>
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="200" styleClass="actions-column"/>
+                            </columns>
+                            <placeholder>
+                                <VBox alignment="CENTER" spacing="10">
+                                    <FontIcon iconLiteral="fas-inbox" iconSize="48" styleClass="empty-icon"/>
+                                    <Label text="Aucune réclamation trouvée" styleClass="empty-text"/>
+                                    <Label text="Les réclamations apparaîtront ici" styleClass="empty-subtext"/>
+                                </VBox>
+                            </placeholder>
+                        </TableView>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </children>
+</AnchorPane>

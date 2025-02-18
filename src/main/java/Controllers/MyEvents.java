@@ -225,4 +225,14 @@ void updateEvent(Evenement event) throws IOException {
             e.printStackTrace();
         }
     }
+    @FXML
+    void GoToRec(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UserReclamation.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

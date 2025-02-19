@@ -22,8 +22,10 @@ public class MainFx extends Application {
 //        Parent root = FXMLLoader.load(getClass().getResource("/Coach.fxml"));
        // Parent root = FXMLLoader.load(getClass().getResource("/adherents.fxml"));
         // Parent root = FXMLLoader.load(getClass().getResource("/creaters.fxml"));
-                   Parent root = FXMLLoader.load(getClass().getResource("/SigninUp.fxml"));
+//                   Parent root = FXMLLoader.load(getClass().getResource("/SigninUp.fxml"));
 
+
+        Parent root = FXMLLoader.load(getClass().getResource("/AddOffre.fxml"));
         // Set up the scene and stage
         Scene scene = new Scene(root);
         primaryStage.setTitle("Coachini");

@@ -62,7 +62,7 @@
 <!--    </children>-->
 <!--</AnchorPane>-->
 
-<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddOffreProduit">
+<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style3.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AddOffreProduit">
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>

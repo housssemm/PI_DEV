@@ -5,41 +5,57 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
-public class Home {
+import java.io.IOException;
 
-    @FXML
-    private Button event;
+public class AddOffre {
 
     @FXML
-    private Button home;
+    private Button offreCoachButton;
 
     @FXML
-    private ImageView isearch;
+    private Button offreProduitButton;
 
     @FXML
-    private ImageView logout;
+    private Button offersButton;
 
     @FXML
-    private Button offre;
+    private void handleOffreCoachButtonAction(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AddOffreCoach.fxml"));
+            Stage stage = (Stage) offreCoachButton.getScene().getWindow();
+            stage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Optionally, show an alert to the user
+        }
+    }
 
     @FXML
-    private Button parametre;
+    private void handleOffreProduitButtonAction(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AddOffreProduit.fxml"));
+            Stage stage = (Stage) offreProduitButton.getScene().getWindow();
+            stage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Optionally, show an alert to the user
+        }
+    }
 
     @FXML
-    private Button produit;
-
-    @FXML
-    private Button reclamation;
-
-    @FXML
-    private Button seance;
-
-    @FXML
-    private TextField search;
-//ROOT
+    private void handleOffersButtonAction(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/listeOffer.fxml"));
+            Stage stage = (Stage) offersButton.getScene().getWindow();
+            stage.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Optionally, show an alert to the user
+        }
+    }
+    //ROOT
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
         try {
@@ -100,4 +116,5 @@ public class Home {
             e.printStackTrace();
         }
     }
+
 }

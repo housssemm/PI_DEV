@@ -385,4 +385,14 @@ public class ProduitController {
             e.printStackTrace();
         }
     }
+    @FXML
+    void GoToOffre(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddOffre.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -29,7 +29,6 @@ public class MyDb {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            System.out.println(" ___ Connection Failed ___");
         }
 
 

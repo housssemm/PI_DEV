@@ -100,6 +100,7 @@ public class AddEvenement {
         idEtat.getItems().addAll("ACTIF", "EXPIRE");
         idEtat.setValue("Etat:");
     }
+
     public void handleButtonClick(ActionEvent event) {
         try {
             String title = idTitle.getText().trim();
@@ -248,12 +249,14 @@ public class AddEvenement {
         idImgLabel.setText("Aucune image sélectionnée");
         imageFile = null;
     }
+
     @FXML
     public void goToMyEvent(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MyEvents.fxml"));
         Parent root = loader.load();
         idTitle.getScene().setRoot(root);
     }
+
     //ROOT
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
@@ -265,6 +268,7 @@ public class AddEvenement {
             e.printStackTrace();
         }
     }
+
     @FXML
     void GoToHome(ActionEvent actionEvent) {
         try {
@@ -275,6 +279,7 @@ public class AddEvenement {
             e.printStackTrace();
         }
     }
+
     @FXML
     void GoToProduit(ActionEvent actionEvent) {
         try {
@@ -285,6 +290,7 @@ public class AddEvenement {
             e.printStackTrace();
         }
     }
+
     @FXML
     void GoToSeance(ActionEvent actionEvent) {
         try {
@@ -295,6 +301,7 @@ public class AddEvenement {
             e.printStackTrace();
         }
     }
+
     @FXML
     void GoToRec(ActionEvent actionEvent) {
         try {
@@ -306,8 +313,17 @@ public class AddEvenement {
         }
     }
 
+    @FXML
+    void GoToOffre(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddOffre.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-
 
 
 

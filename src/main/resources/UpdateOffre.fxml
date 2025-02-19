@@ -2,18 +2,70 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Events">
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<?import javafx.geometry.Insets?>-->
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.ChoiceBox?>-->
+<!--<?import javafx.scene.control.DatePicker?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.control.TextField?>-->
+<!--<?import javafx.scene.layout.AnchorPane?>-->
+<!--<?import javafx.scene.layout.ColumnConstraints?>-->
+<!--<?import javafx.scene.layout.GridPane?>-->
+<!--<?import javafx.scene.layout.HBox?>-->
+<!--<?import javafx.scene.layout.RowConstraints?>-->
+<!--<?import javafx.scene.layout.VBox?>-->
+<!--<?import javafx.scene.text.Font?>-->
+<!--<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@css/style3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UpdateOfferController">-->
+<!--    <children>-->
+<!--        <VBox alignment="CENTER" spacing="20.0" layoutX="100.0" layoutY="50.0">-->
+<!--            <children>-->
+<!--                <Label text="Mettre à jour l'Offre" />-->
+<!--                <GridPane hgap="10" vgap="10">-->
+<!--                    <children>-->
+<!--                        <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0" />-->
+<!--                        <TextField fx:id="nomField" GridPane.rowIndex="0" GridPane.columnIndex="1" />-->
+<!--                        <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" />-->
+<!--                        <TextField fx:id="descriptionField" GridPane.rowIndex="1" GridPane.columnIndex="1" />-->
+<!--                        <Label text="Durée de validité:" GridPane.rowIndex="2" GridPane.columnIndex="0" />-->
+<!--                        <DatePicker fx:id="dureeValiditeField" GridPane.rowIndex="2" GridPane.columnIndex="1" />-->
+<!--                        <Label text="État:" GridPane.rowIndex="3" GridPane.columnIndex="0" />-->
+<!--                        <ChoiceBox fx:id="etatField" GridPane.rowIndex="3" GridPane.columnIndex="1" />-->
+<!--                        <Label text="ID:" GridPane.rowIndex="4" GridPane.columnIndex="0" />-->
+<!--                        <TextField fx:id="idField" GridPane.rowIndex="4" GridPane.columnIndex="1" />-->
+<!--                        <Label text="Nouveau Prix/Tarif:" GridPane.rowIndex="5" GridPane.columnIndex="0" />-->
+<!--                        <TextField fx:id="nouveauPrixTarifField" GridPane.rowIndex="5" GridPane.columnIndex="1" />-->
+<!--                        <Label text="Quantité Max/Réservation Max:" GridPane.rowIndex="6" GridPane.columnIndex="0" />-->
+<!--                        <TextField fx:id="quantiteReservationMaxField" GridPane.rowIndex="6" GridPane.columnIndex="1" />-->
+<!--                    </children>-->
+<!--                </GridPane>-->
+<!--                <HBox spacing="10.0">-->
+<!--                    <children>-->
+<!--                        <Button fx:id="saveButton" mnemonicParsing="false" text="Enregistrer" onAction="#handleSaveButtonAction" />-->
+<!--                        <Button fx:id="cancelButton" mnemonicParsing="false" text="Annuler" onAction="#handleCancelButtonAction" />-->
+<!--                    </children>-->
+<!--                </HBox>-->
+<!--            </children>-->
+<!--        </VBox>-->
+<!--    </children>-->
+<!--</AnchorPane>-->
+
+<AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.UpdateOfferController">
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
@@ -201,12 +253,51 @@
         </VBox>
 
 
-        <ScrollPane hbarPolicy="NEVER" layoutX="457.0" layoutY="165.0" prefHeight="635.0" prefWidth="894.0" vbarPolicy="NEVER">
-            <content>
-                <VBox fx:id="eventList" spacing="20" style="-fx-background-color: #f5f5f5; -fx-padding: 20;" />
-            </content>
-        </ScrollPane>
-      <Label layoutX="317.0" layoutY="92.0" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Liste des Événements :" />
-
+        <AnchorPane layoutX="481.0" layoutY="67.0" prefHeight="600.0" prefWidth="800.0" stylesheets="@css/style3.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+            <children>
+                <VBox alignment="CENTER" layoutX="100.0" layoutY="50.0" spacing="20.0">
+                    <children>
+                        <Label text="Mettre à jour l'Offre" />
+                        <GridPane hgap="10" vgap="10">
+                            <children>
+                                <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <TextField fx:id="descriptionField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label text="Durée de validité:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <DatePicker fx:id="dureeValiditeField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <Label text="État:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <ChoiceBox fx:id="etatField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <Label text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <TextField fx:id="idField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                <Label text="Nouveau Prix/Tarif:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                <TextField fx:id="nouveauPrixTarifField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <Label text="Quantité Max/Réservation Max:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                <TextField fx:id="quantiteReservationMaxField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                            </children>
+                     <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                        </GridPane>
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Enregistrer" />
+                                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Annuler" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
     </children>
 </AnchorPane>

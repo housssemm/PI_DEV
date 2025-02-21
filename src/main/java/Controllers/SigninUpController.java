@@ -555,6 +555,7 @@ public class SigninUpController  implements Initializable {
                 } else {
                     GoToHome(actionEvent);
                 }
+
             } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");

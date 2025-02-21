@@ -18,14 +18,14 @@ public class MainFx extends Application {
         // Load FXML file (adjust path to match your FXML location)
 
 
-        //Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
-//        Parent root = FXMLLoader.load(getClass().getResource("/Coach.fxml"));
+      //  Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
+      // Parent root = FXMLLoader.load(getClass().getResource("/Coach.fxml"));
        // Parent root = FXMLLoader.load(getClass().getResource("/adherents.fxml"));
         // Parent root = FXMLLoader.load(getClass().getResource("/creaters.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("/SigninUp.fxml"));
+          Parent root = FXMLLoader.load(getClass().getResource("/SigninUp.fxml"));
 
 
-      //  Parent root = FXMLLoader.load(getClass().getResource("/AddOffre.fxml"));
+        // Parent root = FXMLLoader.load(getClass().getResource("/MyEvents.fxml"));
         // Set up the scene and stage
         Scene scene = new Scene(root);
         primaryStage.setTitle("Coachini");

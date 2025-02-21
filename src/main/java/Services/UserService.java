@@ -147,4 +147,26 @@ public class UserService {
         }
 
     }
+    public User getUserByEmail(String email) {
+        User user = null;
+        String query = "SELECT * FROM user WHERE email = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                user = new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nom"),
+                        resultSet.getString("prenom"),
+                        resultSet.getString("image"),
+                        resultSet.getString("email"),
+                        resultSet.getString("MDP")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
 }

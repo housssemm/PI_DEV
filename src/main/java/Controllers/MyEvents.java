@@ -132,8 +132,19 @@ void loadEvents() {
                 }
             });
 
+            // Mes Particpent button
+            Button MYPARTICPENT = new Button("Mes Particpent");
+            MYPARTICPENT.getStyleClass().add("particpent-button");
+            MYPARTICPENT.setOnAction(e -> {
+                try {
+                    particpentEvent(event);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
             // Add buttons to the HBox
-            buttonBox.getChildren().addAll(updateButton, deleteButton);
+            buttonBox.getChildren().addAll(updateButton, deleteButton ,MYPARTICPENT);
 
             // Add the button box to textContent
             textContent.getChildren().add(buttonBox);
@@ -184,6 +195,27 @@ void updateEvent(Evenement event) throws IOException {
     stage.setTitle("Modifier l'événement");
     stage.show();
 }
+
+    @FXML
+    void particpentEvent(Evenement event) throws IOException {
+        // Charger la vue de modification d'événement
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MesParticpent.fxml"));
+        Parent root = loader.load();
+
+        // Récupérer le contrôleur et lui passer l'événement à modifier
+        MesParticpent mesParticpent = loader.getController();
+
+        // Passer l'événement sélectionné au contrôleur
+        if (event != null) {
+            mesParticpent.setEventData(event, this); // Make sure setEventData() accepts Evenement
+        }
+
+        // Récupérer la scène de l'événement ActionEvent et changer le root de la scène actuelle
+        Stage stage = (Stage) eventList.getScene().getWindow();  // Assurez-vous que vous utilisez la scène de l'événement
+        stage.setScene(new Scene(root));
+        stage.setTitle("Mes Particpent");
+        stage.show();
+    }
 //ROOT
     @FXML
     void GoToEvent(ActionEvent actionEvent) {

@@ -4,6 +4,7 @@ import Models.*;
 import Services.*;
 import Services.UserService;
 import Utils.MyDb;
+import Utils.Session;
 import javafx.event.ActionEvent; // Utilisez ceci pour JavaFX
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -489,32 +490,72 @@ public class SigninUpController  implements Initializable {
 
 
     private UserService userService = new UserService(MyDb.getInstance().getConn());
-    public void login(ActionEvent actionEvent){
-    Alert alert;
+//    public void login(ActionEvent actionEvent){
+//    Alert alert;
+//
+//        String email = si_email.getText();
+//        String password = si_mdp.getText();
+//
+//        if (email.isEmpty() || password.isEmpty()) {
+//            alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Message d'erreur");
+//            alert.setHeaderText(null);
+//            alert.setContentText( "Champs vides ! veuillez remplir tous les champs !");
+//            alert.showAndWait();
+//        } else {
+//            boolean isAuthenticated = userService.login(email, password);
+//
+//            if (isAuthenticated) {
+//                alert = new Alert(Alert.AlertType.INFORMATION);
+//                alert.setTitle("Connexion réussie");
+//                alert.setHeaderText(null);
+//                alert.setContentText("Bienvenue!");
+//                alert.showAndWait();
+//
+//                // Charger une nouvelle scène ici (ex: Page d'accueil)
+//                GoToHome(actionEvent);
+//            } else {
+//
+//                alert = new Alert(Alert.AlertType.ERROR);
+//                alert.setTitle("Message d'erreur");
+//                alert.setHeaderText(null);
+//                alert.setContentText("Échec de connexion Email ou mot de passe incorrect !");
+//                alert.showAndWait();
+//            }
+//        }
+//    }
 
+
+    public void login(ActionEvent actionEvent) {
+        Alert alert;
         String email = si_email.getText();
         String password = si_mdp.getText();
-
         if (email.isEmpty() || password.isEmpty()) {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText( "Champs vides ! veuillez remplir tous les champs !");
+            alert.setContentText("Champs vides ! veuillez remplir tous les champs !");
             alert.showAndWait();
         } else {
             boolean isAuthenticated = userService.login(email, password);
-
             if (isAuthenticated) {
+                // Set the current user in the session
+                User currentUser = userService.getUserByEmail(email);
+                Session.getInstance().setCurrentUser(currentUser);
+
                 alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Connexion réussie");
                 alert.setHeaderText(null);
-                alert.setContentText("Bienvenue!");
+                alert.setContentText("Bienvenue, " + currentUser.getNom() + "!");
                 alert.showAndWait();
 
-                // Charger une nouvelle scène ici (ex: Page d'accueil)
-                GoToHome(actionEvent);
+                // Load the appropriate home page based on the user's ID
+                if (currentUser.getId() == 1) {
+                    GoToHomeAdmin(actionEvent);
+                } else {
+                    GoToHome(actionEvent);
+                }
             } else {
-
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
@@ -526,6 +567,15 @@ public class SigninUpController  implements Initializable {
     void GoToHome(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/home.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    void GoToHomeAdmin(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
             Parent root = loader.load();
             ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {

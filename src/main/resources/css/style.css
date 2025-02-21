@@ -106,6 +106,18 @@
     -fx-background-color: #FF7364;
 }
 
+.particpent-button {
+    -fx-background-color: #6cc4f5;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.particpent-button:hover {
+    -fx-background-color: #51baf5;
+}
+
 
 .form-label {
     -fx-text-fill: #2c3e50;

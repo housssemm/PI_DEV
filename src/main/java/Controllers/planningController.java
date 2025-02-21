@@ -1,7 +1,9 @@
 package Controllers;
 
 import Models.Seance;
+import Services.CreateurEvenementService;
 import Services.SeanceService;
+import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -321,14 +323,27 @@ public class planningController implements Initializable {
         dialog.showAndWait();
     }
     //ROOT
+    private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
+            if (createurEvenementService.isCreateurEvenement(id)) {
+                path = "/AddEvenement.fxml";
+            } else {
+                path = "/Events.fxml";
+            }
+
+            // Now load the determined path
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
-            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+            ((Node) actionEvent.getSource()).getScene().setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
     @FXML

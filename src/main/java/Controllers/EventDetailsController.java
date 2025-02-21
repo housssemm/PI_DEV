@@ -1,9 +1,12 @@
 package Controllers;
 
 import Models.Evenement;
+import Services.CreateurEvenementService;
+import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -68,14 +71,27 @@ public class EventDetailsController {
         }
     }
 //ROOT
+private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
+            if (createurEvenementService.isCreateurEvenement(id)) {
+                path = "/AddEvenement.fxml";
+            } else {
+                path = "/Events.fxml";
+            }
+
+            // Now load the determined path
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
-            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+            ((Node) actionEvent.getSource()).getScene().setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
     @FXML

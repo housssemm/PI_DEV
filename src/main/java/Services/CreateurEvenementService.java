@@ -184,5 +184,21 @@ public class CreateurEvenementService {
         }
         return null;
     }
+    public boolean isCreateurEvenement(int id) {
+        String sql = "SELECT COUNT(*) FROM createurevenement WHERE id = ?";
 
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // If count > 0, the user is a createur evenement
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

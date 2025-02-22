@@ -185,11 +185,11 @@ public class AddEvenement {
                     return;
                 }
             }
-
+            int idCreateurEvenement = Session.getCurrentUser().getId();
             // Création de l'événement
             Evenement evenement = new Evenement(
                     title, description, dateDebut, dateFin, lieu, imageBytes, prix,
-                    etatEnum, type, organisateur, capaciteMaximale
+                    etatEnum, type, organisateur, capaciteMaximale,idCreateurEvenement
             );
 
             // Sauvegarde dans la base de données
@@ -220,13 +220,7 @@ public class AddEvenement {
     }
 
 
-    @FXML
-    void goToEventList(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
-        Parent root = loader.load();
-        idTitle.getScene().setRoot(root);
 
-    }
 
     // Utility method to show alert messages
     private void showAlert(AlertType type, String title, String message) {
@@ -253,35 +247,17 @@ public class AddEvenement {
         imageFile = null;
     }
 
-    @FXML
-    public void goToMyEvent(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MyEvents.fxml"));
-        Parent root = loader.load();
-        idTitle.getScene().setRoot(root);
-    }
 
     //ROOT
-    private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
+
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
-        int id = Session.getInstance().getCurrentUser().getId();
-        String path = "";
-
         try {
-            if (createurEvenementService.isCreateurEvenement(id)) {
-                path = "/AddEvenement.fxml";
-            } else {
-                path = "/Events.fxml";
-            }
-
-            // Now load the determined path
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = loader.load();
-            ((Node) actionEvent.getSource()).getScene().setRoot(root);
-
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 

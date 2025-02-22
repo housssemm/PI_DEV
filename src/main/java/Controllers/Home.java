@@ -56,27 +56,15 @@ public class Home {
 //            e.printStackTrace();
 //        }
 //    }
-private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
+
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
-        int id = Session.getInstance().getCurrentUser().getId();
-        String path = "";
-
         try {
-            if (createurEvenementService.isCreateurEvenement(id)) {
-                path = "/AddEvenement.fxml";
-            } else {
-                path = "/Events.fxml";
-            }
-
-            // Now load the determined path
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = loader.load();
-            ((Node) actionEvent.getSource()).getScene().setRoot(root);
-
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
     @FXML

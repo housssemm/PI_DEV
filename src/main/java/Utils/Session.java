@@ -4,7 +4,7 @@ import Models.User;
 
 public class Session {
     private static Session instance;
-    private User currentUser;
+    private static User currentUser;
 
     private Session() {
         // Private constructor to prevent instantiation
@@ -17,7 +17,7 @@ public class Session {
         return instance;
     }
 
-    public User getCurrentUser() {
+    public static User getCurrentUser() {
         return currentUser;
     }
 

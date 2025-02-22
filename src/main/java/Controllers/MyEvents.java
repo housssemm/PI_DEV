@@ -5,11 +5,10 @@ import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 
 
 import Models.Evenement;
@@ -42,14 +41,14 @@ public class MyEvents {
 
 void loadEvents() {
     try {
-        List<Evenement> events = evenementService.getAll();  // Fetch all events
+        List<Evenement> events = evenementService.myEvents(Session.getCurrentUser().getId());  // Fetch all events
         for (Evenement event : events) {
             // Create main card container
             VBox eventCard = new VBox();
             eventCard.getStyleClass().add("event-card");
             eventCard.setSpacing(10);
             eventCard.setPadding(new Insets(15));
-            eventCard.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
+            eventCard.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 0);");
 
             // Image section
             ImageView imageView = new ImageView();
@@ -168,14 +167,47 @@ void loadEvents() {
 }
 
 
-    private void deleteEvent(Evenement event) {
-        try {
-            evenementService.delete(event.getId()); // Supprime de la base de données
-            eventList.getChildren().clear(); // Efface l'affichage
-            loadEvents(); // Recharge la liste mise à jour
-        } catch (Exception e) {
-            e.printStackTrace();
+//    private void deleteEvent(Evenement event) {
+//        try {
+//            evenementService.delete(event.getId()); // Supprime de la base de données
+//            eventList.getChildren().clear(); // Efface l'affichage
+//            loadEvents(); // Recharge la liste mise à jour
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+private void deleteEvent(Evenement event) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirmation de suppression");
+    alert.setHeaderText("Êtes-vous sûr de vouloir supprimer cet événement ?");
+    alert.setContentText("Titre de l'événement: " + event.getTitre());
+
+    ButtonType buttonTypeYes = new ButtonType("Oui");
+    ButtonType buttonTypeNo = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+    alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+    alert.showAndWait().ifPresent(response -> {
+        if (response == buttonTypeYes) {
+            try {
+                evenementService.delete(event.getId()); // Supprime de la base de données
+                eventList.getChildren().clear(); // Efface l'affichage
+                loadEvents(); // Recharge la liste mise à jour
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "L'événement a été supprimé avec succès.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur s'est produite lors de la suppression de l'événement.");
+            }
         }
+    });
+}
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 @FXML
@@ -220,27 +252,16 @@ void updateEvent(Evenement event) throws IOException {
         stage.show();
     }
 //ROOT
-private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
+
+
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
-        int id = Session.getInstance().getCurrentUser().getId();
-        String path = "";
-
         try {
-            if (createurEvenementService.isCreateurEvenement(id)) {
-                path = "/AddEvenement.fxml";
-            } else {
-                path = "/Events.fxml";
-            }
-
-            // Now load the determined path
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = loader.load();
-            ((Node) actionEvent.getSource()).getScene().setRoot(root);
-
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
     @FXML

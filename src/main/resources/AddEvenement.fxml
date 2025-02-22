@@ -312,11 +312,8 @@
 <!--                        <Button fx:id="idButton" onAction="#handleButtonClick" styleClass="primary" text="Enregistrer" />-->
 <!--                        <Button fx:id="idButton2" onAction="#goToEventList" styleClass="form-button secondary" text="Consulter les Evenements" />-->
 <!--                     </HBox>-->
-                                 <HBox prefHeight="36.0" prefWidth="577.0" spacing="15" style="-fx-padding: 10 0 0 0;">
-                                    <Button fx:id="idButton" onAction="#handleButtonClick" styleClass="primary" text="Enregistrer" translateX="470.0" />
-
-                                    <Button fx:id="idButton2" onAction="#goToEventList" styleClass="secondary" text="Consulter les Evenements" translateX="470.0" />
-                                    <Button fx:id="idButton3" onAction="#goToMyEvent" styleClass="tr" text="Consulter mes Evenements" translateX="470.0" />
+                                 <HBox prefHeight="50.0" prefWidth="1146.0" spacing="15" style="-fx-padding: 10 0 0 0;">
+                                    <Button fx:id="idButton" onAction="#handleButtonClick" prefHeight="38.0" prefWidth="165.0" styleClass="primary" text="Enregistrer" translateX="500.0" />
                                  </HBox>
                   </VBox>
                </children>

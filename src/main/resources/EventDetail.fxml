@@ -201,7 +201,7 @@
             </children>
         </VBox>
 <!--    layoutY="236.0"-->
-    <VBox fx:id="cardContainer" layoutX="400.0" layoutY="149.0" prefHeight="309.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
+    <VBox fx:id="cardContainer" layoutX="400.0" layoutY="149.0" prefHeight="348.0" prefWidth="390.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
         <children>
             <ImageView fx:id="img" fitWidth="350.0" preserveRatio="true" style="-fx-background-radius: 15 15 0 0; -fx-cursor: hand;">
                 <VBox.margin>
@@ -270,6 +270,9 @@
                     </graphic>
                 </Label>
             </HBox>
+
+
+            <Button fx:id="btnRes" mnemonicParsing="false" onAction="#handleReservationClick" styleClass="btnRes" text="Reserver Ma Place" translateX="100.0" translateY="10.0" />
         </children>
     </VBox>
       <Separator layoutX="935.0" layoutY="196.0" orientation="VERTICAL" prefHeight="426.0" prefWidth="14.0" />

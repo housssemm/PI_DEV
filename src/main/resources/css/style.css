@@ -263,5 +263,14 @@
 
 
 
+.btnRes {
+    -fx-background-color: #FE8578;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
 
-
+}
+.btnRes:hover {
+    -fx-background-color: #FF7364;
+}

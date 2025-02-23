@@ -7,6 +7,7 @@ import Models.etatPaiement;
 import Utils.MyDb;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,11 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
     }
    @Override
     public boolean create(ParticipantEvenement obj) throws Exception {
+       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+       String formattedDate = dateFormat.format(obj.getDateInscription());
         String sql="insert into participantevenement(evenementId,userId,date_inscription,etat_paiement)" +
                 " values('"+obj.getIdEvenement()+"','"+obj.getIdParticipant()+"'," +
-                "'"+obj.getDateInscription() +"','"+obj.getEtatPaiement()+"')";
+                "'"+formattedDate +"','"+obj.getEtatPaiement()+"')";
         try{
         Statement st = conn.createStatement();
         int res = st.executeUpdate(sql);

@@ -18,7 +18,7 @@ public class User {
 
     }
     public User( String nom, String prenom, String image, String email) {
-        this.id = id;
+
         this.nom = nom;
         this.prenom = prenom;
         this.image = image;

@@ -17,6 +17,15 @@ public class User {
         this.MDP = MDP;
 
     }
+    public User( String nom, String prenom, String image, String email) {
+
+        this.nom = nom;
+        this.prenom = prenom;
+        this.image = image;
+        this.email = email;
+
+
+    }
 
     public User(String nom, String prenom, String image, String email, String MDP) {
         this.nom = nom;

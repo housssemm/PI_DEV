@@ -198,7 +198,8 @@ private void sendEmail(String recipientEmail, Evenement event) {
     // Mailjet API credentials
 //    final String apiKey = "your-mailjet-api-key";
 //    final String apiSecret = "your-mailjet-api-secret";
-
+    final String apiKey = "7d6d1541371e53bbe4db88b129dbbdf3";
+    final String apiSecret = "8a79a0d0bdef1ec3122fe35e642bad4b";
     // Initialize Mailjet client using the builder pattern
     ClientOptions options = ClientOptions.builder()
             .apiKey(apiKey)

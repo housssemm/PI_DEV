@@ -8,10 +8,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -201,27 +198,22 @@
                 </HBox>
             </children>
         </VBox>
-      <VBox fx:id="cardContainer" layoutX="410.0" layoutY="159.0" prefHeight="109.0" prefWidth="894.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-padding: 20;">
-         <children>
-            <GridPane hgap="10" vgap="8">
-               <columnConstraints>
-                  <ColumnConstraints prefWidth="100" />
-                  <ColumnConstraints />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
-               <children>
-                  <Label fx:id="locationLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" />
-                  <Label fx:id="dateLabel" style="-fx-text-fill: #333333; -fx-font-weight: 500;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="priceLabel" style="-fx-text-fill: #2196F3; -fx-font-weight: 700;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               </children>
-            </GridPane>
-         </children>
-      </VBox>
-      <Label layoutX="328.0" layoutY="103.0" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Les Participant a Mon Evénement :" />
+
+        <Label layoutX="325.0" layoutY="75.0" style="-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Liste des Participant :" />
+
+        <VBox fx:id="eventDetailsContainer" alignment="TOP_CENTER" layoutX="355.0" layoutY="122.0" spacing="20" style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
+            <!-- Participant Cards will be dynamically added here -->
+            <VBox fx:id="participantsContainer" prefWidth="800" spacing="15" />
+        </VBox>
+<!--        <VBox fx:id="eventDetailsContainer" alignment="TOP_CENTER" layoutX="355.0" layoutY="102.0" spacing="20" style="-fx-padding: 20; -fx-background-color: #f5f5f5;">-->
+<!--            <TableView fx:id="participantsTable" prefHeight="300" prefWidth="800">-->
+<!--                <columns>-->
+<!--                    <TableColumn fx:id="colNom" prefWidth="200" text="Nom" />-->
+<!--                    <TableColumn fx:id="colEmail" prefWidth="400" text="Email" />-->
+<!--                </columns>-->
+<!--            </TableView>-->
+<!--        </VBox>-->
+
 
 
 

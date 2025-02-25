@@ -213,6 +213,7 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
                 participants.add(new User( rs.getString("nom"),
                         rs.getString("prenom"), rs.getString("email"),
                         rs.getString("image")));
+               // rs.getString("image"),rs.getString("MDP")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

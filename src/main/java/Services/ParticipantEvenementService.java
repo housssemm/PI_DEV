@@ -1,9 +1,6 @@
 package Services;
 
-import Models.EtatEvenement;
-import Models.Evenement;
-import Models.ParticipantEvenement;
-import Models.etatPaiement;
+import Models.*;
 import Utils.MyDb;
 
 import java.sql.*;
@@ -146,6 +143,85 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
         return post;
 
     }
+
+
+
+
+
+//        public List<User> getParticipantsByEvent(int eventId) {
+//            List<User> participants = new ArrayList<>();
+//            String query = "SELECT userId FROM participantevenement WHERE evenementId = ?";
+//
+////            try (Connection conn = DatabaseConnection.getInstance().getConnection();
+//                try( PreparedStatement stmt = conn.prepareStatement(query)) {
+//
+//                stmt.setInt(1, eventId);
+//                ResultSet rs = stmt.executeQuery();
+//
+//                while (rs.next()) {
+//                    participants.add(new User(rs.getString("nom"), rs.getString("email"),rs.getString("prenom"),rs.getString("image")));
+//                }
+//
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return participants;
+//        }
+
+
+//
+//    public List<User> getParticipantsByEvent(int eventId) {
+//        List<User> participants = new ArrayList<>();
+//        String query = "SELECT u.nom, u.email, u.prenom, u.image " +
+//                "FROM participantevenement pe " +
+//                "JOIN user u ON pe.userId = u.id " +  // Assurez-vous que la colonne 'id' dans 'user' est correcte
+//                "WHERE pe.evenementId = ?";
+//
+//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+//            stmt.setInt(1, eventId);
+//            ResultSet rs = stmt.executeQuery();
+//
+//            while (rs.next()) {
+//                participants.add(new User(
+//                        rs.getString("nom"),
+//                        rs.getString("email"),
+//                        rs.getString("prenom"),
+//                        rs.getString("image")
+//                ));
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return participants;
+//    }
+
+    public List<User> getParticipantsByEvent(int eventId) {
+        List<User> participants = new ArrayList<>();
+        String query = "SELECT u.id, u.nom, u.prenom, u.email, u.image " +
+                "FROM participantevenement p " +
+                "JOIN user u ON p.userId = u.id " +
+                "WHERE p.evenementId = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, eventId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                participants.add(new User( rs.getString("nom"),
+                        rs.getString("prenom"), rs.getString("email"),
+                        rs.getString("image")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return participants;
+    }
+
 }
+
+
 
 

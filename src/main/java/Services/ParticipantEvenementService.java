@@ -220,7 +220,19 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
         }
         return participants;
     }
-
+    // Add this to ParticipantEvenementService class
+    public void updatePaymentStatus(int userId, int eventId) {
+        String query = "UPDATE participant_evenement SET etat_paiement = ? WHERE participant_id = ? AND evenement_id = ?";
+        try (
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, etatPaiement.PAYE.name());
+            pstmt.setInt(2, userId);
+            pstmt.setInt(3, eventId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error updating payment status: " + e.getMessage());
+        }
+    }
 }
 
 

@@ -401,6 +401,15 @@ public class EventDetailsController {
                         Session.getInstance().getCurrentUser().getEmail(),
                         this.event
                 );
+
+                int idEvenement = this.event.getId();
+                int idParticipant = Session.getInstance().getCurrentUser().getId();
+                Date dateInscription = new Date();
+                etatPaiement etat = etatPaiement.PAYE;
+                ParticipantEvenement participant = new ParticipantEvenement(idParticipant, dateInscription, etat, idEvenement);
+
+                ParticipantEvenementService service = new ParticipantEvenementService();
+                service.create(participant);
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement réussi !");
             }
         } catch (StripeException e) {

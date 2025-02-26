@@ -320,7 +320,7 @@ public class Events {
             // S'assurer qu'il reste toujours visible
             eventList.getChildren().add(titleLabell);
 
-                int id = Session.getInstance().getCurrentUser().getId();
+            int id = Session.getInstance().getCurrentUser().getId();
             // Vérifier si l'utilisateur est un créateur d'événements
             if (createurEvenementService.isCreateurEvenement(id)) {
                 HBox buttonBox = new HBox(20);

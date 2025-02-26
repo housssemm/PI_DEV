@@ -342,31 +342,7 @@ public class MesParticpent {
         }
     }
 
-//    private VBox createParticipantCard(User participant) {
-//        VBox participantCard = new VBox();
-//        participantCard.setSpacing(10);
-//        participantCard.setPadding(new Insets(15));
-//        participantCard.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 0);");
-//
-//        // Name label
-//        Label nameLabel = new Label(participant.getNom());
-//        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #333333;");
-//
-//        // prenom label
-//        Label prenomLabel = new Label(participant.getPrenom());
-//        nameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #333333;");
-//
-//        // Email label
-//        Label emailLabel = new Label(participant.getEmail());
-//        emailLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
-//
-//        // Image label
-//        Label imgLabel = new Label(participant.getImage());
-//        emailLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
-//        participantCard.getChildren().addAll(nameLabel,prenomLabel, emailLabel,imgLabel);
-//
-//        return participantCard;
-//    }
+
 private HBox createParticipantCard(User participant) {
     HBox participantCard = new HBox();
     participantCard.setSpacing(10);
@@ -387,7 +363,7 @@ private HBox createParticipantCard(User participant) {
 
     // Image label (adjusted if necessary, depending on its content)
     Label imgLabel = new Label(participant.getImage());
-    imgLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
+    imgLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #333333;");
 
     // Add all labels to the HBox
     participantCard.getChildren().addAll(emailLabel,nameLabel, prenomLabel, imgLabel);

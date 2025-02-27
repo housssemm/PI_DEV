@@ -419,10 +419,10 @@ public class EventDetailsController {
         }
     }
     private boolean validateCardInputs() {
-//        if (!ncarte.getText().matches("\\d{16}")) {
-//            showAlert(Alert.AlertType.ERROR, "Carte invalide", "Veuillez entrer un numéro de carte à 16 chiffres.");
-//            return false;
-//        }
+        if (!ncarte.getText().matches("\\d{16}")) {
+            showAlert(Alert.AlertType.ERROR, "Carte invalide", "Veuillez entrer un numéro de carte à 16 chiffres.");
+            return false;
+        }
         if (!mm.getText().matches("0[1-9]|1[0-2]")) {
             showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer un mois valide (01-12).");
             return false;

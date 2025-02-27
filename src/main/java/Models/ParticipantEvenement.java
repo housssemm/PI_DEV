@@ -1,4 +1,9 @@
 package Models;
+import Utils.MyDb;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class ParticipantEvenement {
@@ -7,6 +12,7 @@ public class ParticipantEvenement {
     private Date dateInscription;
     private Models.etatPaiement etatPaiement;
     private int idEvenement;
+    private User participant;
 
     public ParticipantEvenement() {}
     public ParticipantEvenement(int idParticipant, Date dateInscription, Models.etatPaiement etatPaiement, int idEvenement) {
@@ -23,7 +29,12 @@ public class ParticipantEvenement {
         this.etatPaiement = etatPaiement;
         this.idEvenement = idEvenement;
     }
-
+    public ParticipantEvenement(int idParticipant, Models.etatPaiement etatPaiement, Date dateInscription) {
+        this.idParticipant = idParticipant;
+        this.etatPaiement = etatPaiement;
+        this.dateInscription = dateInscription;
+        this.participant = fetchUserById(idParticipant); // Fetch User based on id
+    }
     public int getId() {
         return id;
     }
@@ -64,6 +75,32 @@ public class ParticipantEvenement {
         this.idEvenement = idEvenement;
     }
 
+    private User fetchUserById(int id) {
+        // This method fetches the user from the database based on the idParticipant
+        User user = null;
+        String query = "SELECT * FROM user WHERE id = ?";
+        try (PreparedStatement stmt = MyDb.getInstance().getConn().prepareStatement(query)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                user = new User(
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("email"),
+                        rs.getString("image")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    // Getters for participant, etatPaiement, and datePaiement
+    public User getParticipant() {
+        return participant;
+    }
+
     @Override
     public String toString() {
         return "ParticipantEvenement{" +
@@ -75,3 +112,5 @@ public class ParticipantEvenement {
                 '}';
     }
 }
+
+

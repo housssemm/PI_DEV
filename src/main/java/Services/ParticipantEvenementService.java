@@ -146,80 +146,64 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
 
 
 
-
-
-//        public List<User> getParticipantsByEvent(int eventId) {
-//            List<User> participants = new ArrayList<>();
-//            String query = "SELECT userId FROM participantevenement WHERE evenementId = ?";
 //
-////            try (Connection conn = DatabaseConnection.getInstance().getConnection();
-//                try( PreparedStatement stmt = conn.prepareStatement(query)) {
-//
-//                stmt.setInt(1, eventId);
-//                ResultSet rs = stmt.executeQuery();
-//
-//                while (rs.next()) {
-//                    participants.add(new User(rs.getString("nom"), rs.getString("email"),rs.getString("prenom"),rs.getString("image")));
-//                }
-//
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return participants;
-//        }
-
-
 //
 //    public List<User> getParticipantsByEvent(int eventId) {
 //        List<User> participants = new ArrayList<>();
-//        String query = "SELECT u.nom, u.email, u.prenom, u.image " +
-//                "FROM participantevenement pe " +
-//                "JOIN user u ON pe.userId = u.id " +  // Assurez-vous que la colonne 'id' dans 'user' est correcte
-//                "WHERE pe.evenementId = ?";
+//        String query = "SELECT u.id, u.nom, u.prenom, u.email, u.image " +
+//                "FROM participantevenement p " +
+//                "JOIN user u ON p.userId = u.id " +
+//                "WHERE p.evenementId = ?";
 //
 //        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 //            stmt.setInt(1, eventId);
 //            ResultSet rs = stmt.executeQuery();
 //
 //            while (rs.next()) {
-//                participants.add(new User(
-//                        rs.getString("nom"),
-//                        rs.getString("email"),
-//                        rs.getString("prenom"),
-//                        rs.getString("image")
-//                ));
+//                participants.add(new User( rs.getString("nom"),
+//                        rs.getString("prenom"), rs.getString("email"),
+//                        rs.getString("image")));
+//               // rs.getString("image"),rs.getString("MDP")));
 //            }
-//
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//
 //        return participants;
 //    }
 
-    public List<User> getParticipantsByEvent(int eventId) {
-        List<User> participants = new ArrayList<>();
-        String query = "SELECT u.id, u.nom, u.prenom, u.email, u.image " +
-                "FROM participantevenement p " +
-                "JOIN user u ON p.userId = u.id " +
-                "WHERE p.evenementId = ?";
+
+
+
+
+
+    public List<ParticipantEvenement> getParticipantsByEvent(int eventId) {
+        List<ParticipantEvenement> participants = new ArrayList<>();
+
+        // Query to fetch participants for the event
+        String query = "SELECT * FROM participantevenement WHERE evenementId = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, eventId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                participants.add(new User( rs.getString("nom"),
-                        rs.getString("prenom"), rs.getString("email"),
-                        rs.getString("image")));
-               // rs.getString("image"),rs.getString("MDP")));
+                // Get participant id, etatPaiement, and datePaiement from the result set
+                int idParticipant = rs.getInt("userId");
+                etatPaiement etatPaiement = Models.etatPaiement.valueOf(rs.getString("etat_paiement"));
+                Date datePaiement = Date.valueOf(rs.getString("date_inscription"));
+
+                // Create a ParticipantEvenement object, which will internally fetch the User object using the id
+                ParticipantEvenement participantEvenement = new ParticipantEvenement(idParticipant, etatPaiement, datePaiement);
+
+                participants.add(participantEvenement);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return participants;
     }
+
     // Add this to ParticipantEvenementService class
     public void updatePaymentStatus(int userId, int eventId) {
         String query = "UPDATE participant_evenement SET etat_paiement = ? WHERE participant_id = ? AND evenement_id = ?";

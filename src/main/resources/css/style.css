@@ -276,3 +276,26 @@
 }
 
 
+.weather-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.weather-icon {
+    -fx-font-family: "FontAwesome5";  /* This should match the FontAwesome5 font */
+    -fx-font-size: 32px;
+    -fx-text-fill: #4a90e2;
+}
+
+.temperature-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.descriptionn-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}

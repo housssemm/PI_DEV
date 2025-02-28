@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EventDetailsController">    <children>
         <HBox prefHeight="810.0" prefWidth="288">
             <children>
@@ -334,6 +335,16 @@
             </HBox>
         </children>
     </VBox>
+<!--    <Label fx:id="weatherLabel" layoutX="1043.0" layoutY="584.0" text="Weather: " />-->
+    <HBox fx:id="weatherContainer" layoutX="1043" layoutY="584" styleClass="weather-card" spacing="10">
+        <children>
+            <FontIcon fx:id="weatherIcon" styleClass="weather-icon" />
+            <VBox spacing="4">
+                <Label fx:id="temperatureLabel" styleClass="temperature-text"/>
+                <Label fx:id="descriptionnLabel" styleClass="description-text"/>
+            </VBox>
+        </children>
+    </HBox>
 
 </children>
 </AnchorPane>

@@ -304,3 +304,49 @@
     -fx-text-fill: #333333;
     -fx-padding: 0 0 10 0;
 }
+
+
+.btnp {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btnp:hover {
+    -fx-background-color: #51c955;
+}
+.btnat {
+    -fx-background-color: #e68e0e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btnat:hover {
+    -fx-background-color: #FF9800;
+}
+.btna {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btna:hover {
+    -fx-background-color: #f52c1d;
+}
+.btnt {
+    -fx-background-color: #666666;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btnt:hover {
+    -fx-background-color: #575757;
+}

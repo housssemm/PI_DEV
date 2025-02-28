@@ -666,8 +666,9 @@ public class EventDetailsController {
 
 
     @FXML
-    private FontIcon weatherIcon;
+    private ImageView weatherIcon;
     @FXML private HBox weatherContainer;
+
 
     @FXML private Label temperatureLabel;
     @FXML private Label descriptionnLabel;
@@ -751,70 +752,129 @@ public class EventDetailsController {
 //        }
 //    }
 
+//
+//    private void displayWeatherForEvent(String location) {
+//        try {
+//            // Replace "your_api_key" with your actual OpenWeatherMap API key
+//            String apiKey = "ca261522f8b8207fb287fca1899b3690";
+//            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
+//
+//
+//            URL url = new URL(urlString);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setRequestMethod("GET");
+//
+//            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            String inputLine;
+//            StringBuilder response = new StringBuilder();
+//
+//            while ((inputLine = in.readLine()) != null) {
+//                response.append(inputLine);
+//            }
+//            in.close();
+//
+//            // Parse response
+//            JSONObject jsonResponse = new JSONObject(response.toString());
+//            String description = jsonResponse.getJSONArray("weather")
+//                    .getJSONObject(0).getString("description");
+//            double temp = jsonResponse.getJSONObject("main").getDouble("temp");
+//            String iconCode = jsonResponse.getJSONArray("weather")
+//                    .getJSONObject(0).getString("icon");
+//
+//            // Update UI
+////        Platform.runLater(() -> {
+////        weatherIcon.setText(getWeatherIcon(iconCode));
+////        temperatureLabel.setText(String.format("%.1f°C", temp));
+////        descriptionLabel.setText(capitalize(description));
+////    });
+//            Platform.runLater(() -> {
+//                String icon = getWeatherIcon(iconCode);
+//                System.out.println("Icon Code: " + iconCode + ", Icon: " + icon); // Debug statement
+//                weatherIcon.setText(icon);
+//                temperatureLabel.setText(String.format("%.1f°C", temp));
+//                descriptionnLabel.setText(capitalize(description));
+//            });
+//
+//        } catch (Exception e) {
+//            showAlert(Alert.AlertType.ERROR, "Error",
+//                    "Failed to fetch weather data: " + e.getMessage());
+//        }
+//    }
+//
+//    private String getWeatherIcon(String iconCode) {
+//        switch (iconCode) {
+//            case "01d": return "\uf185";  // sun (day)
+//            case "01n": return "\uf186";  // moon (night)
+//            case "02d": return "\uf0c2";  // cloud (day)
+//            case "02n": return "\uf0c2";  // cloud (night)
+//            case "03d": case "03n": return "\uf0c2";  // scattered clouds
+//            case "04d": case "04n": return "\uf0c2";  // broken clouds
+//            case "09d": case "09n": return "\uf0e9";  // shower rain
+//            case "10d": return "\uf008";  // rain (day)
+//            case "10n": return "\uf008";  // rain (night)
+//            case "11d": case "11n": return "\uf0e7";  // thunderstorm
+//            case "13d": case "13n": return "\uf2dc";  // snow
+//            case "50d": case "50n": return "\uf3ed";  // mist
+//            default: return "\uf059";  // question circle (default for unknown icons)
+//        }
+//    }
+//
+//    private String capitalize(String str) {
+//        return str.substring(0, 1).toUpperCase() + str.substring(1);
+//    }
+private void displayWeatherForEvent(String location) {
+    try {
+        String apiKey = "ca261522f8b8207fb287fca1899b3690";
+        String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
 
-    private void displayWeatherForEvent(String location) {
-        try {
-            // Replace "your_api_key" with your actual OpenWeatherMap API key
-            String apiKey = "ca261522f8b8207fb287fca1899b3690";
-            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
 
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
 
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            // Parse response
-            JSONObject jsonResponse = new JSONObject(response.toString());
-            String description = jsonResponse.getJSONArray("weather")
-                    .getJSONObject(0).getString("description");
-            double temp = jsonResponse.getJSONObject("main").getDouble("temp");
-            String iconCode = jsonResponse.getJSONArray("weather")
-                    .getJSONObject(0).getString("icon");
-
-            // Update UI
-//        Platform.runLater(() -> {
-//        weatherIcon.setText(getWeatherIcon(iconCode));
-//        temperatureLabel.setText(String.format("%.1f°C", temp));
-//        descriptionLabel.setText(capitalize(description));
-//    });
-            Platform.runLater(() -> {
-                String icon = getWeatherIcon(iconCode);
-                System.out.println("Icon Code: " + iconCode + ", Icon: " + icon); // Debug statement
-                weatherIcon.setText(icon);
-                temperatureLabel.setText(String.format("%.1f°C", temp));
-                descriptionLabel.setText(capitalize(description));
-            });
-
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error",
-                    "Failed to fetch weather data: " + e.getMessage());
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
         }
-    }
+        in.close();
 
-    private String getWeatherIcon(String iconCode) {
+        JSONObject jsonResponse = new JSONObject(response.toString());
+        String description = jsonResponse.getJSONArray("weather")
+                .getJSONObject(0).getString("description");
+        double temp = jsonResponse.getJSONObject("main").getDouble("temp");
+        String iconCode = jsonResponse.getJSONArray("weather")
+                .getJSONObject(0).getString("icon");
+
+        Platform.runLater(() -> {
+            String iconPath = getWeatherIconPath(iconCode);
+            weatherIcon.setImage(new Image(getClass().getResourceAsStream(iconPath)));
+            temperatureLabel.setText(String.format("%.1f°C", temp));
+            descriptionnLabel.setText(capitalize(description));
+        });
+
+    } catch (Exception e) {
+        showAlert(Alert.AlertType.ERROR, "Error",
+                "Failed to fetch weather data: " + e.getMessage());
+    }
+}
+
+    private String getWeatherIconPath(String iconCode) {
         switch (iconCode) {
-            case "01d": return "\uf185";  // sun (day)
-            case "01n": return "\uf186";  // moon (night)
-            case "02d": return "\uf0c2";  // cloud (day)
-            case "02n": return "\uf0c2";  // cloud (night)
-            case "03d": case "03n": return "\uf0c2";  // scattered clouds
-            case "04d": case "04n": return "\uf0c2";  // broken clouds
-            case "09d": case "09n": return "\uf0e9";  // shower rain
-            case "10d": return "\uf008";  // rain (day)
-            case "10n": return "\uf008";  // rain (night)
-            case "11d": case "11n": return "\uf0e7";  // thunderstorm
-            case "13d": case "13n": return "\uf2dc";  // snow
-            case "50d": case "50n": return "\uf3ed";  // mist
-            default: return "\uf059";  // question circle (default for unknown icons)
+            case "01d": return "/icons/sun.png";  // sun (day)
+            case "01n": return "/icons/moon.png";  // moon (night)
+            case "02d": return "/icons/cloud.png";  // cloud (day)
+            case "02n": return "/icons/cloud.png";  // cloud (night)
+            case "03d": case "03n": return "/icons/cloud.png";  // scattered clouds
+            case "04d": case "04n": return "/icons/cloud.png";  // broken clouds
+            case "09d": case "09n": return "/icons/rain.png";  // shower rain
+            case "10d": return "/icons/rain.png";  // rain (day)
+            case "10n": return "/icons/rain.png";  // rain (night)
+            case "11d": case "11n": return "/icons/thunderstorm.png";  // thunderstorm
+            case "13d": case "13n": return "/icons/snow.png";  // snow
+            case "50d": case "50n": return "/icons/mist.png";  // mist
+            default: return "/icons/default.png";  // default icon
         }
     }
 

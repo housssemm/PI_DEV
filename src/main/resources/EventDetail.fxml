@@ -336,15 +336,24 @@
         </children>
     </VBox>
 <!--    <Label fx:id="weatherLabel" layoutX="1043.0" layoutY="584.0" text="Weather: " />-->
+<!--    <HBox fx:id="weatherContainer" layoutX="1043" layoutY="584" styleClass="weather-card" spacing="10">-->
+<!--        <children>-->
+<!--            <FontIcon fx:id="weatherIcon" styleClass="weather-icon" />-->
+<!--            <VBox spacing="4">-->
+<!--                <Label fx:id="temperatureLabel" styleClass="temperature-text"/>-->
+<!--                <Label fx:id="descriptionnLabel" styleClass="description-text"/>-->
+<!--            </VBox>-->
+<!--        </children>-->
+<!--    </HBox>-->
     <HBox fx:id="weatherContainer" layoutX="1043" layoutY="584" styleClass="weather-card" spacing="10">
         <children>
-            <FontIcon fx:id="weatherIcon" styleClass="weather-icon" />
+            <ImageView fx:id="weatherIcon" styleClass="weather-icon" fitWidth="32" fitHeight="32"/>
+
             <VBox spacing="4">
                 <Label fx:id="temperatureLabel" styleClass="temperature-text"/>
                 <Label fx:id="descriptionnLabel" styleClass="description-text"/>
             </VBox>
         </children>
     </HBox>
-
 </children>
 </AnchorPane>

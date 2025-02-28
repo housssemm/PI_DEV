@@ -53,19 +53,20 @@
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-core</artifactId>
-            <version>12.3.1</version>
+            <version>12.3.0</version>
         </dependency>
         <!-- Ikonli JavaFX -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
-            <version>12.3.1</version>
+            <version>12.3.0</version>
+
         </dependency>
         <!-- Ikonli FontAwesome5 Pack -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-fontawesome5-pack</artifactId>
-            <version>12.3.1</version>
+            <version>12.3.0</version>
         </dependency>
 
 

@@ -1,5 +1,3 @@
-//
-//
 //package Controllers;
 //
 //import Models.Evenement;
@@ -8,6 +6,8 @@
 //import Services.CreateurEvenementService;
 //import Services.ParticipantEvenementService;
 //import Utils.Session;
+//import com.stripe.model.PaymentMethod;
+//import com.stripe.param.PaymentMethodCreateParams;
 //import javafx.event.ActionEvent;
 //import javafx.fxml.FXML;
 //import javafx.fxml.FXMLLoader;
@@ -24,6 +24,8 @@
 //import java.io.ByteArrayInputStream;
 //
 //import java.util.Date;
+//import java.util.HashMap;
+//import java.util.Map;
 //
 //import com.mailjet.client.ClientOptions;
 //import com.mailjet.client.MailjetClient;
@@ -114,6 +116,8 @@
 //            etatLabel.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");  // Default gray color
 //        }
 //    }
+//
+//
 //    private Evenement event;
 //    @FXML
 //    private void handleReservationClick(ActionEvent event) {
@@ -368,6 +372,76 @@
 //    }
 //
 //
+////    @FXML
+////    private void handlePayment(ActionEvent event) {
+////        try {
+////            if (this.event == null) {
+////                showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun événement sélectionné !");
+////                return;
+////            }
+////
+////            // Use a Stripe test token instead of real card data
+////            String testToken = "tok_visa"; // Test token for Visa card
+////
+////            // Explicitly cast to long to resolve the error
+////            long amount = (long) (this.event.getPrix() * 100);
+////
+////            // Create the charge with the test token
+////            Charge charge = Charge.create(ChargeCreateParams.builder()
+////                    .setAmount(amount)
+////                    .setCurrency("usd") // or "eur" depending on your currency
+////                    .setSource(testToken)
+////                    .setDescription("Paiement pour l'événement: " + this.event.getTitre())
+////                    .build());
+////
+////            if (charge.getPaid()) {
+////                // Update payment status in database
+////                new ParticipantEvenementService().updatePaymentStatus(
+////                        Session.getInstance().getCurrentUser().getId(),
+////                        this.event.getId()
+////                );
+////                // Send payment confirmation email
+////                sendPaymentConfirmationEmail(
+////                        Session.getInstance().getCurrentUser().getEmail(),
+////                        this.event
+////                );
+////
+////                int idEvenement = this.event.getId();
+////                int idParticipant = Session.getInstance().getCurrentUser().getId();
+////                Date dateInscription = new Date();
+////                etatPaiement etat = etatPaiement.PAYE;
+////                ParticipantEvenement participant = new ParticipantEvenement(idParticipant, dateInscription, etat, idEvenement);
+////
+////                ParticipantEvenementService service = new ParticipantEvenementService();
+////                service.create(participant);
+////                showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement réussi !");
+////            }
+////        } catch (StripeException e) {
+////            showAlert(Alert.AlertType.ERROR, "Erreur de paiement", e.getMessage());
+////        } catch (Exception e) {
+////            showAlert(Alert.AlertType.ERROR, "Erreur", "Le paiement a échoué : " + e.getMessage());
+////        }
+////    }
+////    private boolean validateCardInputs() {
+////        if (!ncarte.getText().matches("\\d{16}")) {
+////            showAlert(Alert.AlertType.ERROR, "Carte invalide", "Veuillez entrer un numéro de carte à 16 chiffres.");
+////            return false;
+////        }
+////        if (!mm.getText().matches("0[1-9]|1[0-2]")) {
+////            showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer un mois valide (01-12).");
+////            return false;
+////        }
+////        if (!yy.getText().matches("\\d{2}")) {
+////            showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer une année valide (2 chiffres).");
+////            return false;
+////        }
+////        if (!cvc.getText().matches("\\d{3}")) {
+////            showAlert(Alert.AlertType.ERROR, "CVC invalide", "Veuillez entrer un CVC à 3 chiffres.");
+////            return false;
+////        }
+////        return true;
+////    }
+//
 //    @FXML
 //    private void handlePayment(ActionEvent event) {
 //        try {
@@ -376,67 +450,70 @@
 //                return;
 //            }
 //
-//            // Use a Stripe test token instead of real card data
-//            String testToken = "tok_visa"; // Test token for Visa card
+//            // Vérifier les champs
+//            if (!validatePaymentFields()) {
+//                return;
+//            }
 //
-//            // Explicitly cast to long to resolve the error
-//            long amount = (long) (this.event.getPrix() * 100);
+//            // 🔥 Générer un vrai token Stripe
+//            String dynamicToken = createStripeToken();
+//            if (dynamicToken == null || dynamicToken.isEmpty()) {
+//                showAlert(Alert.AlertType.ERROR, "Erreur", "Token de paiement invalide !");
+//                return;
+//            }
 //
-//            // Create the charge with the test token
+//            long amount = (long) (this.event.getPrix() * 100); // Prix en centimes
+//
 //            Charge charge = Charge.create(ChargeCreateParams.builder()
 //                    .setAmount(amount)
-//                    .setCurrency("usd") // or "eur" depending on your currency
-//                    .setSource(testToken)
+//                    .setCurrency("usd")
+//                    .setSource(dynamicToken) // 🔥 Utilisation du vrai token reçu
 //                    .setDescription("Paiement pour l'événement: " + this.event.getTitre())
 //                    .build());
 //
 //            if (charge.getPaid()) {
-//                // Update payment status in database
 //                new ParticipantEvenementService().updatePaymentStatus(
 //                        Session.getInstance().getCurrentUser().getId(),
 //                        this.event.getId()
 //                );
-//                // Send payment confirmation email
 //                sendPaymentConfirmationEmail(
 //                        Session.getInstance().getCurrentUser().getEmail(),
 //                        this.event
 //                );
 //
-//                int idEvenement = this.event.getId();
-//                int idParticipant = Session.getInstance().getCurrentUser().getId();
-//                Date dateInscription = new Date();
-//                etatPaiement etat = etatPaiement.PAYE;
-//                ParticipantEvenement participant = new ParticipantEvenement(idParticipant, dateInscription, etat, idEvenement);
-//
-//                ParticipantEvenementService service = new ParticipantEvenementService();
-//                service.create(participant);
-//                showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement réussi !");
+//                showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement effectué avec succès !");
+//            } else {
+//                showAlert(Alert.AlertType.ERROR, "Erreur", "Le paiement a échoué.");
 //            }
+//
 //        } catch (StripeException e) {
-//            showAlert(Alert.AlertType.ERROR, "Erreur de paiement", e.getMessage());
-//        } catch (Exception e) {
-//            showAlert(Alert.AlertType.ERROR, "Erreur", "Le paiement a échoué : " + e.getMessage());
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "Problème de paiement : " + e.getMessage());
 //        }
 //    }
-//    private boolean validateCardInputs() {
-//        if (!ncarte.getText().matches("\\d{16}")) {
-//            showAlert(Alert.AlertType.ERROR, "Carte invalide", "Veuillez entrer un numéro de carte à 16 chiffres.");
-//            return false;
+//    private String createStripeToken() throws StripeException {
+//        Stripe.apiKey = "sk_test_51QwWQy5NfsiWXvvbzS7EsLjI4Z2CY93sXua9vFXB9WjSAhwimEEQEtXI6Ks3jY6EiOwRAdb7ZrYgPXhpZinTDYz800VyNMFBt4"; // Remplace par ta clé secrète Stripe
+//
+//        // Création des données de la carte
+//        Map<String, Object> cardParams = new HashMap<>();
+//        cardParams.put("number", ncarte.getText());
+//        cardParams.put("exp_month", Integer.parseInt(mm.getText()));
+//        cardParams.put("exp_year", Integer.parseInt("20" + yy.getText())); // Ajoute "20" devant l'année
+//        cardParams.put("cvc", cvc.getText());
+//
+//        // Création du token
+//        Map<String, Object> tokenParams = new HashMap<>();
+//        tokenParams.put("card", cardParams);
+//        if (isTestingMode()) {
+//            return "tok_visa"; // Token de test Stripe prédéfini
 //        }
-//        if (!mm.getText().matches("0[1-9]|1[0-2]")) {
-//            showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer un mois valide (01-12).");
-//            return false;
-//        }
-//        if (!yy.getText().matches("\\d{2}")) {
-//            showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer une année valide (2 chiffres).");
-//            return false;
-//        }
-//        if (!cvc.getText().matches("\\d{3}")) {
-//            showAlert(Alert.AlertType.ERROR, "CVC invalide", "Veuillez entrer un CVC à 3 chiffres.");
-//            return false;
-//        }
+//        Token token = Token.create(tokenParams);
+//        return token.getId(); // Retourne le token généré
+//    }
+//    private boolean isTestingMode() {
 //        return true;
 //    }
+//
+//
 //
 //    private void showAlert(Alert.AlertType alertType, String title, String message) {
 //        Alert alert = new Alert(alertType);
@@ -445,6 +522,32 @@
 //        alert.setContentText(message);
 //        alert.showAndWait();
 //    }
+//    private boolean validatePaymentFields() {
+//        if (!ncarte.getText().matches("^(4242\\d{12}|tok_.*)$")) { // Accepte 4242... ou un token
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "numéro de carte bancaire invalide");
+//            return false;
+//        }
+//        if (ncarte.getText().isEmpty() || ncarte.getText().length() != 16) {
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "Numéro de carte invalide !");
+//            return false;
+//        }
+//        if (mm.getText().isEmpty() || yy.getText().isEmpty() || Integer.parseInt(mm.getText()) > 12 || Integer.parseInt(yy.getText()) < 24) {
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "Date d'expiration invalide !");
+//            return false;
+//        }
+//        if (cvc.getText().isEmpty() || cvc.getText().length() != 3) {
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "CVC invalide !");
+//            return false;
+//        }
+//        if (nomT.getText().isEmpty()) {
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "Nom du titulaire invalide !");
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//
+//
 //}
 //
 //
@@ -486,6 +589,7 @@ import Services.ParticipantEvenementService;
 import Utils.Session;
 import com.stripe.model.PaymentMethod;
 import com.stripe.param.PaymentMethodCreateParams;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -499,8 +603,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -510,6 +618,9 @@ import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.resource.Emailv31;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -521,7 +632,9 @@ import com.stripe.model.Charge;
 import com.stripe.model.Token;
 import com.stripe.param.TokenCreateParams;
 import com.stripe.param.ChargeCreateParams;
-
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 
 public class EventDetailsController {
 
@@ -535,6 +648,7 @@ public class EventDetailsController {
     @FXML private Label etatLabel;
     @FXML private Label organisateurLabel;
     @FXML private Label maxLabel;
+    @FXML private Label weatherLabel;
 
 
     @FXML
@@ -550,9 +664,19 @@ public class EventDetailsController {
     @FXML
     private TextField yy;
 
+
+    @FXML
+    private FontIcon weatherIcon;
+    @FXML private HBox weatherContainer;
+
+    @FXML private Label temperatureLabel;
+    @FXML private Label descriptionnLabel;
     public void initialize() {
         StripeConfig.init(); // Initialiser Stripe
         payerBtn.setOnAction(this::handlePayment);
+
+
+//        Font.loadFont(getClass().getResource("/fonts/fontawesome-webfont.ttf").toExternalForm(), 12);
     }
 
     public void setEventDetails(Evenement event) {
@@ -593,6 +717,109 @@ public class EventDetailsController {
             etatLabel.setText("Etat: " + eventState);
             etatLabel.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black;");  // Default gray color
         }
+        displayWeatherForEvent(event.getLieu());
+    }
+//    private void displayWeatherForEvent(String location) {
+//        try {
+//            // Replace "your_api_key" with your actual OpenWeatherMap API key
+//            String apiKey = "ca261522f8b8207fb287fca1899b3690";
+//            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
+//
+//
+//            URL url = new URL(urlString);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setRequestMethod("GET");
+//
+//            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            String inputLine;
+//            StringBuilder response = new StringBuilder();
+//
+//            while ((inputLine = in.readLine()) != null) {
+//                response.append(inputLine);
+//            }
+//            in.close();
+
+//            // Parse the response to get weather details
+//            JSONObject jsonResponse = new JSONObject(response.toString());
+//            String weatherDescription = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("description");
+//            double temperature = jsonResponse.getJSONObject("main").getDouble("temp");
+//
+//            // Display the weather information
+//            weatherLabel.setText("Weather: " + weatherDescription + ", " + temperature + "°C");
+//        } catch (Exception e) {
+//            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch weather data: " + e.getMessage());
+//        }
+//    }
+
+
+    private void displayWeatherForEvent(String location) {
+        try {
+            // Replace "your_api_key" with your actual OpenWeatherMap API key
+            String apiKey = "ca261522f8b8207fb287fca1899b3690";
+            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
+
+
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // Parse response
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            String description = jsonResponse.getJSONArray("weather")
+                    .getJSONObject(0).getString("description");
+            double temp = jsonResponse.getJSONObject("main").getDouble("temp");
+            String iconCode = jsonResponse.getJSONArray("weather")
+                    .getJSONObject(0).getString("icon");
+
+            // Update UI
+//        Platform.runLater(() -> {
+//        weatherIcon.setText(getWeatherIcon(iconCode));
+//        temperatureLabel.setText(String.format("%.1f°C", temp));
+//        descriptionLabel.setText(capitalize(description));
+//    });
+            Platform.runLater(() -> {
+                String icon = getWeatherIcon(iconCode);
+                System.out.println("Icon Code: " + iconCode + ", Icon: " + icon); // Debug statement
+                weatherIcon.setText(icon);
+                temperatureLabel.setText(String.format("%.1f°C", temp));
+                descriptionLabel.setText(capitalize(description));
+            });
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error",
+                    "Failed to fetch weather data: " + e.getMessage());
+        }
+    }
+
+    private String getWeatherIcon(String iconCode) {
+        switch (iconCode) {
+            case "01d": return "\uf185";  // sun (day)
+            case "01n": return "\uf186";  // moon (night)
+            case "02d": return "\uf0c2";  // cloud (day)
+            case "02n": return "\uf0c2";  // cloud (night)
+            case "03d": case "03n": return "\uf0c2";  // scattered clouds
+            case "04d": case "04n": return "\uf0c2";  // broken clouds
+            case "09d": case "09n": return "\uf0e9";  // shower rain
+            case "10d": return "\uf008";  // rain (day)
+            case "10n": return "\uf008";  // rain (night)
+            case "11d": case "11n": return "\uf0e7";  // thunderstorm
+            case "13d": case "13n": return "\uf2dc";  // snow
+            case "50d": case "50n": return "\uf3ed";  // mist
+            default: return "\uf059";  // question circle (default for unknown icons)
+        }
+    }
+
+    private String capitalize(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
     private Evenement event;
     @FXML
@@ -848,75 +1075,6 @@ public class EventDetailsController {
     }
 
 
-//    @FXML
-//    private void handlePayment(ActionEvent event) {
-//        try {
-//            if (this.event == null) {
-//                showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun événement sélectionné !");
-//                return;
-//            }
-//
-//            // Use a Stripe test token instead of real card data
-//            String testToken = "tok_visa"; // Test token for Visa card
-//
-//            // Explicitly cast to long to resolve the error
-//            long amount = (long) (this.event.getPrix() * 100);
-//
-//            // Create the charge with the test token
-//            Charge charge = Charge.create(ChargeCreateParams.builder()
-//                    .setAmount(amount)
-//                    .setCurrency("usd") // or "eur" depending on your currency
-//                    .setSource(testToken)
-//                    .setDescription("Paiement pour l'événement: " + this.event.getTitre())
-//                    .build());
-//
-//            if (charge.getPaid()) {
-//                // Update payment status in database
-//                new ParticipantEvenementService().updatePaymentStatus(
-//                        Session.getInstance().getCurrentUser().getId(),
-//                        this.event.getId()
-//                );
-//                // Send payment confirmation email
-//                sendPaymentConfirmationEmail(
-//                        Session.getInstance().getCurrentUser().getEmail(),
-//                        this.event
-//                );
-//
-//                int idEvenement = this.event.getId();
-//                int idParticipant = Session.getInstance().getCurrentUser().getId();
-//                Date dateInscription = new Date();
-//                etatPaiement etat = etatPaiement.PAYE;
-//                ParticipantEvenement participant = new ParticipantEvenement(idParticipant, dateInscription, etat, idEvenement);
-//
-//                ParticipantEvenementService service = new ParticipantEvenementService();
-//                service.create(participant);
-//                showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement réussi !");
-//            }
-//        } catch (StripeException e) {
-//            showAlert(Alert.AlertType.ERROR, "Erreur de paiement", e.getMessage());
-//        } catch (Exception e) {
-//            showAlert(Alert.AlertType.ERROR, "Erreur", "Le paiement a échoué : " + e.getMessage());
-//        }
-//    }
-//    private boolean validateCardInputs() {
-//        if (!ncarte.getText().matches("\\d{16}")) {
-//            showAlert(Alert.AlertType.ERROR, "Carte invalide", "Veuillez entrer un numéro de carte à 16 chiffres.");
-//            return false;
-//        }
-//        if (!mm.getText().matches("0[1-9]|1[0-2]")) {
-//            showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer un mois valide (01-12).");
-//            return false;
-//        }
-//        if (!yy.getText().matches("\\d{2}")) {
-//            showAlert(Alert.AlertType.ERROR, "Date invalide", "Veuillez entrer une année valide (2 chiffres).");
-//            return false;
-//        }
-//        if (!cvc.getText().matches("\\d{3}")) {
-//            showAlert(Alert.AlertType.ERROR, "CVC invalide", "Veuillez entrer un CVC à 3 chiffres.");
-//            return false;
-//        }
-//        return true;
-//    }
 
     @FXML
     private void handlePayment(ActionEvent event) {
@@ -997,7 +1155,9 @@ public class EventDetailsController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+
     }
+
     private boolean validatePaymentFields() {
         if (!ncarte.getText().matches("^(4242\\d{12}|tok_.*)$")) { // Accepte 4242... ou un token
             showAlert(Alert.AlertType.ERROR, "Erreur", "numéro de carte bancaire invalide");

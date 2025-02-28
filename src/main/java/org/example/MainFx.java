@@ -1,6 +1,7 @@
 package org.example;
 
 import Services.EvenementService;
+import Services.ParticipantEvenementService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -46,6 +47,7 @@ public class MainFx extends Application {
 
             EvenementService.updateExpiredEvents();
             EvenementService.updateEtatWhenFull();
+            ParticipantEvenementService.cancelExpiredPendingPayments();
         }, 0, 1, TimeUnit.MINUTES);
     }
 

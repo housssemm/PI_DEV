@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
-    Connection conn;
+    static Connection conn;
     public ParticipantEvenementService(){
         this.conn= MyDb.getInstance().getConn();
     }
@@ -146,31 +146,6 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
 
 
 
-//
-//
-//    public List<User> getParticipantsByEvent(int eventId) {
-//        List<User> participants = new ArrayList<>();
-//        String query = "SELECT u.id, u.nom, u.prenom, u.email, u.image " +
-//                "FROM participantevenement p " +
-//                "JOIN user u ON p.userId = u.id " +
-//                "WHERE p.evenementId = ?";
-//
-//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-//            stmt.setInt(1, eventId);
-//            ResultSet rs = stmt.executeQuery();
-//
-//            while (rs.next()) {
-//                participants.add(new User( rs.getString("nom"),
-//                        rs.getString("prenom"), rs.getString("email"),
-//                        rs.getString("image")));
-//               // rs.getString("image"),rs.getString("MDP")));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return participants;
-//    }
-
 
 
 
@@ -183,6 +158,7 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
         String query = "SELECT * FROM participantevenement WHERE evenementId = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            cancelExpiredPendingPayments();
             stmt.setInt(1, eventId);
             ResultSet rs = stmt.executeQuery();
 
@@ -217,6 +193,29 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
             System.out.println("Error updating payment status: " + e.getMessage());
         }
     }
+
+
+
+
+
+    public static void cancelExpiredPendingPayments() {
+        String sql = "UPDATE participantevenement " +
+                "SET etat_paiement = 'ANNULER' " +
+                "WHERE etat_paiement = 'EN_ATTENTE' " +
+                "AND date_inscription < CURRENT_DATE";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+
+            int rowsUpdated = pstmt.executeUpdate();
+            System.out.println("[DEBUG] Canceled " + rowsUpdated + " expired pending payments.");
+
+        } catch (SQLException e) {
+            System.err.println("[ERROR] SQL Exception: " + e.getMessage());
+        }
+    }
+
+
 }
 
 

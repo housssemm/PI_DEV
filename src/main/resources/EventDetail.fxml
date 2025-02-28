@@ -345,15 +345,19 @@
 <!--            </VBox>-->
 <!--        </children>-->
 <!--    </HBox>-->
-    <HBox fx:id="weatherContainer" layoutX="1043" layoutY="584" styleClass="weather-card" spacing="10">
+    <VBox spacing="10" layoutX="1000" layoutY="584" styleClass="weather-card">
         <children>
-            <ImageView fx:id="weatherIcon" styleClass="weather-icon" fitWidth="32" fitHeight="32"/>
-
-            <VBox spacing="4">
-                <Label fx:id="temperatureLabel" styleClass="temperature-text"/>
-                <Label fx:id="descriptionnLabel" styleClass="description-text"/>
-            </VBox>
+            <Label text="Avant de réserver votre place à l’événement, consulter la météo :" styleClass="info-text"/>
+            <HBox fx:id="weatherContainer" spacing="10">
+                <children>
+                    <ImageView fx:id="weatherIcon" styleClass="weather-icon" fitWidth="32" fitHeight="32"/>
+                    <VBox spacing="4">
+                        <Label fx:id="temperatureLabel" styleClass="temperature-text"/>
+                        <Label fx:id="descriptionnLabel" styleClass="description-text"/>
+                    </VBox>
+                </children>
+            </HBox>
         </children>
-    </HBox>
+    </VBox>
 </children>
 </AnchorPane>

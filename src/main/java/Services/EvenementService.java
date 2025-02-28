@@ -202,7 +202,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EvenementService implements Crud<Evenement> {
-    private final Connection conn;
+    private static Connection conn = null;
 
     public EvenementService() {
         this.conn = MyDb.getInstance().getConn();
@@ -216,8 +216,8 @@ public class EvenementService implements Crud<Evenement> {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, obj.getTitre());
             stmt.setString(2, obj.getDescription());
-            stmt.setDate(3, java.sql.Date.valueOf(obj.getDateDebut()));
-            stmt.setDate(4, java.sql.Date.valueOf(obj.getDateFin()));
+            stmt.setDate(3, Date.valueOf(obj.getDateDebut()));
+            stmt.setDate(4, Date.valueOf(obj.getDateFin()));
             stmt.setString(5, obj.getLieu());
             stmt.setString(6, obj.getEtat().name());
             stmt.setDouble(7, obj.getPrix());
@@ -255,8 +255,8 @@ public class EvenementService implements Crud<Evenement> {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, obj.getTitre());
             stmt.setString(2, obj.getDescription());
-            stmt.setDate(3, java.sql.Date.valueOf(obj.getDateDebut()));
-            stmt.setDate(4, java.sql.Date.valueOf(obj.getDateFin()));
+            stmt.setDate(3, Date.valueOf(obj.getDateDebut()));
+            stmt.setDate(4, Date.valueOf(obj.getDateFin()));
             stmt.setString(5, obj.getLieu());
             stmt.setString(6, obj.getEtat().name());
             stmt.setDouble(7, obj.getPrix());
@@ -342,6 +342,8 @@ public class EvenementService implements Crud<Evenement> {
     }
     @Override
     public List<Evenement> getAll() throws Exception {
+        updateExpiredEvents();
+        updateEtatWhenFull();
         String sql = "SELECT * FROM evenement";
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
@@ -369,6 +371,7 @@ public class EvenementService implements Crud<Evenement> {
             obj.setCapaciteMaximale(rs.getInt("capaciteMaximale"));
             obj.setIdCreateurEvenement(rs.getInt("idCreateurEvenement"));
             evenements.add(obj);
+
         }
         return evenements;
     }
@@ -408,5 +411,38 @@ public class EvenementService implements Crud<Evenement> {
         }
 
         return evenements;
+    }
+    public static void updateExpiredEvents() {
+        String sql = "UPDATE evenement SET etat = 'EXPIRE' " +
+                "WHERE etat = 'ACTIF' AND dateDebut < CURRENT_DATE";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            // Log the exact error
+
+            e.printStackTrace();
+        }
+    }
+    public static void updateEtatWhenFull() {
+        String sql = "UPDATE evenement e " +
+                "SET etat = 'EXPIRE' " +
+                "WHERE e.etat = 'ACTIF' AND " +
+                "      e.id IN ( " +
+                "          SELECT p.evenementId " +
+                "          FROM participantevenement p " +
+                "          GROUP BY p.evenementId " +
+                "          HAVING COUNT(p.id) >= e.capaciteMaximale " +
+                "      )";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+
+            int rowsUpdated = pstmt.executeUpdate();
+            System.out.println("[DEBUG] Updated " + rowsUpdated + " full events to EXPIRE.");
+
+        } catch (SQLException e) {
+            System.err.println("[ERROR] SQL Exception: " + e.getMessage());
+        }
     }
 }

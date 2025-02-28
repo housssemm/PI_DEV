@@ -276,6 +276,8 @@
 }
 
 
+
+
 .weather-card {
     -fx-background-color: #ffffff;
     -fx-background-radius: 15;
@@ -284,9 +286,9 @@
 }
 
 .weather-icon {
-    -fx-font-family: "FontAwesome5";  /* This should match the FontAwesome5 font */
-    -fx-font-size: 32px;
-    -fx-text-fill: #4a90e2;
+    -fx-fit-width: 32px;
+    -fx-fit-height: 32px;
+
 }
 
 .temperature-text {
@@ -295,7 +297,7 @@
     -fx-text-fill: #333333;
 }
 
-.descriptionn-text {
+.description-text {
     -fx-font-size: 14px;
     -fx-text-fill: #666666;
 }

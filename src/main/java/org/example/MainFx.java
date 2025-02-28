@@ -1,11 +1,17 @@
 package org.example;
 
+import Services.EvenementService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainFx extends Application {
@@ -31,5 +37,16 @@ public class MainFx extends Application {
         primaryStage.setTitle("Coachini");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        //trigger
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            System.out.println("[DEBUG] Running scheduled task...");
+
+            EvenementService.updateExpiredEvents();
+            EvenementService.updateEtatWhenFull();
+        }, 0, 1, TimeUnit.MINUTES);
     }
+
 }

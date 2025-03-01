@@ -3,6 +3,7 @@ package Controllers;
 
 import Models.ParticipantEvenement;
 import Services.CreateurEvenementService;
+import Services.ParticipantEvenementService;
 import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -27,13 +28,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Events {
+public class MaParticipation {
 
     @FXML
     private VBox eventList; // VBox où les événements seront affichés
 
 
     private EvenementService evenementService = new EvenementService();
+    private ParticipantEvenementService pr = new ParticipantEvenementService();
     @FXML
     private TextField searchField; // Champ de recherche
 
@@ -164,10 +166,10 @@ public class Events {
     }
 
 
-
+    int id = Session.getInstance().getCurrentUser().getId();
     void loadEvents() {
         try {
-            allEvents = evenementService.getAll();
+            allEvents = pr.getEventsByParticipant(id);
             eventList.getChildren().clear(); // Nettoyer la liste avant de charger les événements
             Label titleLabell = new Label("Liste des Événements :");
             titleLabell.setStyle("-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
@@ -175,93 +177,7 @@ public class Events {
             // S'assurer qu'il reste toujours visible
             eventList.getChildren().add(titleLabell);
 
-            int id = Session.getInstance().getCurrentUser().getId();
-            // Vérifier si l'utilisateur est un créateur d'événements
-            if (createurEvenementService.isCreateurEvenement(id)) {
-                HBox buttonBox = new HBox(20);
-                buttonBox.setStyle("-fx-alignment: center-right; -fx-padding: 10;");
-
-                Button creerEventBtn = new Button("Créer un événement");
-                Button consulterMesEventsBtn = new Button("Consulter mes événements");
-
-                creerEventBtn.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
-                consulterMesEventsBtn.setStyle("-fx-background-color: #708090; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
-
-                // Ajouter des actions aux boutons
-                creerEventBtn.setOnAction(e -> {
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddEvenement.fxml"));
-                        Parent root = loader.load();
-
-                        // Vérifie que le bouton a bien une scène avant d'appeler getWindow()
-                        if (creerEventBtn.getScene() != null) {
-                            Stage stage = (Stage) creerEventBtn.getScene().getWindow();
-                            stage.setScene(new Scene(root));
-                            stage.show();
-                        } else {
-                            System.out.println("Erreur : le bouton n'est pas attaché à une scène.");
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
-
-                consulterMesEventsBtn.setOnAction(e -> { try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/MyEvents.fxml"));
-                    Parent root = loader.load();
-
-                    // Vérifie que le bouton a bien une scène avant d'appeler getWindow()
-                    if (consulterMesEventsBtn.getScene() != null) {
-                        Stage stage = (Stage) consulterMesEventsBtn.getScene().getWindow();
-                        stage.setScene(new Scene(root));
-                        stage.show();
-                    } else {
-                        System.out.println("Erreur : le bouton n'est pas attaché à une scène.");
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                });
-
-
-                buttonBox.getChildren().addAll(creerEventBtn, consulterMesEventsBtn);
-                eventList.getChildren().add(buttonBox);
-            }else {
-                HBox buttonBox = new HBox(20);
-                buttonBox.setStyle("-fx-alignment: center-right; -fx-padding: 10;");
-
-                Button parEventBtn = new Button("Mes Participation");
-
-                parEventBtn.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
-
-                // Ajouter des actions aux boutons
-                parEventBtn.setOnAction(e -> {
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MaParticipation.fxml"));
-                        Parent root = loader.load();
-
-                        // Vérifie que le bouton a bien une scène avant d'appeler getWindow()
-                        if (parEventBtn.getScene() != null) {
-                            Stage stage = (Stage) parEventBtn.getScene().getWindow();
-                            stage.setScene(new Scene(root));
-                            stage.show();
-                        } else {
-                            System.out.println("Erreur : le bouton n'est pas attaché à une scène.");
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
-
-
-
-
-                buttonBox.getChildren().addAll(parEventBtn);
-                eventList.getChildren().add(buttonBox);
-
-            }
-
-            List<Evenement> events = evenementService.getAll();
+            List<Evenement> events = pr.getEventsByParticipant(id);
             HBox row = new HBox(50); // HBox pour contenir 2 cartes par ligne
             row.setStyle("-fx-alignment: center-start;"); // Alignement à gauche
 

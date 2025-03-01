@@ -350,3 +350,28 @@
 .btnt:hover {
     -fx-background-color: #575757;
 }
+
+
+.btnE {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btnE:hover {
+    -fx-background-color: #f52e20;
+}
+
+.btnA {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btnA:hover {
+    -fx-background-color: #38c23e;
+}

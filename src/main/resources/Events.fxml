@@ -211,6 +211,10 @@
                </children></VBox>
             </content>
         </ScrollPane>
-
+        <HBox alignment="CENTER" layoutX="1178.0" layoutY="76.0" spacing="10">
+            <Button onAction="#filterEnACTIF" styleClass="btnA" text="ACTIF" />
+            <Button onAction="#filterEXPIRE" styleClass="btnE" text="EXPIRE" />
+            <Button onAction="#filterTout" styleClass="btnt" text="Réinitialiser" />
+        </HBox>
     </children>
 </AnchorPane>

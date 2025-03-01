@@ -216,6 +216,69 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+    public List<Evenement> getEventsByParticipant(int participantId) {
+        List<Evenement> events = new ArrayList<>();
+
+        // Query to fetch events for the participant
+        String query = "SELECT * FROM participantevenement WHERE userId = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, participantId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Get event id from the result set
+                int eventId = rs.getInt("evenementId");
+
+                // Create an Evenement object based on the eventId (assuming you have a method to fetch event details)
+                Evenement event = EvenementService.getById(eventId); // Implement this method to retrieve event details by eventId
+
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return events;
+    }
+
+//    // Assuming you have a method like this to get event details by eventId
+//    public Evenement getEventById(int eventId) {
+//        Evenement event = null;
+//        String query = "SELECT * FROM evenement WHERE id = ?";
+//
+//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+//            stmt.setInt(1, eventId);
+//            ResultSet rs = stmt.executeQuery();
+//
+//            if (rs.next()) {
+//                // Retrieve event details from result set
+//                int id = rs.getInt("id");
+//                String name = rs.getString("name");
+//                // Add other attributes as needed
+//                event = new Evenement(id, name); // Customize the constructor as per your event model
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return event;
+//    }
+
 }
 
 

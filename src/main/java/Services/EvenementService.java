@@ -201,14 +201,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EvenementService implements Crud<Evenement> {
+public class EvenementService {
     private static Connection conn = null;
 
     public EvenementService() {
         this.conn = MyDb.getInstance().getConn();
     }
 
-    @Override
+
     public boolean create(Evenement obj) throws Exception {
         String sql = "INSERT INTO evenement (titre, description, dateDebut, dateFin, lieu, etat, prix, image, type, organisateur, capaciteMaximale, idCreateurEvenement) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -248,7 +248,7 @@ public class EvenementService implements Crud<Evenement> {
         }
         return false;
     }
-    @Override
+
     public void update(Evenement obj) throws Exception {
         String sql = "UPDATE evenement SET titre = ?, description = ?, dateDebut = ?, dateFin = ?, lieu = ?, etat = ?, prix = ?, image = ?, type = ?, organisateur = ?, capaciteMaximale = ?, idCreateurEvenement = ? WHERE id = ?";
 
@@ -285,8 +285,8 @@ public class EvenementService implements Crud<Evenement> {
             System.out.println("Erreur lors de la mise à jour de l'événement: " + e.getMessage());
         }
     }
-    @Override
-    public Evenement getById(int id) throws Exception {
+
+    public static Evenement getById(int id) throws Exception {
         String sql = "SELECT * FROM evenement WHERE id = ?";
         Evenement obj = null;
 
@@ -321,7 +321,7 @@ public class EvenementService implements Crud<Evenement> {
 
         return obj;
     }
-    @Override
+
     public void delete(int id) throws Exception {
         String req = "DELETE FROM evenement WHERE `id`=?";
         try (PreparedStatement pstmt = conn.prepareStatement(req)) {
@@ -340,7 +340,7 @@ public class EvenementService implements Crud<Evenement> {
             e.printStackTrace();
         }
     }
-    @Override
+
     public List<Evenement> getAll() throws Exception {
         updateExpiredEvents();
         updateEtatWhenFull();

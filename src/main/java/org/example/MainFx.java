@@ -40,15 +40,15 @@ public class MainFx extends Application {
         primaryStage.show();
 
         //trigger
-
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
-            System.out.println("[DEBUG] Running scheduled task...");
-
-            EvenementService.updateExpiredEvents();
-            EvenementService.updateEtatWhenFull();
-            ParticipantEvenementService.cancelExpiredPendingPayments();
-        }, 0, 1, TimeUnit.MINUTES);
+//
+//        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//        scheduler.scheduleAtFixedRate(() -> {
+//            System.out.println("[DEBUG] Running scheduled task...");
+//
+//            EvenementService.updateExpiredEvents();
+//            EvenementService.updateEtatWhenFull();
+//            ParticipantEvenementService.cancelExpiredPendingPayments();
+//        }, 0, 1, TimeUnit.MINUTES);
     }
 
 }

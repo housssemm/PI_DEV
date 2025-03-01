@@ -164,7 +164,7 @@
                     <children>
                         <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
                             <children>
-                                <TextField fx:id="search" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
+                                <TextField fx:id="searchField" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
                                     <font>
                                         <Font name="Cambria" size="14.0" />
                                     </font>
@@ -211,7 +211,7 @@
                </children></VBox>
             </content>
         </ScrollPane>
-        <HBox alignment="CENTER" layoutX="1178.0" layoutY="76.0" spacing="10">
+        <HBox alignment="CENTER" layoutX="1178.0" layoutY="76.0" spacing="10" translateX="100.0">
             <Button onAction="#filterEnACTIF" styleClass="btnA" text="ACTIF" />
             <Button onAction="#filterEXPIRE" styleClass="btnE" text="EXPIRE" />
             <Button onAction="#filterTout" styleClass="btnt" text="Réinitialiser" />

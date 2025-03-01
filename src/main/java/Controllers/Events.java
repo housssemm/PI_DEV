@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -24,6 +25,7 @@ import Services.EvenementService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Events {
 
@@ -32,10 +34,13 @@ public class Events {
 
 
     private EvenementService evenementService = new EvenementService();
+    @FXML
+    private TextField searchField; // Champ de recherche
 
     @FXML
     public void initialize() {
         loadEvents();
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchEvents(newValue));
     }
 
     private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
@@ -133,10 +138,36 @@ public class Events {
 
         return eventCard;
     }
+    private List<Evenement> allEvents;
+
+    private void searchEvents(String query) {
+        // Filtrer les événements en fonction de la requête de recherche
+        List<Evenement> filteredEvents = allEvents.stream()
+                .filter(event -> event.getTitre().toLowerCase().contains(query.toLowerCase())
+                        || event.getLieu().toLowerCase().contains(query.toLowerCase())
+                        || event.getType().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+
+        // Nettoyer la liste des événements actuels
+        eventList.getChildren().clear();
+
+        // Ajouter un titre de la liste filtrée
+        Label titleLabell = new Label("Événements trouvés :");
+        titleLabell.setStyle("-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        eventList.getChildren().add(titleLabell);
+
+        // Créer une carte pour chaque événement filtré
+        for (Evenement event : filteredEvents) {
+            VBox eventCard = createEventCard(event);  // Créer une carte pour chaque événement
+            eventList.getChildren().add(eventCard);  // Ajouter la carte à la liste des événements
+        }
+    }
+
 
 
     void loadEvents() {
         try {
+            allEvents = evenementService.getAll();
             eventList.getChildren().clear(); // Nettoyer la liste avant de charger les événements
             Label titleLabell = new Label("Liste des Événements :");
             titleLabell.setStyle("-fx-font-size: 24px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
@@ -153,8 +184,8 @@ public class Events {
                 Button creerEventBtn = new Button("Créer un événement");
                 Button consulterMesEventsBtn = new Button("Consulter mes événements");
 
-                creerEventBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
-                consulterMesEventsBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
+                creerEventBtn.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
+                consulterMesEventsBtn.setStyle("-fx-background-color: #708090; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5;");
 
                 // Ajouter des actions aux boutons
                 creerEventBtn.setOnAction(e -> {
@@ -393,3 +424,4 @@ public class Events {
         loadEvents();
     }
 }
+

@@ -7,20 +7,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReponseService implements CrudR<Reponse> {
+public class ReponseService {
     private Connection conn;
 
     public ReponseService() {
         this.conn = MyDb.getInstance().getConn();
     }
 
-    @Override
+
     public boolean create(Reponse obj) throws Exception {
-        String sql = "INSERT INTO reponse (id_reclamation, date_reponse, contenu) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reponse (id_reclamation, date_reponse, contenu, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, obj.getId_reclamation());
             stmt.setDate(2, new Date(obj.getDate_reponse().getTime()));
             stmt.setString(3, obj.getContenu());
+            stmt.setString(4, obj.getStatus());
 
             int res = stmt.executeUpdate();
             if (res > 0) {
@@ -35,14 +36,15 @@ public class ReponseService implements CrudR<Reponse> {
         return false;
     }
 
-    @Override
+
     public boolean update(Reponse obj) throws Exception {
-        String sql = "UPDATE reponse SET id_reclamation = ?, date_reponse = ?, contenu = ? WHERE id = ?";
+        String sql = "UPDATE reponse SET id_reclamation = ?, date_reponse = ?, contenu = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, obj.getId_reclamation());
             stmt.setDate(2, new Date(obj.getDate_reponse().getTime()));
             stmt.setString(3, obj.getContenu());
-            stmt.setInt(4, obj.getId());
+            stmt.setString(4, obj.getStatus());
+            stmt.setInt(5, obj.getId());
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -57,7 +59,7 @@ public class ReponseService implements CrudR<Reponse> {
         return false;
     }
 
-    @Override
+
     public void delete(int id) throws Exception {
         String sql = "DELETE FROM reponse WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -74,7 +76,7 @@ public class ReponseService implements CrudR<Reponse> {
         }
     }
 
-    @Override
+
     public List<Reponse> getAll() throws Exception {
         String sql = "SELECT * FROM reponse";
         List<Reponse> reponses = new ArrayList<>();
@@ -87,7 +89,8 @@ public class ReponseService implements CrudR<Reponse> {
                         rs.getInt("id"),
                         rs.getInt("id_reclamation"),
                         rs.getDate("date_reponse"),
-                        rs.getString("contenu")
+                        rs.getString("contenu"),
+                        rs.getString("status")
                 );
                 reponses.add(obj);
             }
@@ -97,7 +100,7 @@ public class ReponseService implements CrudR<Reponse> {
         return reponses;
     }
 
-    @Override
+
     public Reponse getById(int id) throws Exception {
         String sql = "SELECT * FROM reponse WHERE id = ?";
         Reponse obj = null;
@@ -111,7 +114,8 @@ public class ReponseService implements CrudR<Reponse> {
                         rs.getInt("id"),
                         rs.getInt("id_reclamation"),
                         rs.getDate("date_reponse"),
-                        rs.getString("contenu")
+                        rs.getString("contenu"),
+                        rs.getString("status")
                 );
             }
         } catch (SQLException e) {
@@ -133,7 +137,8 @@ public class ReponseService implements CrudR<Reponse> {
                         rs.getInt("id"),
                         rs.getInt("id_reclamation"),
                         rs.getDate("date_reponse"),
-                        rs.getString("contenu")
+                        rs.getString("contenu"),
+                        rs.getString("status")
                 );
             }
         } catch (SQLException e) {

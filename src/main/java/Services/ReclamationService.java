@@ -11,7 +11,7 @@ import java.util.List;
  * Service gérant toutes les opérations liées aux réclamations
  * Implémente l'interface Crud pour les opérations standard
  */
-public class ReclamationService implements CrudR<Reclamation> {
+public class ReclamationService  {
     // Attribut pour la connexion à la base de données
     private Connection conn;
 
@@ -35,7 +35,7 @@ public class ReclamationService implements CrudR<Reclamation> {
      * @param obj La réclamation à créer
      * @return true si la création est réussie, false sinon
      */
-    @Override
+
     public boolean create(Reclamation obj) throws Exception {
         // Requête SQL pour l'insertion d'une nouvelle réclamation
         String sql = "INSERT INTO reclamation(description, typeR, id_coach, id_adherent, date) VALUES (?, ?, ?, ?, ?)";
@@ -68,7 +68,7 @@ public class ReclamationService implements CrudR<Reclamation> {
      * @param obj La réclamation à mettre à jour
      * @return true si la mise à jour est réussie, false sinon
      */
-    @Override
+
     public boolean update(Reclamation obj) throws Exception {
         // Requête SQL pour la mise à jour
         String sql = "UPDATE reclamation SET description = ?, typeR = ?, id_coach = ?, id_adherent = ?, date = ? WHERE idReclamation = ?";
@@ -100,7 +100,7 @@ public class ReclamationService implements CrudR<Reclamation> {
      * Supprime une réclamation de la base de données
      * @param id L'identifiant de la réclamation à supprimer
      */
-    @Override
+
     public void delete(int id) throws Exception {
         // Requête SQL pour la suppression
         String sql = "DELETE FROM reclamation WHERE idReclamation = ?";
@@ -125,7 +125,7 @@ public class ReclamationService implements CrudR<Reclamation> {
      * Récupère toutes les réclamations de la base de données
      * @return Liste de toutes les réclamations
      */
-    @Override
+
     public List<Reclamation> getAll() throws Exception {
         // Requête SQL pour récupérer toutes les réclamations
         String sql = "SELECT * FROM reclamation";
@@ -160,7 +160,7 @@ public class ReclamationService implements CrudR<Reclamation> {
      * @param id L'identifiant de la réclamation recherchée
      * @return La réclamation trouvée ou null si non trouvée
      */
-    @Override
+
     public Reclamation getById(int id) throws Exception {
         // Requête SQL pour récupérer une réclamation spécifique
         String sql = "SELECT * FROM reclamation WHERE idReclamation = ?";

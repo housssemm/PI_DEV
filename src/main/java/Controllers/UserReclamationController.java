@@ -1,32 +1,34 @@
 package Controllers;
 
 import Models.Reclamation;
+import Models.Reponse;
 import Models.typeR;
 import Services.ReclamationService;
+import Services.ReponseService;
+import Utils.BadWordFilter;
 import Utils.MyDb;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import javafx.geometry.Pos;
-import javafx.scene.layout.StackPane;
-import javafx.geometry.Insets;
-import Utils.ValidationUtils;
 
 public class UserReclamationController implements Initializable {
     @FXML private TextArea descriptionField;
@@ -38,6 +40,7 @@ public class UserReclamationController implements Initializable {
     @FXML private ListView<Reclamation> reclamationTable;
     @FXML private Button profileButton;
     @FXML private HBox searchContainer;
+    @FXML private DatePicker datePicker;
 
     private final ReclamationService reclamationService = new ReclamationService();
     private ObservableList<Reclamation> reclamationsList = FXCollections.observableArrayList();
@@ -61,7 +64,7 @@ public class UserReclamationController implements Initializable {
         
         // Style the search field
         searchField.getStyleClass().add("search-box");
-        searchField.setPromptText("Rechercher dans vos réclamations...");
+        searchField.setPromptText("Rechercher par type (PRODUIT, COACH, ADHERENT, EVENEMENT) ou description...");
         
         // Setup refresh button with icon
         FontIcon refreshIcon = new FontIcon(FontAwesomeSolid.SYNC_ALT);
@@ -142,11 +145,33 @@ public class UserReclamationController implements Initializable {
                     HBox statusBox = new HBox(6);
                     statusBox.setAlignment(Pos.CENTER_LEFT);
                     
-                    FontIcon statusIcon = new FontIcon(FontAwesomeSolid.CLOCK);
-                    statusIcon.setIconColor(javafx.scene.paint.Color.web("#856404"));
+                    FontIcon statusIcon = new FontIcon();
+                    Label statusLabel = new Label();
                     
-                    Label statusLabel = new Label("En attente");
-                    statusLabel.getStyleClass().addAll("status-badge", "status-pending");
+                    try {
+                        ReponseService reponseService = new ReponseService();
+                        Reponse existingReponse = reponseService.getByReclamationId(reclamation.getIdReclamation());
+                        
+                        if (existingReponse != null) {
+                            statusIcon.setIconLiteral("fas-check-circle");
+                            statusIcon.setIconColor(javafx.scene.paint.Color.web("#28a745"));
+                            statusLabel.setText("Résolue");
+                            statusLabel.getStyleClass().addAll("status-badge", "status-resolved");
+                        } else {
+                            statusIcon.setIconLiteral("fas-clock");
+                            statusIcon.setIconColor(javafx.scene.paint.Color.web("#856404"));
+                            statusLabel.setText("En attente");
+                            statusLabel.getStyleClass().addAll("status-badge", "status-pending");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // Default to pending if there's an error
+                        statusIcon.setIconLiteral("fas-clock");
+                        statusIcon.setIconColor(javafx.scene.paint.Color.web("#856404"));
+                        statusLabel.setText("En attente");
+                        statusLabel.getStyleClass().addAll("status-badge", "status-pending");
+                    }
+                    
                     statusBox.getChildren().addAll(statusIcon, statusLabel);
 
                     // Delete button with icon
@@ -210,15 +235,62 @@ public class UserReclamationController implements Initializable {
         filteredReclamations = new FilteredList<>(reclamationsList, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredReclamations.setPredicate(reclamation -> {
+                // If search field is empty, show all reclamations
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
+
                 String lowerCaseFilter = newValue.toLowerCase();
-                return reclamation.getDescription().toLowerCase().contains(lowerCaseFilter) ||
-                       reclamation.getType().toString().toLowerCase().contains(lowerCaseFilter);
+
+                // Check if the search term matches the type
+                boolean matchesType = false;
+                for (typeR type : typeR.values()) {
+                    if (type.toString().toLowerCase().contains(lowerCaseFilter)) {
+                        if (type == reclamation.getType()) {
+                            matchesType = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Check if description contains search term
+                boolean matchesDescription = reclamation.getDescription().toLowerCase().contains(lowerCaseFilter);
+
+                // Check if the selected date matches
+                boolean matchesDate = true;
+                if (datePicker.getValue() != null) {
+                    Date selectedDate = java.sql.Date.valueOf(datePicker.getValue());
+                    matchesDate = reclamation.getDate().equals(selectedDate);
+                }
+
+                // Return true if either type, description, or date matches
+                return (matchesType || matchesDescription) && matchesDate;
             });
             reclamationTable.setItems(filteredReclamations);
         });
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            filteredReclamations.setPredicate(filteredReclamation -> {
+                if (newValue == null) {
+                    return true; // Show all if no date is selected
+                }
+                Date selectedDate = java.sql.Date.valueOf(newValue);
+                return filteredReclamation.getDate().equals(selectedDate);
+            });
+            reclamationTable.setItems(filteredReclamations);
+        });
+        
+        // Update search icon based on search state
+        FontIcon searchIcon = (FontIcon) searchContainer.getChildren().get(0);
+        if (!searchField.getText().isEmpty()) {
+            searchIcon.setIconLiteral("fas-times");
+            searchIcon.setOnMouseClicked(e -> {
+                searchField.clear();
+                loadReclamations();
+            });
+        } else {
+            searchIcon.setIconLiteral("fas-search");
+            searchIcon.setOnMouseClicked(null);
+        }
     }
 
     private void handleSubmitReclamation() {
@@ -324,21 +396,34 @@ public class UserReclamationController implements Initializable {
         boolean isValid = true;
         String description = descriptionField.getText();
         typeR type = typeComboBox.getValue();
-
-        // Validation de la description
-        if (description == null || description.isEmpty()) {
-            descriptionField.setStyle("-fx-border-color: #dc3545; -fx-border-width: 2px;");
-            isValid = false;
-        } else if (description.length() < 10) {
-            descriptionField.setStyle("-fx-border-color: #ffa500; -fx-border-width: 2px;");
-            isValid = false;
-        }
-
         // Validation du type
         if (type == null) {
             typeComboBox.setStyle("-fx-border-color: #dc3545; -fx-border-width: 2px;");
+            showAlert(Alert.AlertType.ERROR, "Champ vide , veuillez le remplir !",
+                    "Veuillez chosir le type votre réclamation !");
             isValid = false;
         }
+
+        // Validation de la description
+
+        if (description == null || description.isEmpty()) {
+            descriptionField.setStyle("-fx-border-color: #dc3545; -fx-border-width: 2px;");
+            showAlert(Alert.AlertType.ERROR, "Champ vide , veuillez le remplir !",
+                    "Veuillez saisir votre réclamation !");
+            isValid = false;
+        } else if (description.length() < 10) {
+            descriptionField.setStyle("-fx-border-color: #ffa500; -fx-border-width: 2px;");
+            showAlert(Alert.AlertType.ERROR, "Reclamtion invalid",
+                    "Votre réclamation doit contenir 10 caracter .");
+            isValid = false;
+        } else if (BadWordFilter.containsBadWords(description)) {
+            // Vérification des mots inappropriés
+            descriptionField.setStyle("-fx-border-color: #dc3545; -fx-border-width: 2px;");
+            showAlert(Alert.AlertType.ERROR, "Contenu inapproprié", 
+                "Votre réclamation contient des mots inappropriés. Veuillez reformuler votre message.");
+            isValid = false;
+        }
+
 
         return isValid;
     }
@@ -379,15 +464,5 @@ public class UserReclamationController implements Initializable {
                 typeComboBox.setStyle("-fx-border-color: #28a745; -fx-border-width: 2px;");
             }
         });
-    }
-    @FXML
-    void GoTorecc(ActionEvent actionEvent) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Gestion_Rec.fxml"));
-            Parent root = loader.load();
-            ((Button) actionEvent.getSource()).getScene().setRoot(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 } 

@@ -15,7 +15,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane prefHeight="700.0" prefWidth="1550.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EventDetailsController">    <children>
         <HBox prefHeight="810.0" prefWidth="288">
             <children>
@@ -335,29 +334,21 @@
             </HBox>
         </children>
     </VBox>
-<!--    <Label fx:id="weatherLabel" layoutX="1043.0" layoutY="584.0" text="Weather: " />-->
-<!--    <HBox fx:id="weatherContainer" layoutX="1043" layoutY="584" styleClass="weather-card" spacing="10">-->
-<!--        <children>-->
-<!--            <FontIcon fx:id="weatherIcon" styleClass="weather-icon" />-->
-<!--            <VBox spacing="4">-->
-<!--                <Label fx:id="temperatureLabel" styleClass="temperature-text"/>-->
-<!--                <Label fx:id="descriptionnLabel" styleClass="description-text"/>-->
-<!--            </VBox>-->
-<!--        </children>-->
-<!--    </HBox>-->
-    <VBox spacing="10" layoutX="1000" layoutY="584" styleClass="weather-card">
+
+    <VBox layoutX="993.0" layoutY="540.0" spacing="10" styleClass="weather-card">
         <children>
-            <Label text="Avant de réserver votre place à l’événement, consulter la météo :" styleClass="info-text"/>
+            <Label styleClass="info-text" text="Avant de réserver votre place à l’événement, consulter la météo :" />
             <HBox fx:id="weatherContainer" spacing="10">
                 <children>
-                    <ImageView fx:id="weatherIcon" styleClass="weather-icon" fitWidth="32" fitHeight="32"/>
+                    <ImageView fx:id="weatherIcon" fitHeight="32" fitWidth="32" styleClass="weather-icon" />
                     <VBox spacing="4">
-                        <Label fx:id="temperatureLabel" styleClass="temperature-text"/>
-                        <Label fx:id="descriptionnLabel" styleClass="description-text"/>
+                        <Label fx:id="temperatureLabel" styleClass="temperature-text" />
+                        <Label fx:id="descriptionnLabel" styleClass="description-text" />
                     </VBox>
                 </children>
             </HBox>
         </children>
     </VBox>
+      <Button layoutX="1106.0" layoutY="713.0" mnemonicParsing="false" onAction="#btnAddToGoogleCalendar" text="ajouter cette evenement  a google agenda" />
 </children>
 </AnchorPane>

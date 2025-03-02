@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public  class OffreService implements Crud<Offre> {
-    protected Connection conn;
+    protected static Connection conn;
 
     public OffreService() {
         this.conn = MyDb.getInstance().getConn();

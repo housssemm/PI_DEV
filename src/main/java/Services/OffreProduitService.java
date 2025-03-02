@@ -138,4 +138,24 @@ public class OffreProduitService extends OffreService {
 
         return offreProduit; // Retourne l'objet OffreProduit
     }
+    public static String getPhoneNumberById(int userId) {
+        String phoneNumber = null;
+        String query = "SELECT Telephone FROM investisseurproduit WHERE id = ?";
+
+        try (
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                phoneNumber = rs.getString("Telephone");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return phoneNumber;
+    }
 }

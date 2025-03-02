@@ -14,18 +14,18 @@
               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             
             <!-- Navigation Sidebar -->
-            <VBox minWidth="220.0" maxWidth="220.0" styleClass="bg" HBox.hgrow="NEVER">
+            <VBox minWidth="180.0" maxWidth="180.0" styleClass="bg" HBox.hgrow="NEVER">
                 <children>
                     <!-- Logo Section -->
-                    <VBox alignment="CENTER" minHeight="150">
-                        <ImageView fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                    <VBox alignment="CENTER" minHeight="120">
+                        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@img/logor.png"/>
                             </image>
                         </ImageView>
                     </VBox>
 
-                    <Separator prefWidth="200.0"/>
+                    <Separator prefWidth="160.0"/>
                     
                     <!-- Navigation Buttons -->
                     <Button fx:id="profileButton" styleClass="nav-button" text="Mon Profil">
@@ -34,7 +34,7 @@
                         </graphic>
                     </Button>
                     
-                    <Separator prefWidth="200.0"/>
+                    <Separator prefWidth="160.0"/>
                     
                     <Button fx:id="seanceButton" styleClass="nav-button" text="Mes Séances">
                         <graphic>
@@ -42,7 +42,7 @@
                         </graphic>
                     </Button>
                     
-                    <Separator prefWidth="200.0"/>
+                    <Separator prefWidth="160.0"/>
                     
                     <Button fx:id="produitButton" styleClass="nav-button" text="Produits">
                         <graphic>
@@ -50,7 +50,7 @@
                         </graphic>
                     </Button>
                     
-                    <Separator prefWidth="200.0"/>
+                    <Separator prefWidth="160.0"/>
                     
                     <Button fx:id="offreButton" styleClass="nav-button" text="Offres">
                         <graphic>
@@ -58,7 +58,7 @@
                         </graphic>
                     </Button>
                     
-                    <Separator prefWidth="200.0"/>
+                    <Separator prefWidth="160.0"/>
                     
                     <Button fx:id="eventButton" styleClass="nav-button" text="Evénements">
                         <graphic>
@@ -66,20 +66,14 @@
                         </graphic>
                     </Button>
                     
-                    <Separator prefWidth="200.0"/>
+                    <Separator prefWidth="160.0"/>
                     
                     <Button fx:id="reclamationButton" styleClass="nav-button, active" text="Réclamations">
                         <graphic>
                             <FontIcon iconLiteral="fas-comment-alt" iconSize="20"/>
                         </graphic>
                     </Button>
-                    <Separator prefWidth="200.0" />
-
-                    <Button fx:id="reclamationU" onAction="#GoTorecc" styleClass="nav-button, active" text="Admin Reclamations">
-                        <graphic>
-                            <FontIcon iconLiteral="fas-comment-alt" iconSize="20"/>
-                        </graphic>
-                    </Button>
+                    
                     <Region VBox.vgrow="ALWAYS"/>
                     
                     <Button fx:id="logoutButton" styleClass="nav-button, logout-button" text="Déconnexion">
@@ -93,39 +87,48 @@
             <!-- Main Content Area -->
             <VBox HBox.hgrow="ALWAYS">
                 <!-- Top Bar -->
-                <VBox styleClass="modern-top-bar" minHeight="70.0" maxHeight="70.0">
-                    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar-content">
-                        <padding>
-                            <Insets right="30" left="30"/>
-                        </padding>
-                        <HBox alignment="CENTER_LEFT" spacing="15">
-                            <StackPane styleClass="header-icon-container">
-                                <FontIcon iconLiteral="fas-headset" iconSize="24" styleClass="header-icon"/>
-                            </StackPane>
-                            <VBox spacing="2">
-                                <Label text="Centre d'Assistance" styleClass="modern-header-title"/>
-                                <Label text="Service Client 24/7" styleClass="header-subtitle"/>
-                            </VBox>
+                <VBox layoutX="288.0" prefHeight="67.0" prefWidth="1260.0" style="-fx-background-color: #708090;">
+                    <children>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1246.0">
+                            <children>
+                                <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
+                                    <children>
+                                        <HBox fx:id="searchContainer" alignment="CENTER" styleClass="search-container">
+                                            <children>
+                                                <DatePicker fx:id="datePicker" promptText="Sélectionner une date" />
+                                            </children>
+                                        </HBox>
+                                        <HBox fx:id="searchContainer" alignment="CENTER" styleClass="search-container">
+                                            <children>
+                                                <TextField fx:id="searchField" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-field">
+                                                    <font>
+                                                        <Font name="Cambria" size="14.0" />
+                                                    </font>
+                                                </TextField>
+                                            </children>
+                                        </HBox>
+
+                                    </children>
+                                </HBox>
+                                <ImageView fitHeight="57.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/notification.png" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets right="22.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                                <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/profile.png" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets right="22.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                            </children>
                         </HBox>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <HBox fx:id="searchContainer" styleClass="modern-search-container">
-                            <StackPane styleClass="search-icon-container">
-                               
-                            </StackPane>
-                            <TextField fx:id="searchField" promptText="Rechercher dans vos réclamations..." 
-                                     styleClass="modern-search-field"/>
-                        </HBox>
-                        <Button fx:id="refreshButton" styleClass="modern-refresh-button">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-sync-alt" iconSize="16"/>
-                            </graphic>
-                        </Button>
-                        <Button styleClass="modern-profile-button">
-                            <graphic>
-                                <FontIcon iconLiteral="fas-user-circle" iconSize="20"/>
-                            </graphic>
-                        </Button>
-                    </HBox>
+                    </children>
                 </VBox>
 
                 <!-- Main Content -->

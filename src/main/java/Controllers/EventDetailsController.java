@@ -587,6 +587,11 @@ import Models.etatPaiement;
 import Services.CreateurEvenementService;
 import Services.ParticipantEvenementService;
 import Utils.Session;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
 import com.stripe.model.PaymentMethod;
 import com.stripe.param.PaymentMethodCreateParams;
 import javafx.application.Platform;
@@ -609,6 +614,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -632,9 +641,35 @@ import com.stripe.model.Charge;
 import com.stripe.model.Token;
 import com.stripe.param.TokenCreateParams;
 import com.stripe.param.ChargeCreateParams;
-import org.kordamp.ikonli.Ikon;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+
+
+
+
+
+
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+
+import com.google.api.services.calendar.model.EventReminder;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
+import static Services.GoogleCalendarService.*;
 
 public class EventDetailsController {
 
@@ -720,108 +755,7 @@ public class EventDetailsController {
         }
         displayWeatherForEvent(event.getLieu());
     }
-//    private void displayWeatherForEvent(String location) {
-//        try {
-//            // Replace "your_api_key" with your actual OpenWeatherMap API key
-//            String apiKey = "ca261522f8b8207fb287fca1899b3690";
-//            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
-//
-//
-//            URL url = new URL(urlString);
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestMethod("GET");
-//
-//            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            String inputLine;
-//            StringBuilder response = new StringBuilder();
-//
-//            while ((inputLine = in.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//            in.close();
 
-//            // Parse the response to get weather details
-//            JSONObject jsonResponse = new JSONObject(response.toString());
-//            String weatherDescription = jsonResponse.getJSONArray("weather").getJSONObject(0).getString("description");
-//            double temperature = jsonResponse.getJSONObject("main").getDouble("temp");
-//
-//            // Display the weather information
-//            weatherLabel.setText("Weather: " + weatherDescription + ", " + temperature + "°C");
-//        } catch (Exception e) {
-//            showAlert(Alert.AlertType.ERROR, "Error", "Failed to fetch weather data: " + e.getMessage());
-//        }
-//    }
-
-//
-//    private void displayWeatherForEvent(String location) {
-//        try {
-//            // Replace "your_api_key" with your actual OpenWeatherMap API key
-//            String apiKey = "ca261522f8b8207fb287fca1899b3690";
-//            String urlString = "https://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=" + apiKey + "&units=metric";
-//
-//
-//            URL url = new URL(urlString);
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestMethod("GET");
-//
-//            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            String inputLine;
-//            StringBuilder response = new StringBuilder();
-//
-//            while ((inputLine = in.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//            in.close();
-//
-//            // Parse response
-//            JSONObject jsonResponse = new JSONObject(response.toString());
-//            String description = jsonResponse.getJSONArray("weather")
-//                    .getJSONObject(0).getString("description");
-//            double temp = jsonResponse.getJSONObject("main").getDouble("temp");
-//            String iconCode = jsonResponse.getJSONArray("weather")
-//                    .getJSONObject(0).getString("icon");
-//
-//            // Update UI
-////        Platform.runLater(() -> {
-////        weatherIcon.setText(getWeatherIcon(iconCode));
-////        temperatureLabel.setText(String.format("%.1f°C", temp));
-////        descriptionLabel.setText(capitalize(description));
-////    });
-//            Platform.runLater(() -> {
-//                String icon = getWeatherIcon(iconCode);
-//                System.out.println("Icon Code: " + iconCode + ", Icon: " + icon); // Debug statement
-//                weatherIcon.setText(icon);
-//                temperatureLabel.setText(String.format("%.1f°C", temp));
-//                descriptionnLabel.setText(capitalize(description));
-//            });
-//
-//        } catch (Exception e) {
-//            showAlert(Alert.AlertType.ERROR, "Error",
-//                    "Failed to fetch weather data: " + e.getMessage());
-//        }
-//    }
-//
-//    private String getWeatherIcon(String iconCode) {
-//        switch (iconCode) {
-//            case "01d": return "\uf185";  // sun (day)
-//            case "01n": return "\uf186";  // moon (night)
-//            case "02d": return "\uf0c2";  // cloud (day)
-//            case "02n": return "\uf0c2";  // cloud (night)
-//            case "03d": case "03n": return "\uf0c2";  // scattered clouds
-//            case "04d": case "04n": return "\uf0c2";  // broken clouds
-//            case "09d": case "09n": return "\uf0e9";  // shower rain
-//            case "10d": return "\uf008";  // rain (day)
-//            case "10n": return "\uf008";  // rain (night)
-//            case "11d": case "11n": return "\uf0e7";  // thunderstorm
-//            case "13d": case "13n": return "\uf2dc";  // snow
-//            case "50d": case "50n": return "\uf3ed";  // mist
-//            default: return "\uf059";  // question circle (default for unknown icons)
-//        }
-//    }
-//
-//    private String capitalize(String str) {
-//        return str.substring(0, 1).toUpperCase() + str.substring(1);
-//    }
 private void displayWeatherForEvent(String location) {
     try {
         String apiKey = "ca261522f8b8207fb287fca1899b3690";
@@ -1241,9 +1175,63 @@ private void displayWeatherForEvent(String location) {
         }
         return true;
     }
+    @FXML
+    void btnAddToGoogleCalendar(ActionEvent actionEvent) {
+        if (this.event == null) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun événement sélectionné !");
+            return;
+        }
+
+        // Gather event details
+        String title = this.event.getTitre();
+        String location = this.event.getLieu();
+        String description = this.event.getDescription();
+        LocalDate startDate = this.event.getDateDebut(); // Assuming this returns LocalDate
+         // Assuming this returns LocalTime
+        LocalDate endDate = this.event.getDateFin(); // Assuming this returns LocalDate
+         // Assuming this returns LocalTime
+
+        try {
+            addToGoogleCalendar(title, location, description, startDate, endDate);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Événement ajouté à Google Calendar !");
+        } catch (IOException | GeneralSecurityException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout à Google Calendar: " + e.getMessage());
+        }
+    }
+    public static void addToGoogleCalendar(String title, String location, String description,
+                                           LocalDate startDate,
+                                           LocalDate endDate) throws IOException, GeneralSecurityException {
+        // Create an instance of Google Calendar API
+        HttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Credential credential = getCredentials(HTTP_TRANSPORT);
+
+        // Create a Google Calendar service
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+                .setApplicationName(APPLICATION_NAME)
+                .build();
 
 
 
+        // Create an event
+        Event event = new Event()
+                .setSummary(title)
+                .setLocation(location)
+                .setDescription(description);
+
+
+
+
+
+        // Add reminders (email and popup)
+        EventReminder[] reminderOverrides = new EventReminder[]{
+                new EventReminder().setMethod("email").setMinutes(24 * 60),  // 24 hours before
+                new EventReminder().setMethod("popup").setMinutes(10),      // 10 minutes before
+        };
+
+        // Add the event to Google Calendar
+        event = service.events().insert("primary", event).execute();
+        System.out.println("Event added: " + event.getHtmlLink());
+    }
 }
 
 

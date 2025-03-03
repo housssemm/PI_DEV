@@ -375,3 +375,15 @@
 .btnA:hover {
     -fx-background-color: #38c23e;
 }
+
+.btnAg {
+    -fx-background-color: #e68e0e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+
+}
+.btnAg:hover {
+    -fx-background-color: #FF9800;
+}

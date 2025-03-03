@@ -6,16 +6,16 @@ public  class Offre {
     private String nom;
     private String description;
     private Date duree_validite;
-    private Etato etat;
+    private Etato etato;
 
     public Offre() {
     }
-    public Offre(int id,String nom, String description, Date duree_validite, Etato etat) {
+    public Offre(int id,String nom, String description, Date duree_validite, Etato etato) {
         this.id = id;
         this.nom = nom;
         this.description = description;
         this.duree_validite = duree_validite;
-        this.etat = etat;
+        this.etato = etato;
 
     }
     public int getId() {
@@ -43,10 +43,10 @@ public  class Offre {
         this.duree_validite = duree_validite;
     }
     public Etato getEtat() {
-        return etat;
+        return etato;
     }
-    public void setEtat(Etato etat) {
-        this.etat = etat;
+    public void setEtat(Etato etato) {
+        this.etato = etato;
     }
 
 
@@ -57,7 +57,7 @@ public  class Offre {
                 ", nom='" + nom + '\'' +
                 ", description='" + description + '\'' +
                 ", duree_validite=" + duree_validite +
-                ", etat=" + etat +
+                ", etat=" + etato +
                 '}';
     }
 

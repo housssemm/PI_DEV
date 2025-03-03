@@ -13,6 +13,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.scene.control.ButtonType;
+
 
 import java.io.IOException;
 
@@ -35,11 +37,23 @@ public class OfferDetailsController {
 
     public void setOfferDetails(Offre offer) {
         this.currentOffer = offer;
-        // Set the details of the offer to the corresponding labels
+
+        // Set the general offer details
         nameLabel.setText(offer.getNom());
         descriptionLabel.setText("Description: " + offer.getDescription());
         validiteLabel.setText("Validité: " + offer.getDuree_validite());
         etatLabel.setText("Etat: " + offer.getEtat());
+
+        // Assure que tous les labels spécifiques sont visibles et réinitialisés
+        specificLabel1.setText("");
+        specificLabel2.setText("");
+        specificLabel3.setText("");
+        specificLabel4.setText("");
+
+        specificLabel1.setVisible(true);
+        specificLabel2.setVisible(true);
+        specificLabel3.setVisible(true);
+        specificLabel4.setVisible(true);
 
         // Set the type-specific details
         if (offer instanceof OffreCoach) {
@@ -48,17 +62,23 @@ public class OfferDetailsController {
             specificLabel1.setText("ID Coach: " + offreCoach.getIdCoach());
             specificLabel2.setText("Nouveau Tarif: " + offreCoach.getNouveauTarif());
             specificLabel3.setText("Réservation Max: " + offreCoach.getReservationMax());
-            specificLabel4.setText(""); // Clear the fourth label for OffreCoach
+            specificLabel4.setVisible(false); // Cache le 4ème label inutile
         } else if (offer instanceof OffreProduit) {
             OffreProduit offreProduit = (OffreProduit) offer;
             typeLabel.setText("Type: Produit");
             specificLabel1.setText("ID Produit: " + offreProduit.getIdProduit());
             specificLabel2.setText("Nouveau Prix: " + offreProduit.getNouveauPrix());
             specificLabel3.setText("Quantité Max: " + offreProduit.getQuantiteMax());
-            specificLabel4.setText(""); // Clear the fourth label for OffreProduit
+            specificLabel4.setVisible(false); // Cache le 4ème label inutile
+        } else {
+            typeLabel.setText("Type: Inconnu");
+            specificLabel1.setVisible(false);
+            specificLabel2.setVisible(false);
+            specificLabel3.setVisible(false);
+            specificLabel4.setVisible(false);
         }
 
-        // Update the etatLabel based on the offer state (ACTIF or INACTIF)
+        // Mise à jour du style pour l'état
         String offerState = String.valueOf(offer.getEtat());
         if ("ACTIF".equals(offerState)) {
             etatLabel.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 5 7; -fx-background-radius: 5;");
@@ -68,6 +88,7 @@ public class OfferDetailsController {
             etatLabel.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: black; -fx-padding: 5 7; -fx-background-radius: 5;");
         }
     }
+
 
     @FXML
     private void handleUpdateButtonAction(ActionEvent event) {
@@ -81,26 +102,50 @@ public class OfferDetailsController {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Mettre à jour l'offre");
-            stage.show();
-        } catch (IOException e) {
+
+            // Ajouter le showAndWait() et rafraîchissement
+            stage.showAndWait();
+
+            // Recharger les données après mise à jour
+            Offre updatedOffer = offreService.getById(currentOffer.getId());
+            setOfferDetails(updatedOffer);
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur de chargement: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        try {
-            offreService.delete(currentOffer.getId());
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre supprimée avec succès.");
+        // Créer une boîte de dialogue de confirmation
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirmation de suppression");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer cette offre ?");
 
-            // Close the current window
-            Stage stage = (Stage) deleteButton.getScene().getWindow();
-            stage.close();
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la suppression de l'offre.");
-            e.printStackTrace();
-        }
+        // Ajouter des boutons OK et Annuler
+        confirmationAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // L'utilisateur a confirmé la suppression
+                try {
+                    offreService.delete(currentOffer.getId());
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre supprimée avec succès.");
+
+                    // Fermer la fenêtre actuelle
+                    Stage stage = (Stage) deleteButton.getScene().getWindow();
+                    stage.close();
+                } catch (Exception e) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la suppression de l'offre.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("User cancelled deletion");
+                // L'utilisateur a annulé la suppression
+                // Vous pouvez ajouter un message ou simplement ne rien faire
+            }
+        });
     }
+
 
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);

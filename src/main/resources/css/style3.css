@@ -199,4 +199,13 @@
 
 .details-button:hover {
     -fx-background-color: #FF9900;
+}.combo-box {
+     -fx-background-color: white;
+     -fx-border-radius: 5;
+     -fx-background-radius: 5;
+     -fx-padding: 3 8;
+ }
+
+.combo-box .list-cell {
+    -fx-font-size: 14px;
 }

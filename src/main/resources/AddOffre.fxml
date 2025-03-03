@@ -215,7 +215,7 @@
                                     <Label styleClass="event-title" text="Offre Coach" />
                                     <Button fx:id="offreCoachButton" mnemonicParsing="false" onAction="#handleOffreCoachButtonAction" styleClass="buttonn" text="Add Offre Coach" />
                                 </VBox>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                <Separator orientation="VERTICAL" prefHeight="200.0" />
                                 <VBox alignment="CENTER" spacing="10.0" translateX="70.0">
                                     <ImageView fitHeight="240.0" fitWidth="361.0" pickOnBounds="true" preserveRatio="true" styleClass="event-image">
                                         <image>

@@ -11,9 +11,9 @@ public class OffreProduit extends Offre {
     public OffreProduit() {}//Constructeur
 
     //  Constructeur
-    public OffreProduit(int id, String nom, String description, Date duree_validite, Etato etat,
+    public OffreProduit(int id, String nom, String description, Date duree_validite, Etato etato,
                         int idProduit, double nouveauPrix, int quantiteMax, int quantiteVendue) {
-        super(id, nom, description, duree_validite, etat); // Appel du constructeur de Offre
+        super(id, nom, description, duree_validite, etato); // Appel du constructeur de Offre
         this.idProduit = idProduit;
         this.nouveauPrix = nouveauPrix;
         this.quantiteMax = quantiteMax;

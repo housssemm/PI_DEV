@@ -1,11 +1,9 @@
 package Controllers;
 
 import Models.OffreProduit;
-import Models.Etato;
-import Services.CreateurEvenementService;
-import Services.OffreProduitService;
 import Services.TwilioSMSService;
-import Utils.Session;
+import Models.Etato;
+import Services.OffreProduitService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -126,10 +124,9 @@ public class AddOffreProduit {
             // Création de l'offre
             OffreProduit offreProduit = new OffreProduit(0, nom, description, Date.valueOf(dureeValidite), etatEnum, idProduit, nouveauPrix, quantiteMax, 0);
             offreProduitService.create(offreProduit);
-            int id = Session.getInstance().getCurrentUser().getId();
-            String phoneNumber = OffreProduitService.getPhoneNumberById(id);
+
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre Produit ajoutée avec succès.");
-            TwilioSMSService.sendSms(phoneNumber, "Bonjour ! vous avez ajouter un nouveau produit 🚀");
+            TwilioSMSService.sendSms("+21656452244", "Bonjour ! vous avez ajouter un nouveau produit 🚀");
 
             clearForm();
         } catch (Exception e) {

@@ -1,12 +1,14 @@
 package Controllers;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import Utils.MyDb;
 import Models.Offre;
 import Models.OffreCoach;
 import Models.OffreProduit;
 import Models.Etato;
-import Services.CreateurEvenementService;
 import Services.OffreService;
-import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +21,8 @@ import java.time.ZoneId;
 import java.sql.Date;
 
 public class UpdateOfferController {
+
+    private Connection conn = MyDb.getInstance().getConn();
 
     @FXML
     private TextField nomField;
@@ -73,46 +77,88 @@ public class UpdateOfferController {
         return new Date(dateToConvert.getTime()).toLocalDate();
     }
 
+    private void closeWindow() {
+        Stage stage = (Stage) nomField.getScene().getWindow();
+        stage.close();
+    }
+    
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
         try {
-            String nom = nomField.getText();
-            String description = descriptionField.getText();
-            LocalDate dureeValidite = dureeValiditeField.getValue();
-            Etato etat = Etato.valueOf(etatField.getValue());
-            int id = Integer.parseInt(idField.getText());
-            double nouveauPrixTarif = Double.parseDouble(nouveauPrixTarifField.getText());
-            int quantiteReservationMax = Integer.parseInt(quantiteReservationMaxField.getText());
-
-            if (currentOffer instanceof OffreCoach) {
-                OffreCoach offreCoach = (OffreCoach) currentOffer;
-                offreCoach.setNom(nom);
-                offreCoach.setDescription(description);
-                offreCoach.setDuree_validite(Date.valueOf(dureeValidite));
-                offreCoach.setEtat(etat);
-                offreCoach.setIdCoach(id);
-                offreCoach.setNouveauTarif(nouveauPrixTarif);
-                offreCoach.setReservationMax(quantiteReservationMax);
-                offreService.update(offreCoach);
-            } else if (currentOffer instanceof OffreProduit) {
-                OffreProduit offreProduit = (OffreProduit) currentOffer;
-                offreProduit.setNom(nom);
-                offreProduit.setDescription(description);
-                offreProduit.setDuree_validite(Date.valueOf(dureeValidite));
-                offreProduit.setEtat(etat);
-                offreProduit.setIdProduit(id);
-                offreProduit.setNouveauPrix(nouveauPrixTarif);
-                offreProduit.setQuantiteMax(quantiteReservationMax);
-                offreService.update(offreProduit);
+            // Validation basique
+            if (!validateInputs()) {
+                return;
             }
 
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre mise à jour avec succès.");
-            // Fermer la fenêtre actuelle
-            Stage stage = (Stage) nomField.getScene().getWindow();
-            stage.close();
+            // Mise à jour des champs communs
+            currentOffer.setNom(nomField.getText());
+            currentOffer.setDescription(descriptionField.getText());
+            currentOffer.setDuree_validite(Date.valueOf(dureeValiditeField.getValue()));
+            currentOffer.setEtat(Etato.valueOf(etatField.getValue()));
+
+            // Mise à jour via le service existant (champs de base seulement)
+            OffreService offreService = new OffreService();
+            offreService.update(currentOffer);
+
+            // Mise à jour manuelle des champs spécifiques
+            if (currentOffer instanceof OffreCoach) {
+                updateOffreCoachFields((OffreCoach) currentOffer);
+            } else if (currentOffer instanceof OffreProduit) {
+                updateOffreProduitFields((OffreProduit) currentOffer);
+            }
+
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre mise à jour !");
+            closeWindow();
+
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Valeurs numériques invalides");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la mise à jour de l'offre.");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur technique: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private boolean validateInputs() {
+        if (nomField.getText().isEmpty()
+                || descriptionField.getText().isEmpty()
+                || dureeValiditeField.getValue() == null
+                || etatField.getValue() == null) {
+
+            showAlert(Alert.AlertType.WARNING, "Champs manquants", "Remplissez tous les champs obligatoires");
+            return false;
+        }
+        return true;
+    }
+
+    private void updateOffreCoachFields(OffreCoach offreCoach) throws Exception {
+        // Mise à jour directe en base pour les champs spécifiques
+        String sql = "UPDATE OffreCoach SET "
+                + "idCoach = ?, nouveauTarif = ?, reservationMax = ? "
+                + "WHERE id = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, Integer.parseInt(idField.getText()));
+            pst.setDouble(2, Double.parseDouble(nouveauPrixTarifField.getText()));
+            pst.setInt(3, Integer.parseInt(quantiteReservationMaxField.getText()));
+            pst.setInt(4, currentOffer.getId());
+
+            pst.executeUpdate();
+        }
+    }
+
+    private void updateOffreProduitFields(OffreProduit offreProduit) throws Exception {
+        // Mise à jour directe en base pour les champs spécifiques
+        String sql = "UPDATE OffreProduit SET "
+                + "idProduit = ?, nouveauPrix = ?, quantiteMax = ? "
+                + "WHERE id = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, Integer.parseInt(idField.getText()));
+            pst.setDouble(2, Double.parseDouble(nouveauPrixTarifField.getText()));
+            pst.setInt(3, Integer.parseInt(quantiteReservationMaxField.getText()));
+            pst.setInt(4, currentOffer.getId());
+
+            pst.executeUpdate();
         }
     }
 

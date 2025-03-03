@@ -16,9 +16,9 @@ public class OffreCoach extends Offre {
 
 
     // Constructeur complet
-    public OffreCoach(int id, String nom, String description, Date duree_validite, Etato etat,
+    public OffreCoach(int id, String nom, String description, Date duree_validite, Etato etato,
                       int idCoach, double nouveauTarif, int reservationActuelle, int reservationMax) {
-        super(id,nom, description, duree_validite, etat);// Appel du constructeur de Offre
+        super(id,nom, description, duree_validite, etato);// Appel du constructeur de Offre
         this.idCoach = idCoach;
         this.nouveauTarif = nouveauTarif;
         this.reservationActuelle = reservationActuelle;

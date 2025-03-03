@@ -349,6 +349,6 @@
             </HBox>
         </children>
     </VBox>
-      <Button layoutX="1106.0" layoutY="713.0" mnemonicParsing="false" onAction="#btnAddToGoogleCalendar" text="ajouter cette evenement  a google agenda" />
+      <Button layoutX="1106.0" layoutY="713.0" mnemonicParsing="false" onAction="#btnAddToGoogleCalendar" text="ajouter cette evenement  a google agenda" styleClass="btnAg" />
 </children>
 </AnchorPane>

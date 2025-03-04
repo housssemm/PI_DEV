@@ -2,6 +2,7 @@ package Services;
 
 import Models.Categorie;
 import Utils.MyDb;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,10 @@ public class categorieService implements Crud<Categorie> {
         }
         return false;
     }
-
     @Override
     public void update(Categorie obj) throws Exception {
         String sql = "update Categorie set nom = ?,image= ? where id = ? ";
-        try (PreparedStatement stmt = conn.prepareStatement(sql);){
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
         stmt.setString(1, obj.getNom());
         stmt.setString(2, obj.getImage());
         stmt.setInt(3, obj.getId());
@@ -43,19 +43,17 @@ public class categorieService implements Crud<Categorie> {
         if (rowsUpdated > 0) {
             System.out.println("Modification categorie effectuée avec succès !");
         } else {
-            System.out.println("Vérifier l' id de categorie");
+            System.out.println("Vérifier l'id de categorie");
         }
     } catch (Exception e) {
         System.out.println(e.getMessage());
     }
     }
-
     @Override
     public void delete(int id) throws Exception {
         String sql = "DELETE FROM Categorie WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1,id);
-
             // Vérifier si un categorie a été supprimé
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
@@ -66,7 +64,6 @@ public class categorieService implements Crud<Categorie> {
             throw new Exception("Erreur lors de la suppression de categorie: " + e.getMessage());
         }
     }
-
     @Override
     public List<Categorie> getAll() throws Exception {
         String sql = "select * from Categorie";
@@ -96,9 +93,36 @@ public class categorieService implements Crud<Categorie> {
             String image = rs.getString("image");
             obj=new Categorie(id,nom,image);
             return obj;
-
         }
         return obj;
     }
+    public List<Integer> getCategoryId() throws SQLException {
+        String sql = "SELECT id FROM Categorie";
+        List<Integer> categoryIds = new ArrayList<>();
+
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                categoryIds.add(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erreur lors de l'exécution de la requête pour récupérer les IDs des catégories", e);
+        }
+        return categoryIds;
+    }
+
+    public String getNomCategorieById(int idCategorie) {
+        String query = "SELECT nom FROM categorie WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idCategorie);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nom");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Inconnu";
+    }
+
 }
 

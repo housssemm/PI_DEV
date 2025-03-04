@@ -3,18 +3,16 @@ package Models;
 public class panier {
 
     private int id;
-    private Integer adherentId;
-    private Integer coachId;
+    private Integer UserId;
 
     public panier() {}
-    public panier(Integer adherentId, Integer coachId) {
-        this.adherentId = adherentId;
-        this.coachId = coachId;
+
+    public panier(Integer UserId) {
+        this.UserId = UserId;
     }
-    public panier(int id, Integer adherentId, Integer coachId) {
+    public panier(int id, Integer UserId) {
         this.id = id;
-        this.adherentId = adherentId;
-        this.coachId = coachId;
+        this.UserId = UserId;
     }
 
     public int getId() {
@@ -25,28 +23,18 @@ public class panier {
         this.id = id;
     }
 
-    public Integer getAdherentId() {
-        return adherentId;
+    public Integer getUserId() {
+        return UserId;
     }
 
-    public void setAdherentId(Integer adherentId) {
-        this.adherentId = adherentId;
+    public void setUserId(Integer userId) {
+        UserId = userId;
     }
-
-    public Integer getCoachId() {
-        return coachId;
-    }
-
-    public void setCoachId(Integer coachId) {
-        this.coachId = coachId;
-    }
-
     @Override
     public String toString() {
         return "panier{" +
                 "id=" + id +
-                ", adherentId=" + adherentId +
-                ", coachId=" + coachId +
+                ", UserId=" + UserId +
                 '}';
     }
 }

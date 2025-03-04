@@ -1,8 +1,13 @@
 package Services;
+
 import Models.etat;
 import Models.produit;
 import Utils.MyDb;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +40,6 @@ public class produitService implements Crud<produit> {
         }
         return false;
     }
-
     @Override
     public void update(produit obj) throws Exception {
         String sql = "update produit set nom = ?,description = ?,image= ?,etat= ?,categorieId= ?,quantite= ?,prix= ? where id = ? ";
@@ -107,7 +111,8 @@ public class produitService implements Crud<produit> {
         stmt.setInt(1, id);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            int idInvestisseur = rs.getInt("id investisseur");
+
+            int idInvestisseur = rs.getInt("idInvestisseur");
             String nom = rs.getString("nom");
             String description = rs.getString("description");
             String image = rs.getString("image");
@@ -125,9 +130,11 @@ public class produitService implements Crud<produit> {
         List<produit> produits = new ArrayList<>();
         String sql = "SELECT * FROM produit WHERE categorieId = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
+
         stmt.setInt(1, categorieId);
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
+            int idProduit = rs.getInt("id");
             int idInvestisseur = rs.getInt("idInvestisseur");
             String nom = rs.getString("nom");
             String description = rs.getString("description");
@@ -135,10 +142,37 @@ public class produitService implements Crud<produit> {
             etat etat = Models.etat.valueOf(rs.getString("etat"));
             int quantite = rs.getInt("quantite");
             float prix = rs.getFloat("prix");
-            produit produit = new produit(idInvestisseur, nom, description, image, etat, categorieId , quantite, prix);
+            produit produit = new produit(idProduit,idInvestisseur, nom, description, image, etat, categorieId , quantite, prix);
 
             // Ajouter le produit à la liste
             produits.add(produit);
+        }
+        return produits;
+    }
+    public List<produit> getAll_ByInvestisseur(int idInvestisseur) throws Exception {
+        String sql = "SELECT * FROM produit WHERE idInvestisseur = ?";
+        List<produit> produits = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // Définir l'ID de l'investisseur dans la requête
+            stmt.setInt(1, idInvestisseur);
+
+            // Exécuter la requête
+            ResultSet rs = stmt.executeQuery();
+            // Parcourir les résultats
+            while (rs.next()) {
+                produit prod = new produit();
+                prod.setId(rs.getInt("id"));
+                prod.setIdInvestisseur(rs.getInt("IdInvestisseur"));
+                prod.setNom(rs.getString("nom"));
+                prod.setDescription(rs.getString("Description"));
+                prod.setImage(rs.getString("image"));
+                prod.setEtat(etat.valueOf(rs.getString("etat")));
+                prod.setCategorieId(rs.getInt("categorieId"));
+                prod.setQuantite(rs.getInt("quantite"));
+                prod.setPrix(rs.getFloat("prix"));
+                produits.add(prod);
+            }
         }
         return produits;
     }

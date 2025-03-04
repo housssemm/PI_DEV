@@ -3,6 +3,7 @@ package Controllers;
 import Models.etat;
 import Models.produit;
 import Services.CreateurEvenementService;
+import Services.categorieService;
 import Services.produitService;
 import Utils.Session;
 import javafx.event.ActionEvent;
@@ -19,8 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
+
 import java.io.File;
+import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProduitController {
     @FXML
@@ -30,11 +35,9 @@ public class ProduitController {
     @FXML
     private ChoiceBox<etat> etat_produit;
     @FXML
-    private TextField Id_categorie;
+    private ChoiceBox<Integer> Id_categorie;
     @FXML
-    private TextField Id_categorie1;
-    @FXML
-    private TextField Id_investisseur;
+    private ChoiceBox<Integer> Id_categorie1;
     @FXML
     private TextField Nom_Produit1;
     @FXML
@@ -60,6 +63,7 @@ public class ProduitController {
     private File selectedImageFile;
     private produitService produitService = new produitService();
     private produit produitUpdated=new produit();
+    private categorieService categService = new categorieService();
     private int selectedProduitId;
 
     @FXML
@@ -69,20 +73,49 @@ public class ProduitController {
         String nom = nom_produit.getText();
         String description = desc_produit.getText();
         etat etatProduit = etat.valueOf(etat_produit.getValue().toString());
-        int idCategorie =Integer.parseInt(Id_categorie.getText());
-        int idInvestisseur =Integer.parseInt(Id_investisseur.getText());
+        Integer idCategorie = Id_categorie.getValue();
+        // Récupérer l'ID de l'investisseur connecté à partir de la session
+        int idInvestisseur = Session.getInstance().getCurrentUser().getId();
         int quantite=Integer.parseInt(quantite_produit.getText());
         float prix = Float.parseFloat(prix_produit.getText());
-        String imagePath = selectedImageFile.getAbsolutePath().replace("\\", "/");
-        produit prod=new produit(idInvestisseur,nom,description,imagePath,etatProduit,idCategorie,quantite,prix);
+        String imageName1 = "";
+        // Récupérer uniquement le nom du fichier
+        imageName1 = selectedImageFile.getName();
+        produit prod=new produit(idInvestisseur,nom,description,imageName1,etatProduit,idCategorie,quantite,prix);
         produitService.create(prod);
+
         initialize();
+
+        // Réinitialiser les champs après l'ajout
+        nom_produit.clear();
+        desc_produit.clear();
+        Id_categorie.getItems().clear();
+        quantite_produit.clear();
+        prix_produit.clear();
+        imageView.setImage(null);
+        selectedImageFile = null;
+        showSuccessAlert();
+    }
+    private void loadCategories() throws Exception {
+        Id_categorie.getItems().clear();
+        Id_categorie1.getItems().clear();
+        // Récupérer les IDs des catégories depuis la base de données
+        List<Integer> categoryIds = categService.getCategoryId();
+
+        // Utiliser un Set pour éliminer les doublons
+        Set<Integer> uniqueCategoryIds = new HashSet<>(categoryIds);
+
+        // Ajouter les IDs uniques dans le ChoiceBox
+        Id_categorie.getItems().addAll(uniqueCategoryIds);
+        Id_categorie1.getItems().addAll(uniqueCategoryIds);
     }
     public void initialize() throws Exception {
 
         // Remplir le ChoiceBox pour l'état
         etat_produit.getItems().setAll(etat.values());
         etat_produit1.getItems().setAll(etat.values());
+        loadCategories();
+
         if (GridPaneProd == null) {
             System.out.println("GridPane is null! Check FXML configuration.");
         } else {
@@ -95,10 +128,8 @@ public class ProduitController {
         // Ajouter un espacement entre les éléments du GridPane
         GridPaneProd.setHgap(20); // Espacement horizontal entre les colonnes
         GridPaneProd.setAlignment(Pos.CENTER); // Centrer le contenu dans le GridPane
-
-        // Récupérer tous les produits
-        List<produit> produits = produitService.getAll(); // Remplacez par la méthode correcte pour récupérer vos produits
-
+        int idInvestisseur = Session.getInstance().getCurrentUser().getId();
+        List<produit> produits = produitService.getAll_ByInvestisseur(idInvestisseur);
         // Nettoyer le GridPane
         GridPaneProd.getChildren().clear();
 
@@ -108,11 +139,16 @@ public class ProduitController {
             imageView.setFitWidth(60); // Taille de l'image (ajustée)
             imageView.setFitHeight(50); // Taille de l'image (ajustée)
 
+            // Créer le chemin relatif de l'image dans resources/img
+            String imagePath = "/img/" + prod.getImage(); // Utilisation du chemin relatif à resources
+
             // Vérifier si l'image existe et l'afficher
-            File imageFile = new File(prod.getImage());
-            if (imageFile.exists()) {
-                Image image = new Image(imageFile.toURI().toString());
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream != null) {
+                Image image = new Image(imageStream);
                 imageView.setImage(image);
+            } else {
+                System.out.println("Image non trouvée : " + imagePath);
             }
 
             // Ajouter les informations du produit dans des Texts
@@ -135,11 +171,14 @@ public class ProduitController {
             Button deleteButton = new Button("Supprimer");
             deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
             deleteButton.setOnAction(event -> {
-                try {
-                    produitService.delete(prod.getId());
-                    initialize();
-                } catch (Exception e) {
-                    System.out.println("Erreur lors de la suppression de la catégorie : " + e.getMessage());
+                if (confirmerSuppression()) {
+                    try {
+                        produitService.delete(prod.getId());
+                        initialize(); // Rafraîchir l'interface après la suppression
+                        System.out.println("Produit supprimé avec succès.");
+                    } catch (Exception e) {
+                        System.out.println("Erreur lors de la suppression du produit : " + e.getMessage());
+                    }
                 }
             });
             // Ajouter le bouton "Modifier"
@@ -147,22 +186,24 @@ public class ProduitController {
             modifyButton.setStyle("-fx-background-color: #f58400; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
 
             modifyButton.setOnAction(event -> {
-                // Remplir les champs avec les informations de la catégorie sélectionnée
                 Nom_Produit1.setText(prod.getNom());
                 desc_prod1.setText(prod.getDescription());
                 quantite_produit1.setText(String.valueOf(prod.getQuantite()));
                 prix1.setText(String.valueOf(prod.getPrix()));
-                Id_categorie1.setText(String.valueOf(prod.getCategorieId()));
+                Id_categorie1.setValue(prod.getCategorieId());
                 etat_produit1.setValue(prod.getEtat());
                 selectedProduitId= prod.getId();
-                // Charger l'image existante dans l'ImageView global
-                File imageFile1 = new File(prod.getImage());
-                if (imageFile1.exists()) {
-                    String imagePath = "file:" + imageFile1.getAbsolutePath();
-                    Image image = new Image(imagePath);
-                    imgView.setImage(image);
+
+                String imageName = prod.getImage();
+                String imagePath1 = "/img/" + imageName;
+
+                // Vérifier si l'image existe dans resources
+                InputStream imageStream1 = getClass().getResourceAsStream(imagePath1);
+                if (imageStream1 != null) {
+                    Image image = new Image(imageStream1);
+                    imgView.setImage(image);  // Afficher l'image dans l'ImageView
                 } else {
-                    System.out.println("L'image n'existe pas à ce chemin.");
+                    System.out.println("L'image n'a pas été trouvée : " + imagePath1);
                 }
             });
             // Créer une VBox pour chaque produit
@@ -192,8 +233,6 @@ public class ProduitController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             selectedImageFile = file;
-            // Normaliser le chemin pour être compatible avec JavaFX
-            selectedImageFile.getAbsolutePath().replace("\\", "/");
             // Charger et afficher l'image dans l'ImageView
             Image image = new Image(file.toURI().toString());
             imageView.setImage(image);
@@ -211,7 +250,6 @@ public class ProduitController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             selectedImageFile = file;
-            selectedImageFile.getAbsolutePath().replace("\\", "/");
             Image image = new Image(file.toURI().toString());
             imgView.setFitWidth(90);
             imgView.setFitHeight(80);
@@ -227,17 +265,28 @@ public class ProduitController {
             showAlert("Erreur", "L'image du produit est manquante.");
             return;
         }
-            produitUpdated.setNom(Nom_Produit1.getText());
-            produitUpdated.setDescription(desc_prod1.getText());
-            String imagePath = selectedImageFile.getAbsolutePath().replace("\\", "/");
-            produitUpdated.setImage(imagePath);
-            produitUpdated.setEtat(etat.valueOf(etat_produit1.getValue().toString()));
-            produitUpdated.setCategorieId(Integer.parseInt(Id_categorie1.getText()));
-            produitUpdated.setQuantite(Integer.parseInt(quantite_produit1.getText()));
-            produitUpdated.setPrix(Float.parseFloat(prix1.getText()));
-            produitUpdated.setId(selectedProduitId); // Associer l'ID de la catégorie sélectionnée
-            // Appeler le service pour mettre à jour la catégorie dans la base de données
-            produitService.update(produitUpdated);
+        produitUpdated.setNom(Nom_Produit1.getText());
+        produitUpdated.setDescription(desc_prod1.getText());
+        String imageName = selectedImageFile.getName();
+        produitUpdated.setImage(imageName);
+        produitUpdated.setEtat(etat.valueOf(etat_produit1.getValue().toString()));
+        produitUpdated.setCategorieId(Integer.parseInt(Id_categorie1.getValue().toString()));
+        produitUpdated.setQuantite(Integer.parseInt(quantite_produit1.getText()));
+        produitUpdated.setPrix(Float.parseFloat(prix1.getText()));
+        produitUpdated.setId(selectedProduitId); // Associer l'ID de la catégorie sélectionnée
+        // Appeler le service pour mettre à jour la catégorie dans la base de données
+        produitService.update(produitUpdated);
+
+        Id_categorie1.getItems().clear();
+        Nom_Produit1.clear();
+        desc_prod1.clear();
+        etat_produit1.getItems().clear();
+        prix1.clear();
+        quantite_produit1.clear();
+        imgView.setImage(null);
+        selectedImageFile=null;
+
+        showSuccessAlert1();
         // mise a jour
         initialize();
     }
@@ -266,12 +315,8 @@ public class ProduitController {
             showAlert("Erreur de saisie", "la quantite doit être un nombre valide.");
             return false;
         }
-        if (Id_categorie.getText().isEmpty() || !Id_categorie.getText().matches("[1-9][0-9]*")) {
+        if (Id_categorie.getValue() == null) {
             showAlert("Erreur de saisie", "L'ID de catégorie doit être un nombre valide.");
-            return false;
-        }
-        if (Id_investisseur.getText().isEmpty() || !Id_investisseur.getText().matches("[1-9][0-9]*")) {
-            showAlert("Erreur de saisie", "L'ID de l'investisseur doit être un nombre valide.");
             return false;
         }
         if (prix_produit.getText().isEmpty() || !prix_produit.getText().matches("[1-9][0-9]*(\\.[0-9]+)?")) {
@@ -309,7 +354,7 @@ public class ProduitController {
             showAlert("Erreur de saisie", "la quantite doit être un nombre valide.");
             return false;
         }
-        if (Id_categorie1.getText().isEmpty() || !Id_categorie1.getText().matches("[1-9][0-9]*")) {
+        if (Id_categorie1.getValue() == null) {
             showAlert("Erreur de saisie", "L'ID de catégorie doit être un nombre valide.");
             return false;
         }
@@ -326,16 +371,50 @@ public class ProduitController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    //ROOT
+    private boolean confirmerSuppression() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Voulez-vous vraiment supprimer ce produit ?");
 
+        // Afficher la boîte de dialogue et retourner la réponse
+        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
+    }
+    private void showSuccessAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText("Le produit a été ajouté avec succès !");
+        alert.showAndWait();
+    }
+    private void showSuccessAlert1() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText("Le produit a été modifié avec succès !");
+        alert.showAndWait();
+    }
+    //ROOT
+    private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
+            if (createurEvenementService.isCreateurEvenement(id)) {
+                path = "/AddEvenement.fxml";
+            } else {
+                path = "/Events.fxml";
+            }
+
+            // Now load the determined path
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
-            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+            ((Node) actionEvent.getSource()).getScene().setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
     @FXML

@@ -1,7 +1,5 @@
 package Models;
 
-import Services.produitService;
-
 public class produit {
     private int id;
     private int idInvestisseur;

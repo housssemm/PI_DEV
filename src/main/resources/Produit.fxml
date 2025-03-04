@@ -22,7 +22,7 @@
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
-                <VBox alignment="TOP_CENTER" prefHeight="810.0" prefWidth="341.0" styleClass="bg">
+                <VBox alignment="TOP_CENTER" prefHeight="775.0" prefWidth="288.0" styleClass="bg">
                     <children>
                         <ImageView fitHeight="199.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -172,7 +172,7 @@
                                 </ImageView>
                             </graphic>
                             <VBox.margin>
-                                <Insets />
+                                <Insets bottom="45.0" />
                             </VBox.margin>
                         </Button>
                     </children>
@@ -236,9 +236,9 @@
                 <ImageView fx:id="imageView" fitHeight="106.0" fitWidth="149.0" layoutX="18.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
             </children>
         </Pane>
-        <Label layoutX="1055.0" layoutY="92.0" style="-fx-text-fill: F58400;" text=" Modifier des Produits">
+        <Label layoutX="1090.0" layoutY="94.0" style="-fx-text-fill: F58400;" text=" Modifier des Produits">
             <font>
-                <Font name="System Bold" size="23.0" />
+                <Font name="System Bold" size="20.0" />
             </font>
         </Label>
         <ScrollPane fx:id="scrollPaneProd" fitToHeight="true" hbarPolicy="ALWAYS" layoutX="353.0" layoutY="449.0" pannable="true" prefHeight="352.0" prefViewportWidth="10.0" prefWidth="1138.0" vbarPolicy="NEVER">
@@ -256,9 +256,9 @@
            </GridPane>
          </content>
     </ScrollPane>
-        <Label layoutX="454.0" layoutY="92.0" style="-fx-text-fill: F58400;" text="Ajouter des Produits">
+        <Label layoutX="466.0" layoutY="93.0" prefHeight="32.0" prefWidth="199.0" style="-fx-text-fill: F58400;" text="Ajouter des Produits">
             <font>
-                <Font name="System Bold" size="23.0" />
+                <Font name="System Bold" size="20.0" />
             </font>
         </Label>
         <Label layoutX="947.0" layoutY="150.0" prefHeight="27.0" prefWidth="158.0" text=" Nom Produit :">
@@ -299,12 +299,7 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <Label layoutX="331.0" layoutY="325.0" text="Id Categorie :">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-      </Label>
-      <Label layoutX="330.0" layoutY="368.0" text="Id Investisssuer :">
+      <Label layoutX="334.0" layoutY="325.0" text="Id Categorie :">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
@@ -324,14 +319,12 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
-      <Label layoutX="332.0" layoutY="408.0" text="Prix Produit :">
+      <Label layoutX="335.0" layoutY="368.0" text="Prix Produit :">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <TextField fx:id="prix_produit" layoutX="482.0" layoutY="405.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
-      <TextField fx:id="Id_categorie" layoutX="481.0" layoutY="322.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
-      <TextField fx:id="Id_investisseur" layoutX="481.0" layoutY="365.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
+      <TextField fx:id="prix_produit" layoutX="479.0" layoutY="367.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
       <ChoiceBox fx:id="etat_produit" layoutX="480.0" layoutY="237.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
       <Label layoutX="954.0" layoutY="195.0" text="Description :">
          <font>
@@ -360,7 +353,6 @@
       </Label>
       <TextField fx:id="desc_prod1" layoutX="1110.0" layoutY="191.0" prefHeight="34.0" prefWidth="169.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
       <TextField fx:id="quantite_produit1" layoutX="1110.0" layoutY="277.0" prefHeight="34.0" prefWidth="169.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
-      <TextField fx:id="Id_categorie1" layoutX="1109.0" layoutY="321.0" prefHeight="34.0" prefWidth="169.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
       <TextField fx:id="prix1" layoutX="1109.0" layoutY="364.0" prefHeight="34.0" prefWidth="169.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
       <ChoiceBox fx:id="etat_produit1" layoutX="1109.0" layoutY="237.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
       <Button layoutX="1318.0" layoutY="354.0" mnemonicParsing="false" onAction="#Modifier" prefHeight="40.0" prefWidth="152.0" style="-fx-background-color: F58400; -fx-border-color: gray;" text="Modifier" textFill="WHITE">
@@ -368,5 +360,12 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Button>
+      <ChoiceBox fx:id="Id_categorie" layoutX="480.0" layoutY="322.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
+      <ChoiceBox fx:id="Id_categorie1" layoutX="1109.0" layoutY="322.0" prefHeight="32.0" prefWidth="170.0" style="-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 8;" />
+      <Label layoutX="821.0" layoutY="418.0" style="-fx-text-fill: F58400;" text="Liste des Produits">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

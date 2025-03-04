@@ -165,7 +165,7 @@
         <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1274.0">
                 <children>
-                    <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
+                    <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1011.0">
                         <children>
                             <TextField fx:id="search" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
                                 <font>
@@ -182,7 +182,28 @@
                             </ImageView>
                         </children>
                     </HBox>
-                    <ImageView fitHeight="57.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
+                  <Button mnemonicParsing="false" onAction="#openPopUpRecommondation" prefHeight="48.0" prefWidth="47.0">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/excellence.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#click_on_Panier" style="-fx-background-color: #708090;">
+                     <graphic>
+                          <ImageView fitHeight="38.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="@cart1.png" />
+                              </image>
+                          </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets right="16.0" top="3.0" />
+                     </HBox.margin>
+                  </Button>
+                    <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                         <image>
                             <Image url="@img/notification.png" />
                         </image>
@@ -190,26 +211,23 @@
                             <Insets right="22.0" />
                         </HBox.margin>
                     </ImageView>
-                    <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@img/profile.png" />
-                        </image>
-                        <HBox.margin>
-                            <Insets right="22.0" />
-                        </HBox.margin>
-                    </ImageView>
+                  <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/profile.png" />
+                     </image>
+                  </ImageView>
                 </children>
             </HBox>
         </children>
     </VBox>
       <Label layoutX="346.0" layoutY="109.0" text="Categories">
          <font>
-            <Font name="System Bold" size="26.0" />
+            <Font name="System Bold" size="22.0" />
          </font>
       </Label>
-        <ScrollPane fx:id="scrollPane" hbarPolicy="ALWAYS" layoutX="346.0" layoutY="167.0" prefHeight="181.0" prefWidth="716.0" style="-fx-border-color: white;" vbarPolicy="NEVER">
+        <ScrollPane fx:id="scrollPane" hbarPolicy="ALWAYS" layoutX="346.0" layoutY="167.0" prefHeight="182.0" prefWidth="728.0" style="-fx-border-color: white;" vbarPolicy="NEVER">
          <content>
-            <GridPane fx:id="gridPane" prefHeight="162.0" prefWidth="684.0">
+            <GridPane fx:id="gridPane" prefHeight="162.0" prefWidth="734.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -222,7 +240,7 @@
             </GridPane>
          </content>
         </ScrollPane>
-      <ScrollPane fx:id="scrollProd" hbarPolicy="NEVER" layoutX="347.0" layoutY="384.0" prefHeight="404.0" prefWidth="755.0" vbarPolicy="ALWAYS">
+      <ScrollPane fx:id="scrollProd" hbarPolicy="NEVER" layoutX="347.0" layoutY="384.0" prefHeight="404.0" prefWidth="728.0" vbarPolicy="ALWAYS">
          <content>
             <GridPane fx:id="gridProd" prefHeight="402.0" prefWidth="707.0">
               <columnConstraints>
@@ -236,5 +254,7 @@
             </GridPane>
          </content>
       </ScrollPane>
+      <Separator layoutX="1106.0" layoutY="67.0" orientation="VERTICAL" prefHeight="742.0" prefWidth="3.0" />
+      <VBox fx:id="cartBox" layoutX="1109.0" layoutY="67.0" prefHeight="656.0" prefWidth="443.0" />
     </children>
 </AnchorPane>

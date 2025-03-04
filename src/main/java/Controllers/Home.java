@@ -1,7 +1,6 @@
 package Controllers;
 
-import Services.CreateurEvenementService;
-import Services.UserService;
+import Services.*;
 import Utils.MyDb;
 import Utils.Session;
 import javafx.event.ActionEvent;
@@ -77,10 +76,21 @@ public class Home {
             e.printStackTrace();
         }
     }
+    private InvestisseurProduitService InvestisseurService = new InvestisseurProduitService();
+    private Services.AdherentService AdherentService = new AdherentService();
+    private Services.CoachService CoachService = new CoachService();
+
     @FXML
     void GoToProduit(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Produit.fxml"));
+            if (InvestisseurService.isInvestisseurProduit(id)) {
+                path = "/produit.fxml";
+            } else if(AdherentService.isAdherent(id) || CoachService.isCoach(id)) {
+                path = "/PanierClient.fxml";
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
             ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {

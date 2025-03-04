@@ -20,7 +20,7 @@
     <children>
         <HBox prefHeight="810.0" prefWidth="288.0">
             <children>
-                <VBox alignment="TOP_CENTER" prefHeight="810.0" prefWidth="341.0" styleClass="bg">
+                <VBox alignment="TOP_CENTER" prefHeight="766.0" prefWidth="288.0" styleClass="bg">
                     <children>
                         <ImageView fitHeight="199.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
@@ -43,7 +43,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button fx:id="seance" mnemonicParsing="false" onAction="#GoToSeance" prefHeight="67.0" prefWidth="294.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
+                        <Button fx:id="seance" mnemonicParsing="false" onAction="#GoToSeance" prefHeight="67.0" prefWidth="296.0" style="-fx-background-color: F58400;" text="Séances" textFill="WHITE">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -74,6 +74,22 @@
                                 <Insets right="40.0" />
                             </padding>
                         </Button>
+                  <Separator prefWidth="200.0" />
+                  <Button mnemonicParsing="false" onAction="#GoToCategorie" prefHeight="67.0" prefWidth="296.0" style="-fx-background-color: F58400;" text="Categories" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="33.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/produit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </Button>
                         <Separator prefWidth="200.0" />
                         <Button fx:id="offre" mnemonicParsing="false" onAction="#GoToOffre" prefHeight="67.0" prefWidth="300.0" style="-fx-background-color: F58400;" text="Offres" textFill="WHITE">
                             <font>
@@ -142,7 +158,7 @@
                             </padding>
                         </Button>
                         <Separator prefWidth="200.0" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="602.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE" translateY="50.0">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="24.0" prefWidth="288.0" style="-fx-background-color: F58400;" styleClass="lg" textFill="WHITE" translateY="50.0">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -154,7 +170,7 @@
                                 </ImageView>
                             </graphic>
                             <VBox.margin>
-                                <Insets />
+                                <Insets bottom="45.0" />
                             </VBox.margin>
                         </Button>
                     </children>

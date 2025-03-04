@@ -1,4 +1,5 @@
 package Controllers;
+
 import Models.Categorie;
 import Services.CreateurEvenementService;
 import Services.categorieService;
@@ -11,14 +12,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 public class AjoutercategorieController {
@@ -35,24 +39,24 @@ public class AjoutercategorieController {
     private File selectedImageFile;
     private categorieService categService = new categorieService();
     private int selectedCategorieId;
+    private Categorie CategorieUpdated=new Categorie();
 
     @FXML
     void AjouterCategorie() throws Exception {
         if (!validateInput()) return;
 
-        categorieService categService = new categorieService();
-        if (selectedImageFile != null) {
-            String imagePath = selectedImageFile.getAbsolutePath().replace("\\", "/");
-
-            Categorie c1 = new Categorie(label_Nom_categ.getText(), imagePath);
-            categService.create(c1);
-            //mise a jour
-            initialize();
-            // Réinitialiser les champs après l'ajout
-            label_Nom_categ.clear();
-            imageView.setImage(null);
-            selectedImageFile = null;
-        }
+        String imageName1 = "";
+        // Récupérer uniquement le nom du fichier
+        imageName1 = selectedImageFile.getName();
+        Categorie c1 = new Categorie(label_Nom_categ.getText(), imageName1);
+        categService.create(c1);
+        showSuccessAlert();
+        //mise a jour
+        initialize();
+        // Réinitialiser les champs après l'ajout
+        label_Nom_categ.clear();
+        imageView.setImage(null);
+        selectedImageFile = null;
     }
     @FXML
     void upload_new_image() {
@@ -62,8 +66,6 @@ public class AjoutercategorieController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             selectedImageFile = file;
-            // Normaliser le chemin pour être compatible avec JavaFX
-            selectedImageFile.getAbsolutePath().replace("\\", "/");
             // Charger et afficher l'image dans l'ImageView
             Image image = new Image(file.toURI().toString());
             imgView.setFitWidth(90);  // Largeur maximale
@@ -73,7 +75,6 @@ public class AjoutercategorieController {
             imgView.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10; -fx-padding: 10;");
         }
     }
-
     @FXML
     void upload_Image() {
         FileChooser fileChooser = new FileChooser();
@@ -82,8 +83,6 @@ public class AjoutercategorieController {
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             selectedImageFile = file;
-            // Normaliser le chemin pour être compatible avec JavaFX
-            selectedImageFile.getAbsolutePath().replace("\\", "/");
             // Charger et afficher l'image dans l'ImageView
             Image image = new Image(file.toURI().toString());
             imageView.setFitWidth(90);  // Largeur maximale
@@ -118,13 +117,16 @@ public class AjoutercategorieController {
             imageView.setFitWidth(60); // Taille de l'image (ajustée)
             imageView.setFitHeight(50); // Taille de l'image (ajustée)
 
+            // Créer le chemin relatif de l'image dans resources/img
+            String imagePath = "/img/" + categorie.getImage();
             // Vérifier si l'image existe et l'afficher
-            File imageFile = new File(categorie.getImage());
-            if (imageFile.exists()) {
-                Image image = new Image(imageFile.toURI().toString());
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream != null) {
+                Image image = new Image(imageStream);
                 imageView.setImage(image);
+            } else {
+                System.out.println("Image non trouvée : " + imagePath);
             }
-
             // Créer un Text pour le nom de la catégorie
             Text nameText = new Text("Nom : " + categorie.getNom());
             nameText.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
@@ -133,11 +135,13 @@ public class AjoutercategorieController {
             Button deleteButton = new Button("Supprimer");
             deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
             deleteButton.setOnAction(event -> {
-                try {
-                    categService.delete(categorie.getId());
-                    initialize();
-                } catch (Exception e) {
-                    System.out.println("Erreur lors de la suppression de la catégorie : " + e.getMessage());
+                if (confirmerSuppression()) {
+                    try {
+                        categService.delete(categorie.getId());
+                        initialize();
+                    } catch (Exception e) {
+                        System.out.println("Erreur lors de la suppression de la catégorie : " + e.getMessage());
+                    }
                 }
             });
 
@@ -150,16 +154,16 @@ public class AjoutercategorieController {
                 // Remplir les champs avec les informations de la catégorie sélectionnée
                 Nom_categ.setText(categorie.getNom());
                 selectedCategorieId = categorie.getId();
-                // Charger l'image existante dans l'ImageView global
-                File imageFile1 = new File(categorie.getImage());
-                if (imageFile1.exists()) {
-                    System.out.println("L'image existe à ce chemin.");
-                    // Charger l'image et l'afficher dans l'ImageView
-                    String imagePath = "file:" + imageFile1.getAbsolutePath();
-                    Image image = new Image(imagePath);
-                    imgView.setImage(image);
+                String imageName = categorie.getImage();
+                String imagePath1 = "/img/" + imageName;
+
+                // Vérifier si l'image existe dans resources
+                InputStream imageStream1 = getClass().getResourceAsStream(imagePath1);
+                if (imageStream1 != null) {
+                    Image image = new Image(imageStream1);
+                    imgView.setImage(image);  // Afficher l'image dans l'ImageView
                 } else {
-                    System.out.println("L'image n'existe pas à ce chemin.");
+                    System.out.println("L'image n'a pas été trouvée : " + imagePath1);
                 }
             });
 
@@ -183,12 +187,19 @@ public class AjoutercategorieController {
     @FXML
     void Modifier() throws Exception {
         if (!validateInput1()) return;
-        Categorie updatedCategorie = new Categorie(Nom_categ.getText(), selectedImageFile.getAbsolutePath());
-        updatedCategorie.setId(selectedCategorieId); // Associer l'ID de la catégorie sélectionnée
-        // Appeler le service pour mettre à jour la catégorie dans la base de données
-            categService.update(updatedCategorie);
+        // Associer l'ID de la catégorie sélectionnée
+        CategorieUpdated.setId(selectedCategorieId);
+        CategorieUpdated.setNom(Nom_categ.getText());
+        CategorieUpdated.setNom(Nom_categ.getText());
+        String imageName = selectedImageFile.getName();
+        CategorieUpdated.setImage(imageName);
+        categService.update(CategorieUpdated);
+        showSuccessAlert1();
+        Nom_categ.clear();
+        imgView.setImage(null);
+        selectedImageFile = null;
         // mise a jour
-            initialize();
+        initialize();
     }
     private boolean validateInput() {
         if (label_Nom_categ.getText() == null || label_Nom_categ.getText().trim().isEmpty()) {
@@ -226,6 +237,28 @@ public class AjoutercategorieController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private void showSuccessAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText("La categorie a été ajouté avec succès !");
+        alert.showAndWait();
+    }
+    private void showSuccessAlert1() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText("La categorie a été modifié avec succès !");
+        alert.showAndWait();
+    }
+    private boolean confirmerSuppression() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Voulez-vous vraiment supprimer ce Categorie ?");
+
+        // Afficher la boîte de dialogue et retourner la réponse
+        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
     }
     //ROOT
     private CreateurEvenementService createurEvenementService = new CreateurEvenementService();

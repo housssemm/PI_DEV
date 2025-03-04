@@ -1,7 +1,5 @@
 package Models;
 
-import java.sql.Blob;
-
 public class Categorie {
     private int id;
     private String nom;

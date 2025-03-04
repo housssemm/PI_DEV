@@ -175,4 +175,22 @@ public class CoachService {
         return null;
     }
 
+    public boolean isCoach(int id) {
+        String sql = "SELECT COUNT(*) FROM coach WHERE id = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // If count > 0, the user is a coach
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -1,9 +1,15 @@
 package Services;
+
 import Models.etatP;
+import Models.panier;
 import Models.panierProduit;
+import Models.produit;
 import Utils.MyDb;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,31 +24,40 @@ public class PanierProduitService implements Crud<panierProduit> {
         throw new UnsupportedOperationException("Create Not supported");
     }
 
-    public boolean ajouterPlusieursProduitsPanier(List<panierProduit> panierProduitLists) throws Exception {
-        String sql = "INSERT INTO PanierProduit (produitId, panierId, quantite, date, montant, etat_paiement) VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            for (panierProduit panierProds : panierProduitLists) {
-                statement.setInt(1, panierProds.getProduitId());
-                statement.setInt(2, panierProds.getPanierId());
-                statement.setInt(3, panierProds.getQuantite());
-                statement.setTimestamp(4, Timestamp.valueOf(panierProds.getDate()));
-                statement.setFloat(5, panierProds.getMontant());
-                statement.setString(6, panierProds.getEtat_paiement().name());
-                statement.addBatch(); // Ajout de la requête à la batch
-            }
-
-            statement.executeBatch(); // Exécute toutes les requêtes en une seule fois
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'ajout des produits au panier : " + e.getMessage());
-            return false;
+    public void ajouterProduitAuPanier(panier panier, produit produit, int quantite) throws SQLException {
+        if (panier == null || produit == null) {
+            throw new IllegalArgumentException("Le panier et le produit ne peuvent pas être null.");
         }
-        System.out.println("Tous les produits ont été ajoutés avec succès !");
-        return true;
+        // Vérifier si le produit existe dans la table produit
+        String checkProduitQuery = "SELECT COUNT(*) FROM produit WHERE id = ?";
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkProduitQuery)) {
+            checkStmt.setInt(1, produit.getId());
+            ResultSet resultSet = checkStmt.executeQuery();
+            resultSet.next();
+            if (resultSet.getInt(1) == 0) {
+                throw new SQLException("Le produit avec l'ID " + produit.getId() + " n'existe pas.");
+            }
+        }
+
+        String query = "INSERT INTO panierproduit (panierId,produitId,etat_paiement, quantite, montant, date) " +
+                "VALUES (?, ?, ?, ?, ?, NOW())";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, panier.getId()); // ID du panier
+            statement.setInt(2, produit.getId()); // ID du produit
+            statement.setString(3, "En_Attente"); // Etat de paiement par défaut
+            statement.setInt(4, quantite); // Quantité du produit
+            statement.setFloat(5, produit.getPrix() * quantite); // Montant calculé
+            // Exécuter l'insertion
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'ajout du produit au panier : " + e.getMessage());
+            throw e;
+        }
     }
     @Override
     public void delete(int id)throws Exception {
-        String sql = "DELETE FROM PanierProduit WHERE id = ?";
+        String sql = "DELETE FROM panierproduit WHERE id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
 
@@ -56,9 +71,8 @@ public class PanierProduitService implements Crud<panierProduit> {
             }
         }
     }
-
     public void modifierQuantiteProduitDansPanier(int id, int nouvelleQuantite) throws Exception {
-        String sql = "UPDATE PanierProduit SET quantite = ? WHERE id = ?";
+        String sql = "UPDATE panierproduit SET quantite = ? WHERE id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             // Définir les paramètres dans la requête SQL
@@ -75,21 +89,34 @@ public class PanierProduitService implements Crud<panierProduit> {
             }
         }
     }
-
-
     @Override
     public void update(panierProduit obj)throws Exception {
         throw new UnsupportedOperationException("Update not supported.");
     }
+    public void updatePaymentStatusByPanierId(int panierId,etatP etatPaiement) throws Exception {
+        String query = "UPDATE panierproduit SET etat_paiement = ? WHERE panierId = ?";
 
-
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            // Remplir les paramètres de la requête
+            stmt.setString(1, etatPaiement.name()); // Exemple : "Payé"
+            stmt.setInt(2, panierId);
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("État du paiement mis à jour avec succès pour le panier avec ID : " + panierId);
+            } else {
+                System.out.println("Aucun panier trouvé avec l'ID : " + panierId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new Exception("Erreur lors de la mise à jour de l'état du paiement", e);
+        }
+    }
     @Override
     public List<panierProduit> getAll(){
         throw new UnsupportedOperationException("getAll not supported.");
     }
-
     public List<panierProduit> getProduitsDansPanier(int panierId) throws Exception {
-        String sql = "SELECT * FROM PanierProduit WHERE panierId = ?";
+        String sql = "SELECT * FROM panierproduit WHERE panierId = ?";
         List<panierProduit> produitsDansPanier = new ArrayList<>();
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -109,25 +136,55 @@ public class PanierProduitService implements Crud<panierProduit> {
                 produitsDansPanier.add(panierProd);
             }
         }
+        System.out.println("Produits dans le panier récupérés : " + produitsDansPanier.size());
         return produitsDansPanier;
     }
     @Override
     public panierProduit getById(int id) throws Exception {
-        String sql = "select * from panierProduit where id=?";
+        String sql = "select * from panierproduit where id=?";
         panierProduit obj = null;
         PreparedStatement stmt = conn.prepareStatement(sql);
         stmt.setInt(1, id);
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            int idpanier = rs.getInt("Id panier");
-            int idproduit = rs.getInt("Id produit");
-            int quantite = rs.getInt("Quantite");
+            int idpanier = rs.getInt("panierId");
+            int idproduit = rs.getInt("produitId");
+            int quantite = rs.getInt("quantite");
             LocalDateTime date=rs.getTimestamp("date").toLocalDateTime();
             float montant = rs.getFloat("montant");
-            etatP etat_paiement= etatP.valueOf(rs.getString("etat"));
+            etatP etat_paiement= etatP.valueOf(rs.getString("etat_paiement"));
             obj=new panierProduit(id,idproduit,idpanier,quantite,date,montant,etat_paiement);
             return obj;
         }
+        else {
+        // Si aucun produit n'est trouvé avec cet ID
+        System.out.println("Aucun panier produit trouvé avec l'ID : " + id);
+    }
         return obj;
+    }
+    public void supprimerProduitsParPanierId(int panierId) {
+        // Code pour supprimer les produits dans la base de données liés au panierId
+        String query = "DELETE FROM panierProduit WHERE panierId = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, panierId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean mettreAJourStockProduit(produit produit) {
+        try {
+            // Exemple de requête SQL pour mettre à jour le stock
+            String query = "UPDATE panierproduit SET quantite = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, produit.getQuantite());
+            ps.setInt(2, produit.getId());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -187,4 +187,21 @@ public class InvestisseurProduitService {
         return null;
     }
 
+    public boolean isInvestisseurProduit(int id) {
+        String sql = "SELECT COUNT(*) FROM investisseurproduit WHERE id = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    // If count > 0, the user is a investisseur de produit
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

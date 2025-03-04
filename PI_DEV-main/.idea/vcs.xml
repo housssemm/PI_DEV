@@ -2,9 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-<<<<<<< HEAD
-=======
-    <mapping directory="$PROJECT_DIR$/PI_DEV" vcs="Git" />
->>>>>>> 30aaa13 (gestion offres + Api + metiers avancé)
   </component>
 </project>

@@ -79,7 +79,7 @@
 //    private InvestisseurProduitService InvestisseurService = new InvestisseurProduitService();
 //    private Services.AdherentService AdherentService = new AdherentService();
 //    private Services.CoachService CoachService = new CoachService();
-//
+
 //    @FXML
 //    void GoToProduit(ActionEvent actionEvent) {
 //        int id = Session.getInstance().getCurrentUser().getId();
@@ -131,9 +131,7 @@
 package Controllers;
 
 import Models.Coach;
-import Services.CoachService;
-import Services.CreateurEvenementService;
-import Services.PlanningService;
+import Services.*;
 import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -241,6 +239,31 @@ public class Home {
     }
 
 
+    private void afficherPaiementCoach(Coach coach) {
+        int idUtilisateur = Session.getInstance().getCurrentUser().getId();
+        AdherentService adherentService = new AdherentService();
+        if (adherentService.isAdherent(idUtilisateur)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PaiementCoachPlan.fxml"));
+                Parent root = loader.load();
+
+                PaiementCoachPlan controller = loader.getController();
+                controller.setCoach(coach);
+
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) coachcard.getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Paiement de Planning du Coach");
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Seuls les adhérents peuvent accéder au paiement.");
+        }
+    }
+
+
     /**
      * Crée une carte visuelle pour un coach.
      */
@@ -318,23 +341,6 @@ public class Home {
     /**
      * Affiche la scène de paiement pour un coach sélectionné.
      */
-    private void afficherPaiementCoach(Coach coach) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PaiementCoachPlan.fxml"));
-            Parent root = loader.load();
-
-            PaiementCoachPlan controller = loader.getController();
-            controller.setCoach(coach);
-
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) coachcard.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Paiement de Planning du Coach");
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void afficherTousLesCoachs(List<Coach> coaches) {
         try {
@@ -369,27 +375,14 @@ public class Home {
 
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
-        int id = Session.getInstance().getCurrentUser().getId();
-        String path = "";
-
         try {
-            if (createurEvenementService.isCreateurEvenement(id)) {
-                path = "/AddEvenement.fxml";
-            } else {
-                path = "/Events.fxml";
-            }
-
-            // Now load the determined path
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
             Parent root = loader.load();
-            ((Node) actionEvent.getSource()).getScene().setRoot(root);
-
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
-
 
     @FXML
     void GoToHome(ActionEvent actionEvent) {
@@ -401,10 +394,21 @@ public class Home {
             e.printStackTrace();
         }
     }
+    private InvestisseurProduitService InvestisseurService = new InvestisseurProduitService();
+    private Services.AdherentService AdherentService = new AdherentService();
+    private Services.CoachService CoachService = new CoachService();
+
     @FXML
     void GoToProduit(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Produit.fxml"));
+            if (InvestisseurService.isInvestisseurProduit(id)) {
+                path = "/produit.fxml";
+            } else if(AdherentService.isAdherent(id) || CoachService.isCoach(id)) {
+                path = "/PanierClient.fxml";
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
             ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {

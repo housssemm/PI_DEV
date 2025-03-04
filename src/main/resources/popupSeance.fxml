@@ -37,17 +37,22 @@
             <Label layoutX="323.0" layoutY="188.0" text="Heure Fin" />
             <TextField fx:id="field_HeureDebut" layoutX="401.0" layoutY="136.0" promptText="saisir HeureDebut" />
             <TextField fx:id="field_Heurefin" layoutX="402.0" layoutY="184.0" promptText="saisir Heure fin" />
-            <Button layoutX="194.0" layoutY="240.0" mnemonicParsing="false" onAction="#ajouterSeance" style="-fx-background-color: #f58400;" text="Ajouter" textFill="WHITE">
+            <Button layoutX="307.0" layoutY="240.0" mnemonicParsing="false" onAction="#ajouterSeance" style="-fx-background-color: #f58400;" text="Ajouter" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="284.0" layoutY="240.0" mnemonicParsing="false" onAction="#annulerSeance" style="-fx-background-color: #f58400;" text="Annuler" textFill="WHITE">
+            <Button layoutX="383.0" layoutY="240.0" mnemonicParsing="false" onAction="#annulerSeance" style="-fx-background-color: #f58400;" text="Annuler" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
             <ChoiceBox fx:id="field_adherent_Id" layoutX="401.0" layoutY="36.0" prefWidth="150.0" />
+            <Button fx:id="btnChoisirVideo" layoutX="88.0" layoutY="227.0" mnemonicParsing="false" onAction="#ChoisirVideo" prefHeight="26.0" prefWidth="105.0" style="-fx-background-color: #f58400;" text="choisir Video" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </content>

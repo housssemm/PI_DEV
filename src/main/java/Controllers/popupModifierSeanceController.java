@@ -6,14 +6,17 @@ import Services.SeanceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
-
+import java.time.format.DateTimeFormatter;
 
 public class popupModifierSeanceController {
 
+    public Button btnChoisirVideo;
     @FXML
     private TextArea ModifyDescription;
 
@@ -52,7 +55,17 @@ public class popupModifierSeanceController {
     }
     @FXML
     public void initialize() {
+
         ModifyType.getItems().setAll(Type.values());
+        ModifyType.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == Type.ENREGISTRE) {
+                btnChoisirVideo.setDisable(false);
+            } else {
+                btnChoisirVideo.setDisable(true);
+            }
+        });
+
+
     }
     @FXML
     public void ModifierSeance() throws Exception {
@@ -134,6 +147,10 @@ public class popupModifierSeanceController {
             afficherAlerte("Format heure invalide", "L'heure de fin doit être au format HH:mm.", Alert.AlertType.ERROR);
             return false;
         }
+        if (!ModifyLien.getText().toLowerCase().endsWith(".mp4")) {
+            afficherAlerte("Format vidéo invalide", "La vidéo doit être au format MP4.", Alert.AlertType.ERROR);
+            return false;
+        }
 
         return true;
     }
@@ -172,9 +189,13 @@ public class popupModifierSeanceController {
         ModifyLien.setText(seance.getLienVideo());
 
         Modify_Date.setValue(seance.getDate().toLocalDate());
-        Modify_HeureDebut.setText(seance.getHeureDebut().toString());
-        Modify_Heurefin.setText(seance.getHeureFin().toString());
+
         Modify_adherent_Id.setText(String.valueOf(seance.getIdAdherent()));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        Modify_HeureDebut.setText(seance.getHeureDebut().toLocalTime().format(formatter));
+        Modify_Heurefin.setText(seance.getHeureFin().toLocalTime().format(formatter));
 
         System.out.println("Séance chargée pour modification : " + seance.getTitre() + " ID: " + seance.getId());
     }
@@ -183,4 +204,19 @@ public class popupModifierSeanceController {
         stage.close();
     }
 
+    public void ChoisirVideo(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une vidéo");
+
+        // Filtre pour ne permettre que la sélection de fichiers vidéo
+        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Fichiers vidéo", "*.mp4", "*.avi", "*.mov", "*.mkv");
+        fileChooser.getExtensionFilters().add(videoFilter);
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            // Stocker le chemin du fichier dans le champ Lien vidéo
+            ModifyLien.setText(selectedFile.getAbsolutePath());
+        }
+    }
 }

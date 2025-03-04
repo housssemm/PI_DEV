@@ -247,8 +247,6 @@ public class planningController implements Initializable {
         Label type = new Label("📖 Type: " + seance.getType());
         type.setStyle("-fx-font-size: 16; -fx-text-fill: #000000;");
 
-        Label videoLink = new Label("🎥 Vidéo: " + seance.getLienVideo());
-        videoLink.setStyle("-fx-font-size: 16; -fx-text-fill: #000000;");
 
         Label startTime = new Label("🕒 Début: " + seance.getHeureDebut().toString());
         startTime.setStyle("-fx-font-size: 16; -fx-text-fill: #000000;");
@@ -281,12 +279,30 @@ public class planningController implements Initializable {
         HBox buttonBox = new HBox(10, btnModifier, btnSupprimer, btnLive);
         buttonBox.setAlignment(Pos.CENTER);
 
-        card.getChildren().addAll(title, description, date, coachId, adherentId, type, videoLink, startTime, endTime, buttonBox);
+        card.getChildren().addAll(title, description, date, coachId, adherentId, type, startTime, endTime, buttonBox);
 
         return card;
     }
 
     private void regarderVideo(Seance seance) {
+
+        try {
+            // Charger le fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/regarderVideo.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer le contrôleur de la nouvelle scène
+            RegarderVideo controller = loader.getController();
+            controller.initData(seance); // Passer la séance au contrôleur
+
+            // Créer une nouvelle fenêtre (Stage)
+            Stage stage = new Stage();
+            stage.setTitle("Regarder la vidéo");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -316,7 +332,7 @@ public class planningController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Live Streaming");
             stage.setScene(new Scene(root));
-            stage.setResizable(false);
+            stage.setResizable(true);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -405,6 +421,8 @@ public class planningController implements Initializable {
         popupSeanceController popupController = loader.getController();
         popupController.setCalendarController(this);
 
+        popupController.setIdPlanning(this.idPlanning);//////////
+        popupController.loadAdherents();///////////////////////
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(dialogPane);

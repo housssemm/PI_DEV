@@ -3,11 +3,10 @@ package Services;
 import Models.EtatPaiementPlan;
 import Utils.MyDb;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PaiementPlanningService {
@@ -43,25 +42,25 @@ public PaiementPlanningService() {}
         }
     }
 
-        // Méthode pour récupérer la liste des IDs adhérents qui ont payé
-//        public List<Integer> getAdherentsPayeByPlanning(int idPlanning) {
-//            List<Integer> adherents = new ArrayList<>();
-//            String query = "SELECT DISTINCT id_adherent FROM paiement_planning " +
-//                    "WHERE id_planning = ? AND etat_paiement = 'payé'"; // Assurez-vous que 'payé' correspond à la valeur exacte dans la BDD
-//
-//            try {
-//                PreparedStatement ps = conn.prepareStatement(query);
-//                ps.setInt(1, idPlanning);
-//                ResultSet rs = ps.executeQuery();
-//
-//                while (rs.next()) {
-//                    adherents.add(rs.getInt("id_adherent"));
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            return adherents;
-//        }
+
+        public List<Integer> getAdherentsPayeByPlanning(int idPlanning) {
+            List<Integer> adherents = new ArrayList<>();
+            String query = "SELECT DISTINCT id_adherent FROM paiement_planning " +
+                    "WHERE id_planning = ? AND etat_paiement = 'payé'"; // Assurez-vous que 'payé' correspond à la valeur exacte dans la BDD
+
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setInt(1, idPlanning);
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    adherents.add(rs.getInt("id_adherent"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return adherents;
+        }
 
 }
 

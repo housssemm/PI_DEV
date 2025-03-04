@@ -1,16 +1,25 @@
 package Controllers;
 
+import Models.Evenement;
 import Models.OffreCoach;
 import Models.Etato;
 
 import Services.OffreCoachService;
 
+import Utils.Session;
+import com.mailjet.client.ClientOptions;
+import com.mailjet.client.MailjetClient;
+import com.mailjet.client.MailjetRequest;
+import com.mailjet.client.MailjetResponse;
+import com.mailjet.client.resource.Emailv31;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.sql.Date;
@@ -127,6 +136,8 @@ public class AddOffreCoach {
             offreCoachService.create(offreCoach);
 
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre Coach ajoutée avec succès.");
+            String recipientEmail = Session.getInstance().getCurrentUser().getEmail();
+            sendEmail(recipientEmail);
             clearForm();
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout de l'offre Coach.");
@@ -216,6 +227,58 @@ public class AddOffreCoach {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddOffre.fxml"));
             Parent root = loader.load();
             ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendEmail(String recipientEmail) {
+        // Mailjet API credentials
+
+        final String apiKey = "7d6d1541371e53bbe4db88b129dbbdf3";
+        final String apiSecret = "8a79a0d0bdef1ec3122fe35e642bad4b";
+        // Initialize Mailjet client using the builder pattern
+        ClientOptions options = ClientOptions.builder()
+                .apiKey(apiKey)
+                .apiSecretKey(apiSecret)
+                .build();
+        MailjetClient client = new MailjetClient(options);
+
+        // Create the email content
+        JSONObject message = new JSONObject();
+        message.put(Emailv31.Message.FROM, new JSONObject()
+                .put("Email", "houssemm.labidi@gmail.com")
+                .put("Name", "Couchini"));
+        message.put(Emailv31.Message.TO, new JSONArray()
+                .put(new JSONObject()
+                        .put("Email", recipientEmail)
+                        .put("Name", "Recipient Name")));
+
+
+        message.put(Emailv31.Message.HTMLPART,
+                "Bonjour <b>" + Session.getInstance().getCurrentUser().getPrenom()+"</b><br />" +
+
+                        " Nous vous confirmons par le présent email que votre offre de coaching a bien été ajoutée à notre plateforme.</b>" +
+                        " Celle-ci est désormais visible et accessible aux utilisateurs concernés.<br /><br />"+
+
+
+                        "Merci de votre confiance et à bientôt ! <br />"+
+                        "<h2>L’équipe Coachini<h2>"
+        );
+
+        // Create the Mailjet request
+        MailjetRequest request = new MailjetRequest(Emailv31.resource)
+                .property(Emailv31.MESSAGES, new JSONArray().put(message));
+
+        try {
+            // Send the email
+            MailjetResponse response = client.post(request);
+            if (response.getStatus() == 200) {
+                System.out.println("Email sent successfully!");
+            } else {
+                System.out.println("Error occurred: " + response.getStatus());
+                System.out.println(response.getData());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

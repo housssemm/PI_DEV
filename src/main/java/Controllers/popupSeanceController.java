@@ -2,14 +2,17 @@ package Controllers;
 
 import Models.Seance;
 import Models.Type;
-import Services.AdherentService;
+import Services.PaiementPlanningService;
 import Services.PlanningService;
 import Services.SeanceService;
 import Utils.Session;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
@@ -17,7 +20,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class popupSeanceController {
-
+    @FXML
+    public Button btnChoisirVideo;
     @FXML
     private TextArea fieldDescription;
 
@@ -47,11 +51,19 @@ public class popupSeanceController {
     private planningController calendarController;
     @FXML
     public void initialize() {
-
+        fieldType.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Type.ENREGISTRE) {
+                btnChoisirVideo.setDisable(false);
+            } else {
+                btnChoisirVideo.setDisable(true);
+            }
+        });
         fieldType.getItems().setAll(Type.values());
-        AdherentService serviceAdherent = new AdherentService();
-        List<Integer> idsAdherents = serviceAdherent.getIdsAdherents();
-        field_adherent_Id.getItems().setAll(idsAdherents);
+    }
+    public void loadAdherents() {
+        PaiementPlanningService paiementService = new PaiementPlanningService();
+        List<Integer> adherentsPayeurs = paiementService.getAdherentsPayeByPlanning(idPlanning);
+        field_adherent_Id.getItems().setAll(adherentsPayeurs);
     }
 
     public void setCalendarController(planningController calendarController) {
@@ -154,6 +166,11 @@ public class popupSeanceController {
         if (!estHeureValide(field_Heurefin.getText())) {
             afficherAlerte("Format heure invalide", "L'heure de fin doit être au format HH:mm.", Alert.AlertType.ERROR);
             return false;
+
+        }
+        if (!fieldLien.getText().toLowerCase().endsWith(".mp4")) {
+            afficherAlerte("Format vidéo invalide", "La vidéo doit être au format MP4.", Alert.AlertType.ERROR);
+            return false;
         }
 
         return true;
@@ -182,4 +199,22 @@ public class popupSeanceController {
     public void annulerSeance() {
         fermerFenetre();
     }
+
+    public void ChoisirVideo(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une vidéo");
+
+        // Filtre pour ne permettre que la sélection de fichiers vidéo
+        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Fichiers vidéo", "*.mp4", "*.avi", "*.mov", "*.mkv");
+        fileChooser.getExtensionFilters().add(videoFilter);
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            // Stocker le chemin du fichier dans le champ Lien vidéo
+            fieldLien.setText(selectedFile.getAbsolutePath());
+        }
+    }
+
+
 }

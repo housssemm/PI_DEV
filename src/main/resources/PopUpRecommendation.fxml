@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane hgap="10" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.0" prefWidth="522.0" vgap="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RecommondationController">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+
+    <!-- Question 1 : Niveau de forme (Intense ou Modéré) -->
+    <Label text="Niveau de forme :" GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font></Label>
+    <ComboBox fx:id="niveauFormeCombo" style="-fx-background-color: white; -fx-border-color: gray;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Debutant" />
+                <String fx:value="Intermédiare" />
+                <String fx:value="Avancé" />
+            </FXCollections>
+        </items>
+        <!-- Valeur par défaut -->
+        <value>
+            <String fx:value="Debutant" />
+        </value>
+    </ComboBox>
+
+    <!-- Question 2 : Préférences alimentaires -->
+    <Label text="Préférences alimentaires :" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font></Label>
+    <TextField fx:id="preferencesField" promptText="Ex : végétarien, riche en protéines, etc." style="-fx-background-color: white; -fx-border-color: gray;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+    <!-- Question 3 : Contraintes physiques -->
+    <Label text="Contraintes physiques :" GridPane.columnIndex="0" GridPane.rowIndex="2">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font></Label>
+    <TextField fx:id="contraintesField" promptText="Ex : douleurs articulaires, blessures, etc." style="-fx-background-color: white; -fx-border-color: gray;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+    <!-- Bouton pour obtenir la recommandation -->
+    <Button fx:id="submitButton" onAction="#handleSubmitButton" style="-fx-background-color: #F58400;" text="Obtenir la recommandation" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font></Button>
+
+    <!-- Zone d'affichage du résultat -->
+    <TextArea fx:id="resultArea" editable="false" style="-fx-background-color: white; -fx-border-color: gray;" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

@@ -1,25 +1,41 @@
 package Models;
 
 public class User {
-    private int id, age;
-    private String firstName, lastName;
+    private int id;
+    private String nom, prenom , image , email , MDP;
+
 
     public User() {
     }
 
-    public User(int age, String firstName, String lastName) {
-        this.age = age;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public User(int id, int age, String firstName, String lastName) {
+    public User(int id, String nom, String prenom, String image, String email, String MDP) {
         this.id = id;
-        this.age = age;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.image = image;
+        this.email = email;
+        this.MDP = MDP;
+
+    }
+    public User( String nom, String prenom, String image, String email) {
+
+        this.nom = nom;
+        this.prenom = prenom;
+        this.image = image;
+        this.email = email;
+
+
     }
 
+    public User(String nom, String prenom, String image, String email, String MDP) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.image = image;
+        this.email = email;
+        this.MDP = MDP;
+
+    }
+    // Getter et Setter pour id
     public int getId() {
         return id;
     }
@@ -28,37 +44,60 @@ public class User {
         this.id = id;
     }
 
-    public int getAge() {
-        return age;
+    // Getter et Setter pour nom
+    public String getNom() {
+        return nom;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+    // Getter et Setter pour prenom
+    public String getPrenom() {
+        return prenom;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    // Getter et Setter pour image
+    public String getImage() {
+        return image;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setImage(String image) {
+        this.image = image;
+    }
+    // Getter et Setter pour email
+    public String getEmail() {
+        return email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
+    // Getter et Setter pour MDP
+    public String getMDP() {
+        return MDP;
+    }
+
+    public void setMDP(String MDP) {
+        this.MDP = MDP;
+    }
+
+
+    // Méthode toString pour afficher les infos de l'utilisateur
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", age=" + age +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", image='" + image + '\'' +
+                ", email='" + email + '\'' +
+                ", MDP='" + MDP + '\'' +
                 '}';
     }
 }

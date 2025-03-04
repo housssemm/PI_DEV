@@ -2,11 +2,8 @@ package Services;
 
 import Models.Planning;
 import Utils.MyDb;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,5 +124,22 @@ public class PlanningService implements Crud<Planning> {
         }
         return null; // Aucun planning trouvé
     }
+    public Integer getIdPlanningByCoachId(int idCoach) {
+        String sql = "SELECT id FROM planning WHERE idCoach = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCoach);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id"); // Retourne l'ID du planning si trouvé
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID du planning : " + e.getMessage());
+        }
+        return null; // Retourne null si aucun planning n'est trouvé
+    }
+
+
 
 }

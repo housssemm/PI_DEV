@@ -193,4 +193,37 @@ public class CoachService {
         return false;
     }
 
+    public List<Coach> getAllValide() {
+        List<Coach> coaches = new ArrayList<>();
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+                "c.annee_experience, c.certificat_valide, c.specialite, c.note " +
+                "FROM user u " +
+                "JOIN coach c ON u.id = c.id " + // Jointure entre les tables user et coach
+                "WHERE c.certificat_valide = 1"; // Condition pour filtrer les coachs avec un certificat valide
+
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                // Création d'un coach avec les données de la base
+                Coach coach = new Coach(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("image"),
+                        rs.getString("email"),
+                        rs.getString("MDP"),
+                        rs.getByte("certificat_valide"),
+                        SpecialiteC.valueOf(rs.getString("specialite")), // Assurez-vous que la spécialité est bien stockée en tant que String dans la base
+                        rs.getInt("note"),
+                        rs.getInt("annee_experience")
+                );
+                coaches.add(coach);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return coaches;
+    }
+
 }

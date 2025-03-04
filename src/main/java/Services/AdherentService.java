@@ -203,5 +203,18 @@ public class AdherentService {
         }
         return false;
     }
+    public List<Integer> getIdsAdherents() {
+        List<Integer> ids = new ArrayList<>();
+        String query = "SELECT id FROM Adherent";
 
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                ids.add(resultSet.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
 }

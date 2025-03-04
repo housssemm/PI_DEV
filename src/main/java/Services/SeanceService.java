@@ -3,6 +3,7 @@ package Services;
 import Models.Seance;
 import Models.Type;
 import Utils.MyDb;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,7 @@ public class SeanceService implements Crud<Seance> {
 
     public List<Seance> getSeancesByPlanningId(int idPlanning) {
         List<Seance> seances = new ArrayList<>();
-        String query = "SELECT * FROM Seance WHERE planning_id = ?";
+        String query = "SELECT * FROM Seance WHERE Planning_id = ?";
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setInt(1, idPlanning);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -163,4 +164,33 @@ public class SeanceService implements Crud<Seance> {
         }
         return seances;
     }
+    public List<Seance> getSeancesByAdherentId(int idAdherent) {
+        List<Seance> seances = new ArrayList<>();
+        String query = "SELECT * FROM seance WHERE idAdherent = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setInt(1, idAdherent);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Seance seance = new Seance();
+                    seance.setId(resultSet.getInt("id"));
+                    seance.setTitre(resultSet.getString("Titre"));
+                    seance.setDescription(resultSet.getString("Description"));
+                    seance.setDate(resultSet.getDate("Date"));
+                    seance.setType(Type.valueOf(resultSet.getString("Type")));
+                    seance.setLienVideo(resultSet.getString("LienVideo"));
+                    seance.setHeureDebut(resultSet.getTime("HeureDebut"));
+                    seance.setHeureFin(resultSet.getTime("HeureFin"));
+                    seance.setIdCoach(resultSet.getInt("idCoach"));
+                    seance.setIdAdherent(resultSet.getInt("idAdherent"));
+                    seance.setPlanningId(resultSet.getInt("planning_id"));
+                    seances.add(seance);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des séances par idAdherent : " + e.getMessage());
+        }
+        return seances;
+    }
+
 }

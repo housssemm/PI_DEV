@@ -164,11 +164,11 @@
       </HBox>
       <VBox layoutX="288.0" prefHeight="67.0" prefWidth="1260.0" style="-fx-background-color: #708090;">
          <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1246.0">
+            <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="1267.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1159.0">
+                  <HBox alignment="CENTER" prefHeight="67.0" prefWidth="1033.0">
                      <children>
-                        <TextField fx:id="search" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
+                        <TextField fx:id="search" onAction="#RechercheSeance" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
                            <font>
                               <Font name="Cambria" size="14.0" />
                            </font>
@@ -199,6 +199,15 @@
                         <Insets right="22.0" />
                      </HBox.margin>
                   </ImageView>
+                  <Button mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="36.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/etoilevide.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </HBox>
          </children>
@@ -242,7 +251,7 @@
          </Button>
 
       </AnchorPane>
-      <ScrollPane fx:id="scrollpane" fitToWidth="true" hbarPolicy="NEVER" layoutX="1086.0" layoutY="97.0" prefHeight="662.0" prefWidth="434.0" vbarPolicy="ALWAYS">
+      <ScrollPane fx:id="scrollpane" fitToWidth="true" hbarPolicy="NEVER" layoutX="1094.0" layoutY="147.0" prefHeight="652.0" prefWidth="434.0" vbarPolicy="ALWAYS">
          <content>
             <GridPane fx:id="gridSeance" prefHeight="398.0" prefWidth="398.0">
               <columnConstraints>
@@ -254,5 +263,10 @@
             </GridPane>
          </content>
       </ScrollPane>
+      <Button layoutX="1137.0" layoutY="98.0" mnemonicParsing="false" onAction="#TriParHeureDebut" prefHeight="26.0" prefWidth="132.0" style="-fx-background-color: F58400;" text="Tri par heureDebut" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

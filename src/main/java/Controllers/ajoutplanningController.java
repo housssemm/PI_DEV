@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.Planning;
+import Services.CoachService;
 import Services.CreateurEvenementService;
 import Services.PlanningService;
 import Utils.Session;
@@ -9,11 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.io.IOException;
 public class ajoutplanningController {
 
     @FXML
-    private TextField idcoachplan, titreplan, tarifplan;
+    private TextField titreplan, tarifplan;
     @FXML
     private VBox planningVBox;
 
@@ -29,6 +30,7 @@ public class ajoutplanningController {
 
     @FXML
     public void initialize() {
+
         setupHeader();
     }
 
@@ -40,7 +42,7 @@ public class ajoutplanningController {
         }
 
         PlanningService ps = new PlanningService();
-        int idCoach = Integer.parseInt(idcoachplan.getText());
+        int idCoach =Session.getInstance().getCurrentUser().getId();
 
         // Vérifier si le coach a déjà un planning
         if (ps.getPlanningByCoachId(idCoach) != null) {
@@ -58,13 +60,8 @@ public class ajoutplanningController {
     }
 
     private boolean validerChamps() {
-        if (idcoachplan.getText().isEmpty() || titreplan.getText().isEmpty() || tarifplan.getText().isEmpty()) {
+        if ( titreplan.getText().isEmpty() || tarifplan.getText().isEmpty()) {
             afficherAlerte("Champs vides", "Tous les champs doivent être remplis.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        if (!estEntier(idcoachplan.getText())) {
-            afficherAlerte("Format invalide", "L'ID du coach doit être un nombre entier.", Alert.AlertType.ERROR);
             return false;
         }
 
@@ -74,15 +71,6 @@ public class ajoutplanningController {
         }
 
         return true;
-    }
-
-    private boolean estEntier(String valeur) {
-        try {
-            Integer.parseInt(valeur);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     private boolean estDoublePositif(String valeur) {
@@ -163,45 +151,39 @@ public class ajoutplanningController {
 
     @FXML
     void consulterplan(ActionEvent event) throws IOException {
-        PlanningService ps = new PlanningService();
-        int idCoach = Integer.parseInt(idcoachplan.getText());
 
-        // Vérifier si le coach a un planning
-        Planning planning = ps.getPlanningByCoachId(idCoach);
-        if (planning == null) {
-            afficherAlerte("Accès refusé", "Vous n'avez pas encore de planning. Veuillez en créer un d'abord.", Alert.AlertType.WARNING);
-            return;
-        }
-
-        // Récupérer l'ID du planning depuis l'objet 'planning'
-        int idPlanning = planning.getIdPlanning();  // Assurez-vous que votre modèle 'Planning' a cette méthode.
-
-        // Charger le fichier FXML de planning
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/planning.fxml"));
         Parent root = loader.load();
 
-        // Récupérer le contrôleur de la nouvelle scène
-        planningController controller = loader.getController();
-
-        // Passer l'ID du coach et l'ID du planning au contrôleur
-        controller.initData(idCoach, idPlanning);
-
-        // Créer une nouvelle scène et l'afficher
         Stage stage = new Stage();
         stage.setTitle("Consulter Planning");
         stage.setScene(new Scene(root));
         stage.show();
     }
     //ROOT
+    private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
 
+    private CoachService coachService = new CoachService();
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Events.fxml"));
+            if (createurEvenementService.isCreateurEvenement(id)) {
+                path = "/AddEvenement.fxml";
+            } else {
+                path = "/Events.fxml";
+            }
+
+            // Now load the determined path
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
-            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+            ((Node) actionEvent.getSource()).getScene().setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
     @FXML
@@ -227,10 +209,28 @@ public class ajoutplanningController {
 
     @FXML
     void GoToSeance(ActionEvent actionEvent) {
+        int id = Session.getInstance().getCurrentUser().getId();
+        String path = "";
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ajoutplanning.fxml"));
+            if (coachService.isCoach(id)) {
+                PlanningService ps = new PlanningService();
+
+                // Vérifie si le coach a déjà un planning
+                if (ps.getPlanningByCoachId(id) != null) {
+                    path = "/planning.fxml"; // Redirige vers la page de planning existant
+                } else {
+                    path = "/ajoutplanning.fxml"; // Redirige vers l'ajout de planning
+                }
+
+            } else {
+                path = "/planningAdherent.fxml"; // Redirige les adhérents vers leur planning
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
-            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+            ((Node) actionEvent.getSource()).getScene().setRoot(root);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

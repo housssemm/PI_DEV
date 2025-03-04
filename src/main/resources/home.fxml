@@ -224,131 +224,18 @@
                               </Button>
                            </children>
                         </VBox>
-                        <VBox layoutX="22.0" layoutY="182.0" prefHeight="306.0" prefWidth="766.0" spacing="20.0" style="-fx-padding: 20;">
+                        <VBox layoutX="24.0" layoutY="157.0" prefHeight="337.0" prefWidth="1190.0" spacing="20.0" style="-fx-padding: 20;">
                            <children>
                               <Label text="Entraîneurs en vedette" textFill="#333333">
                                  <font>
                                     <Font name="Arial Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <HBox prefHeight="210.0" prefWidth="792.0" spacing="20.0">
-                                 <children>
-                                    <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
-                                       <children>
-                                          <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@img/coach.png" />
-                                             </image>
-                                          </ImageView>
-                                          <Label text="John Doe" textFill="#333333">
-                                             <font>
-                                                <Font name="Arial Bold" size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Fitness Coach" textFill="#666666">
-                                             <font>
-                                                <Font name="Arial" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox prefHeight="210.0" prefWidth="233.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
-                                       <children>
-                                          <ImageView fitHeight="150.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@img/coach1.png" />
-                                             </image>
-                                          </ImageView>
-                                          <Label text="Lucas Moreau" textFill="#333333">
-                                             <font>
-                                                <Font name="Arial Bold" size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Fitness Coach" textFill="#666666">
-                                             <font>
-                                                <Font name="Arial" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
-                                       <children>
-                                          <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@img/coach2.png" />
-                                             </image>
-                                          </ImageView>
-                                          <Label text="Noah Lefevre" textFill="#333333">
-                                             <font>
-                                                <Font name="Arial Bold" size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Fitness Coach" textFill="#666666">
-                                             <font>
-                                                <Font name="Arial" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
-                                       <children>
-                                          <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@img/coach3.png" />
-                                             </image>
-                                          </ImageView>
-                                          <Label text="Hugo Martin" textFill="#333333">
-                                             <font>
-                                                <Font name="Arial Bold" size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Fitness Coach" textFill="#666666">
-                                             <font>
-                                                <Font name="Arial" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
-                                       <children>
-                                          <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@img/coach4.png" />
-                                             </image>
-                                          </ImageView>
-                                          <Label text="Mathis Durand" textFill="#333333">
-                                             <font>
-                                                <Font name="Arial Bold" size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Fitness Coach" textFill="#666666">
-                                             <font>
-                                                <Font name="Arial" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox prefWidth="300.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: white;">
-                                       <children>
-                                          <ImageView fitHeight="150.0" fitWidth="280.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@img/coach5.png" />
-                                             </image>
-                                          </ImageView>
-                                          <Label text="Ethan Lambert" textFill="#333333">
-                                             <font>
-                                                <Font name="Arial Bold" size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label text="Fitness Coach" textFill="#666666">
-                                             <font>
-                                                <Font name="Arial" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
+                              <ScrollPane fx:id="scrollPane" pannable="true" hbarPolicy="NEVER" prefHeight="272.0" prefWidth="1150.0" vbarPolicy="NEVER" fitToHeight="true">
+                                 <content>
+                                    <HBox fx:id="coachcard" prefHeight="269.0" prefWidth="1150.0" spacing="20.0" />
+                                 </content>
+                              </ScrollPane>
                            </children>
                         </VBox>
                         <VBox layoutX="25.0" layoutY="476.0" spacing="20.0" style="-fx-padding: 20;">

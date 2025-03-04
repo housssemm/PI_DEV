@@ -1,7 +1,6 @@
 package Controllers;
 
 import Models.Seance;
-import Models.Type;
 import Services.CoachService;
 import Services.CreateurEvenementService;
 import Services.PlanningService;
@@ -16,33 +15,22 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import video.api.client.ApiVideoClient;
-import video.api.client.api.models.LiveStream;
-import video.api.client.api.models.LiveStreamAssets;
-import video.api.client.api.models.LiveStreamCreationPayload;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-
-
-public class planningController implements Initializable {
-
-    public TextField search;
+public class PlanningAdherentController implements Initializable {
     ZonedDateTime dateFocus;
     ZonedDateTime today;
-    private int selectedDayOfMonth = 0;
 
     @FXML
     private ScrollPane scrollPane;
@@ -56,44 +44,28 @@ public class planningController implements Initializable {
     private FlowPane calendar;
 
     private int idCoach;
-    private int idPlanning;
-    private Button btnLancerLive;
-    private String lienVideo;
-
-
-    private String apiKey = "SJ9ExzbAMWr99kTXcls9nygm4eqUTOtK5SJ75i5GU8a"; // Remplace par ta clé API
-    private String liveStreamId;
-    private ApiVideoClient client;
+    private int idAdherent;
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateFocus = ZonedDateTime.now();
         today = ZonedDateTime.now();
         drawCalendar();
-        client = new ApiVideoClient(apiKey);
-
-        search.textProperty().addListener((observable, oldValue, newValue) -> {
-            RechercheSeance();
-        });
-
-
     }
+
     @FXML
     void backOneMonth() {
         dateFocus = dateFocus.minusMonths(1);
-        System.out.println("⬅ Mois précédent : " + dateFocus.getMonthValue() + " - Année : " + dateFocus.getYear());
-        refreshCalendar();
+        calendar.getChildren().clear();
+        drawCalendar();
     }
     @FXML
     void forwardOneMonth() {
         dateFocus = dateFocus.plusMonths(1);
-        System.out.println("➡ Mois suivant : " + dateFocus.getMonthValue() + " - Année : " + dateFocus.getYear());
-        refreshCalendar();
-    }
-    void refreshCalendar() {
         calendar.getChildren().clear();
         drawCalendar();
     }
+
     private void drawCalendar() {
         DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy", Locale.FRENCH);
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", Locale.FRENCH);
@@ -114,12 +86,11 @@ public class planningController implements Initializable {
 
         int dateOffset = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(), 1, 0, 0, 0, 0, dateFocus.getZone()).getDayOfWeek().getValue() - 1;
 
-        idCoach=Session.getInstance().getCurrentUser().getId();
-        PlanningService ps = new PlanningService();
-        idPlanning=ps.getIdPlanningByCoachId(idCoach);
-        // Charger les séances pour le mois
-        Map<Integer, List<Seance>> seancesMap = getSeancesForMonth(dateFocus, idPlanning);
+        // Récupérer les séances pour l'adhérent et le mois actuel
+        idAdherent = Session.getInstance().getCurrentUser().getId();
+        Map<Integer, List<Seance>> calendrierSeances = getSeancesForMonth(dateFocus, idAdherent);
 
+        // Vide la grille avant de redessiner
         calendar.getChildren().clear();
 
         for (int i = 0; i < 6; i++) {
@@ -138,16 +109,16 @@ public class planningController implements Initializable {
                 int calculatedDate = (i * 7) + j + 1 - dateOffset;
                 if (calculatedDate > 0 && calculatedDate <= monthMaxDate) {
                     Text date = new Text(String.valueOf(calculatedDate));
-                    date.setTranslateY(-(rectangleHeight / 2) * 0.75);
+                    double textTranslationY = -(rectangleHeight / 2) * 0.75;
+                    date.setTranslateY(textTranslationY);
                     stackPane.getChildren().add(date);
 
-                    // Vérifier si des séances existent pour cette date
-                    List<Seance> seances = seancesMap.get(calculatedDate);
-                    if (seances != null && !seances.isEmpty()) {
-                        rectangle.setFill(Color.web("#F58400"));  // Colorier si une séance existe
+                    // Vérifie si des séances existent pour ce jour
+                    List<Seance> seancesDuJour = calendrierSeances.get(calculatedDate);
+                    if (seancesDuJour != null && !seancesDuJour.isEmpty()) {
+                        rectangle.setFill(Color.web("#F58400"));  // Colorer en orange
                     }
 
-                    // Gérer le clic sur la case du calendrier
                     stackPane.setOnMouseClicked(event -> {
                         showSessionsForDate(calculatedDate);
                     });
@@ -157,18 +128,29 @@ public class planningController implements Initializable {
         }
     }
 
-    private void updateGridSeance(List<Seance> sessions) {
+    public void showSessionsForDate(int dayOfMonth) {
+        System.out.println("Affichage des séances pour le jour: " + dayOfMonth);
+
+        idAdherent = Session.getInstance().getCurrentUser().getId();
+        List<Seance> sessionsForDay = getSessionsForSelectedDay(dayOfMonth, idAdherent);
+
+        // Ajout d'un log pour vérifier si des séances sont récupérées
+        System.out.println("Nombre de séances trouvées pour ce jour: " + sessionsForDay.size());
+
         gridSeance.getChildren().clear();
         gridSeance.getRowConstraints().clear();
         gridSeance.setVgap(10);
         gridSeance.setPadding(Insets.EMPTY);
 
         double cardHeight = 300;
-        for (int i = 0; i < sessions.size(); i++) {
-            Seance session = sessions.get(i);
+
+        for (int i = 0; i < sessionsForDay.size(); i++) {
+            Seance session = sessionsForDay.get(i);
             VBox sessionCard = createSeanceCard(session);
+
             sessionCard.setAlignment(Pos.CENTER);
             sessionCard.setPadding(new Insets(10));
+
             gridSeance.add(sessionCard, 0, i);
 
             RowConstraints rowConstraints = new RowConstraints();
@@ -176,31 +158,24 @@ public class planningController implements Initializable {
             gridSeance.getRowConstraints().add(rowConstraints);
         }
 
-        double gridHeight = cardHeight * sessions.size() + gridSeance.getVgap() * (sessions.size() - 1);
+        double gridHeight = cardHeight * sessionsForDay.size() + gridSeance.getVgap() * (sessionsForDay.size() - 1);
         gridSeance.setPrefHeight(gridHeight);
     }
-    public void showSessionsForDate(int dayOfMonth) {
-        System.out.println("Jour sélectionné : " + dayOfMonth);
 
-        // Mémoriser le jour sélectionné
-        this.selectedDayOfMonth = dayOfMonth;
 
-        PlanningService ps = new PlanningService();
-        int idCoach = Session.getInstance().getCurrentUser().getId();
-        int idPlanning = ps.getIdPlanningByCoachId(idCoach);
+    private List<Seance> getSessionsForSelectedDay(int dayOfMonth, int id_adherent) {
+        Map<Integer, List<Seance>> seanceMap = getSeancesForMonth(dateFocus, id_adherent);
 
-        List<Seance> sessionsForDay = getSessionsForSelectedDay(dayOfMonth, idPlanning);
-        System.out.println("Date sélectionnée: " + dayOfMonth + " Mois: " + dateFocus.getMonthValue());
-        System.out.println("Séances trouvées: " + sessionsForDay.size());
+        List<Seance> sessions = seanceMap.getOrDefault(dayOfMonth, new ArrayList<>());
 
-        updateGridSeance(sessionsForDay);
+        // Ajout de logs pour vérifier si des séances sont récupérées
+        System.out.println("Jour sélectionné: " + dayOfMonth + " | Mois: " + dateFocus.getMonthValue() + " | Année: " + dateFocus.getYear());
+        System.out.println("Séances trouvées: " + sessions.size());
+
+        return sessions;
     }
 
 
-    private List<Seance> getSessionsForSelectedDay(int dayOfMonth, int idPlanning) {
-        Map<Integer, List<Seance>> seanceMap = getSeancesForMonth(dateFocus, idPlanning);
-        return seanceMap.getOrDefault(dayOfMonth, new ArrayList<>());
-    }
     public VBox createSeanceCard(Seance seance) {
         VBox card = new VBox(10);
         card.setStyle("-fx-background-color: #ffffff; " +
@@ -256,71 +231,22 @@ public class planningController implements Initializable {
         Label endTime = new Label("🕕 Fin: " + seance.getHeureFin().toString());
         endTime.setStyle("-fx-font-size: 16; -fx-text-fill: #000000;");
 
+        Button btnparticiper = new Button("👤 participer");
+        btnparticiper.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnparticiper.setOnAction(event -> ParticiperSeance(seance));
 
-        Button btnModifier = new Button("✏ Modifier");
-        btnModifier.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnModifier.setOnAction(event -> modifierSeance(seance));
-
-
-        Button btnSupprimer = new Button("🗑 Supprimer");
-        btnSupprimer.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnSupprimer.setOnAction(event -> supprimerSeance(seance));
-
-        Button btnLive = new Button();
-        btnLive.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-font-weight: bold;");
-
-        if (seance.getType() == Type.EN_DIRECT) {
-            btnLive.setText("📡 Lancer Live");
-            btnLive.setOnAction(event -> lancerLive(seance));
-        } else {
-            btnLive.setText("▶ Regarder Vidéo");
-            btnLive.setOnAction(event -> regarderVideo(seance));
-        }
-
-        // Ajouter les boutons dans un HBox
-        HBox buttonBox = new HBox(10, btnModifier, btnSupprimer, btnLive);
-        buttonBox.setAlignment(Pos.CENTER);
+       HBox buttonBox = new HBox(10, btnparticiper);
+       buttonBox.setAlignment(Pos.CENTER);
 
         card.getChildren().addAll(title, description, date, coachId, adherentId, type, videoLink, startTime, endTime, buttonBox);
 
         return card;
     }
 
-    private void regarderVideo(Seance seance) {
-
-    }
-
-    private void lancerLive(Seance seance) {
-
-        try {
-            // Créer un live stream si ce n'est pas encore fait
-            LiveStream liveStream = client.liveStreams().create(
-                    new LiveStreamCreationPayload().name("Séance en direct")
-            );
-
-            LiveStreamAssets assets = liveStream.getAssets();
-            String playerUrl = liveStream.getAssets().getHls().toString();
 
 
-            // Ouvrir la fenêtre du live
-            ouvrirFenetreLive(playerUrl);
+    private void ParticiperSeance(Seance seance) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    private void ouvrirFenetreLive(String url) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/liveStream.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Live Streaming");
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private Map<Integer, List<Seance>> createSeanceMap(List<Seance> seances) {
@@ -333,105 +259,28 @@ public class planningController implements Initializable {
         return SeanceMap;
     }
 
-    private Map<Integer, List<Seance>> getSeancesForMonth(ZonedDateTime dateFocus, int idPlanning) {
+    private Map<Integer, List<Seance>> getSeancesForMonth(ZonedDateTime dateFocus, int idAdherent) {
         SeanceService sc = new SeanceService();
-        List<Seance> seances = sc.getSeancesByPlanningId(idPlanning);
-        System.out.println("🔄 Chargement des séances pour le mois : " + dateFocus.getMonthValue() + " - Année : " + dateFocus.getYear());
+        List<Seance> allSeances = sc.getSeancesByAdherentId(idAdherent);
 
+        // Filtrer par mois et année
         List<Seance> filteredSeances = new ArrayList<>();
-        for (Seance s : seances) {
-            LocalDate seanceDate = s.getDate().toLocalDate();
-
-            // Vérifier que la séance appartient bien au mois et à l'année de dateFocus
-            if (seanceDate.getYear() == dateFocus.getYear() && seanceDate.getMonthValue() == dateFocus.getMonthValue()) {
-                filteredSeances.add(s);
+        for (Seance seance : allSeances) {
+            LocalDate localDate = seance.getDate().toLocalDate();
+            if (localDate.getYear() == dateFocus.getYear() && localDate.getMonthValue() == dateFocus.getMonthValue()) {
+                filteredSeances.add(seance);
             }
-        }
-
-        // Debugging : Vérifier quelles séances sont gardées
-        for (Seance s : filteredSeances) {
-            System.out.println("Séance filtrée : " + s.getTitre() + " - " + s.getDate());
         }
 
         return createSeanceMap(filteredSeances);
     }
 
-    private void modifierSeance(Seance seance) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/popupModifierSeance.fxml"));
-            DialogPane dialogPane = loader.load();
 
-            popupModifierSeanceController controller = loader.getController();
-            controller.initData(seance);
-            controller.setPlanningController(this);
-
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(dialogPane);
-            Optional<ButtonType> result = dialog.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-    }
-    private void supprimerSeance(Seance seance) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer la séance ?");
-        alert.setContentText("Voulez-vous vraiment supprimer cette séance ?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            SeanceService service = new SeanceService();
-            service.delete(seance.getId());
-
-            // Remove only the card for the deleted session
-            for (Node node : gridSeance.getChildren()) {
-                if (node instanceof VBox) {
-                    VBox card = (VBox) node;
-                    Label title = (Label) card.getChildren().get(0); // assuming title is the first label
-
-                    // If the title matches the session being deleted, remove the card
-                    if (title.getText().contains(seance.getTitre())) {
-                        gridSeance.getChildren().remove(card);
-                        break; // Exit after removing the matching card
-                    }}}}}
-
-
-
-    public void ajouterSeance(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/popupSeance.fxml"));
-        DialogPane dialogPane = loader.load();
-
-        popupSeanceController popupController = loader.getController();
-        popupController.setCalendarController(this);
-
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-    }
-    public void TriParHeureDebut(ActionEvent event) {
-        // Vérifier qu'un jour est sélectionné
-        if (selectedDayOfMonth == 0) {
-            System.out.println("Aucun jour sélectionné !");
-            return;
-        }
-
-        PlanningService ps = new PlanningService();
-        int idCoach = Session.getInstance().getCurrentUser().getId();
-        int idPlanning = ps.getIdPlanningByCoachId(idCoach);
-        List<Seance> sessions = getSessionsForSelectedDay(selectedDayOfMonth, idPlanning);
-
-        // Trier la liste par heure de début
-        sessions.sort(Comparator.comparing(Seance::getHeureDebut));
-
-        updateGridSeance(sessions);
-    }
 
     //ROOT
     private CreateurEvenementService createurEvenementService = new CreateurEvenementService();
-    private CoachService coachService = new CoachService();
 
+    private CoachService coachService = new CoachService();
 
     @FXML
     void GoToEvent(ActionEvent actionEvent) {
@@ -487,7 +336,7 @@ public class planningController implements Initializable {
 
                 // Vérifie si le coach a déjà un planning
                 if (ps.getPlanningByCoachId(id) != null) {
-                    path = "/planning.fxml"; // Redirige vers la page de calendrier existant
+                    path = "/planning.fxml"; // Redirige vers la page de planning existant
                 } else {
                     path = "/ajoutplanning.fxml"; // Redirige vers l'ajout de planning
                 }
@@ -524,26 +373,4 @@ public class planningController implements Initializable {
             e.printStackTrace();
         }
     }
-
-    @FXML
-    private void RechercheSeance() {
-        // Récupérer le texte saisi
-        String query = search.getText().toLowerCase().trim();
-
-        // Charger toutes les séances du planning
-        int idCoach = Session.getInstance().getCurrentUser().getId();
-        int idPlanning = new PlanningService().getIdPlanningByCoachId(idCoach);
-        List<Seance> allSeances = new SeanceService().getSeancesByPlanningId(idPlanning);
-
-        // Filtrer uniquement par le titre (nom) de la séance, en protégeant contre les null
-        List<Seance> filteredSeances = allSeances.stream()
-                .filter(s -> s.getTitre() != null && s.getTitre().toLowerCase().contains(query))
-                .collect(Collectors.toList());
-
-        updateGridSeance(filteredSeances);
-    }
-
-
-
-
 }

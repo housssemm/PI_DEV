@@ -41,7 +41,11 @@ public class popupModifierSeanceController {
     private int idCoach;
     private int idPlanning;
     private int idSeance;
+    private planningController calendarController;
 
+    public void setPlanningController(planningController calendarController) {
+        this.calendarController = calendarController;
+    }
     public void annulerSeance(ActionEvent event) {
         Stage stage = (Stage) Modifytitre.getScene().getWindow();
         stage.close();
@@ -92,10 +96,14 @@ public class popupModifierSeanceController {
                 );
 
                 sc.update(s1);
+                if (calendarController != null) {
+                    calendarController.refreshCalendar();
+                }
+
                 fermerFenetre();
             } catch (IllegalArgumentException e) {
 
-                afficherAlerte("Erreur de format", "Veuillez vérifier le format des heures (HH:mm).", Alert.AlertType.ERROR);
+                afficherAlerte("Erreur de format", "Veuillez vérifier le format des heures (HH:mm:ss).", Alert.AlertType.ERROR);
             } catch (Exception e) {
 
                 afficherAlerte("Erreur", "Une erreur est survenue lors de la modification de la séance.", Alert.AlertType.ERROR);
@@ -103,6 +111,7 @@ public class popupModifierSeanceController {
         }
 
     private boolean validerChamps() {
+
         if (Modifytitre.getText().isEmpty() || ModifyDescription.getText().isEmpty() || ModifyLien.getText().isEmpty()
                 || Modify_HeureDebut.getText().isEmpty()
                 || Modify_Heurefin.getText().isEmpty() || Modify_adherent_Id.getText().isEmpty()

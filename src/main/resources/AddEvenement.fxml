@@ -322,23 +322,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="842.0">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="974.0">
-                           <children>
-                              <TextField fx:id="search" prefHeight="33.0" prefWidth="249.0" promptText="Recherche..." styleClass="search-box">
-                                 <font>
-                                    <Font name="Cambria" size="14.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </TextField>
-                              <ImageView fx:id="isearch" fitHeight="42.0" fitWidth="38.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@img/cherche.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="974.0" />
                         <ImageView fitHeight="57.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@img/notification.png" />

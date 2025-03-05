@@ -204,7 +204,7 @@ import java.util.List;
 public class EvenementService {
     private static Connection conn = null;
 
-    public EvenementService() {
+    public EvenementService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
 

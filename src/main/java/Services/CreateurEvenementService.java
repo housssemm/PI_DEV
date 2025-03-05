@@ -1,6 +1,8 @@
 package Services;
-import Models.*;
+
+import Models.CreateurEvenement;
 import Models.User;
+import Models.UserData;
 import Utils.MyDb;
 
 import java.sql.*;
@@ -13,9 +15,9 @@ public class CreateurEvenementService {
     private Connection conn;
     private final UserService userService;
 
-    public CreateurEvenementService() {
+    public CreateurEvenementService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
-        this.userService = new UserService(MyDb.getInstance().getConn());
+        this.userService = new UserService();
     }
     public CreateurEvenement mapUserDataToCreateur(UserData userData) {
         CreateurEvenement createurEvenement = new CreateurEvenement();
@@ -84,19 +86,21 @@ public class CreateurEvenementService {
         String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
                 "c.nom_organisation, c.description, c.adresse, c.telephone, c.certificat_valide " +
                 "FROM user u " +
-                "JOIN createurevenement c ON u.id = c.id";
-         // Jointure entre les tables user et createur d evenement
+                "JOIN createurevenement c ON u.id = c.id"; // Jointure entre les tables user et createur d'evenement
 
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
+                // Récupérer l'image comme une chaîne de caractères (chemin de fichier)
+                String imagePath = rs.getString("image");  // Chemin du fichier image
+
                 // Création d'un createur d'evenement avec les données de la base
                 CreateurEvenement createur = new CreateurEvenement(
                         rs.getInt("id"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
-                        rs.getString("image"),
+                        imagePath,  // Le chemin de l'image
                         rs.getString("email"),
                         rs.getString("MDP"),
                         rs.getString("nom_organisation"),
@@ -105,49 +109,12 @@ public class CreateurEvenementService {
                         rs.getString("telephone"),
                         rs.getByte("certificat_valide")
                 );
-                createurEvenements.add(createur);
-
+                createurEvenements.add(createur);  // Ajouter le createur à la liste
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return createurEvenements;
-    }
-    public boolean updateCreateurEvenement(CreateurEvenement createurEvenement) {
-        String sql = "UPDATE createurevenement SET nom_organisation = ?, description = ?, adresse = ?, telephone = ?, certificat_valide = ? WHERE id = ?";
-
-        try (PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setString(1, createurEvenement.getNom_organisation());
-            pst.setString(2, createurEvenement.getDescription());
-            pst.setString(3, createurEvenement.getAdresse());
-            pst.setString(4, createurEvenement.getTelephone());
-            pst.setBoolean(5, createurEvenement.getCertificat_valide() == 1);
-            pst.setInt(6, createurEvenement.getId());
-
-            pst.executeUpdate();
-
-        int rowsUpdated = pst.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println(" ✅ Createur d'evénement mis à jour avec succès !");
-                return true;
-            } else {
-                System.out.println(" ❌ Aucune mise à jour pour le Createur d'evénement.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public boolean updateCreateurEvenementWithUser(CreateurEvenement createurEvenement) {
-        // Mise à jour de l'utilisateur
-        User user = new User(createurEvenement.getId(), createurEvenement.getNom(), createurEvenement.getPrenom(), createurEvenement.getImage(), createurEvenement.getEmail(), createurEvenement.getMDP());
-        boolean userUpdated = userService.updateUser(user);
-
-        // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach
-        if (userUpdated) {
-            return updateCreateurEvenement(createurEvenement);
-        }
-        return false;
     }
     public CreateurEvenement getCreateurEvenementById(int id) {
         String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
@@ -184,6 +151,45 @@ public class CreateurEvenementService {
         }
         return null;
     }
+
+
+    public boolean updateCreateurEvenement(CreateurEvenement createurEvenement) {
+        String sql = "UPDATE createurevenement SET nom_organisation = ?, description = ?, adresse = ?, telephone = ?, certificat_valide = ? WHERE id = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, createurEvenement.getNom_organisation());
+            pst.setString(2, createurEvenement.getDescription());
+            pst.setString(3, createurEvenement.getAdresse());
+            pst.setString(4, createurEvenement.getTelephone());
+            pst.setBoolean(5, createurEvenement.getCertificat_valide() == 1);
+            pst.setInt(6, createurEvenement.getId());
+
+            pst.executeUpdate();
+
+        int rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println(" ✅ Createur d'evénement mis à jour avec succès !");
+                return true;
+            } else {
+                System.out.println(" ❌ Aucune mise à jour pour le Createur d'evénement.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean updateCreateurEvenementWithUser(CreateurEvenement createurEvenement) {
+        // Mise à jour de l'utilisateur
+        User user = new User(createurEvenement.getId(), createurEvenement.getNom(), createurEvenement.getPrenom(), createurEvenement.getImage(), createurEvenement.getEmail(), createurEvenement.getMDP());
+        boolean userUpdated = userService.updateUser(user);
+
+        // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach
+        if (userUpdated) {
+            return updateCreateurEvenement(createurEvenement);
+        }
+        return false;
+    }
+
     public boolean isCreateurEvenement(int id) {
         String sql = "SELECT COUNT(*) FROM createurevenement WHERE id = ?";
 
@@ -200,5 +206,17 @@ public class CreateurEvenementService {
             e.printStackTrace();
         }
         return false;
+    }
+    public int getNombreEVENT() {
+        String query = "SELECT COUNT(*) FROM createurevenement WHERE certificat_valide = 1";  // Assure-toi que le nom de la table est correct
+        try (PreparedStatement statement = conn.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;  // Retourne 0 en cas d'erreur
     }
 }

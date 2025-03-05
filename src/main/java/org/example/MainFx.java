@@ -27,7 +27,7 @@ public class MainFx extends Application {
 
         //  Parent root = FXMLLoader.load(getClass().getResource("/DashboardR.fxml"));
       // Parent root = FXMLLoader.load(getClass().getResource("/Coach.fxml"));
-       // Parent root = FXMLLoader.load(getClass().getResource("/adherents.fxml"));
+       // Parent root = FXMLLoader.load(getClass().getResource("/invest.fxml"));
         // Parent root = FXMLLoader.load(getClass().getResource("/creaters.fxml"));
          Parent root = FXMLLoader.load(getClass().getResource("/SigninUp.fxml"));
 

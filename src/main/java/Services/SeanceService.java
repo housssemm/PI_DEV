@@ -11,7 +11,7 @@ import java.util.List;
 public class SeanceService implements Crud<Seance> {
     Connection conn = MyDb.getInstance().getConn();
 
-    public SeanceService() {}
+    public SeanceService() throws SQLException {}
 
     @Override
     public boolean create(Seance obj) {

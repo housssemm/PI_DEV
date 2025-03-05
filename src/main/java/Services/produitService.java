@@ -4,17 +4,14 @@ import Models.etat;
 import Models.produit;
 import Utils.MyDb;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class produitService implements Crud<produit> {
     Connection conn;
 
-    public produitService() {
+    public produitService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
 

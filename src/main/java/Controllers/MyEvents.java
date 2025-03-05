@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MyEvents {
@@ -30,8 +31,11 @@ public class MyEvents {
 
     private EvenementService evenementService = new EvenementService();
 
+    public MyEvents() throws SQLException {
+    }
 
-        @FXML
+
+    @FXML
     public void initialize() {
         loadEvents();
     }

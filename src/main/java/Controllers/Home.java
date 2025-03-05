@@ -146,11 +146,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,15 +188,18 @@ public class Home {
     private final CoachService coachService = new CoachService();
     private final CreateurEvenementService createurEvenementService = new CreateurEvenementService();
 
+    public Home() throws SQLException {
+    }
+
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         loadCoaches();
     }
 
     /**
      * Charge et affiche les coachs valides.
      */
-    private void loadCoaches() {
+    private void loadCoaches() throws SQLException {
         if (scrollPane == null || coachcard == null) {
             System.out.println("Erreur : scrollPane ou coachcard est null !");
             return;
@@ -239,7 +244,7 @@ public class Home {
     }
 
 
-    private void afficherPaiementCoach(Coach coach) {
+    private void afficherPaiementCoach(Coach coach) throws SQLException {
         int idUtilisateur = Session.getInstance().getCurrentUser().getId();
         AdherentService adherentService = new AdherentService();
         if (adherentService.isAdherent(idUtilisateur)) {
@@ -289,7 +294,13 @@ public class Home {
         card.getChildren().addAll(imageContainer, infoContainer);
 
         // Gérer le clic sur la carte
-        card.setOnMouseClicked(event -> afficherPaiementCoach(coach));
+        card.setOnMouseClicked(event -> {
+            try {
+                afficherPaiementCoach(coach);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         return card;
     }
@@ -458,6 +469,26 @@ public class Home {
     void GoToOffre(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddOffre.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToProfile(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Profil.fxml"));
+            Parent root = loader.load();
+            ((Node) event.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToChat(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/chatbot .fxml"));
             Parent root = loader.load();
             ((Button) actionEvent.getSource()).getScene().setRoot(root);
         } catch (Exception e) {

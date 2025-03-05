@@ -2,7 +2,8 @@ package Models;
 
 public class User {
     private int id;
-    private String nom, prenom , image , email , MDP;
+    private String nom, prenom  , email , MDP;
+    private String image;
 
 
     public User() {
@@ -17,15 +18,6 @@ public class User {
         this.MDP = MDP;
 
     }
-    public User( String nom, String prenom, String image, String email) {
-
-        this.nom = nom;
-        this.prenom = prenom;
-        this.image = image;
-        this.email = email;
-
-
-    }
 
     public User(String nom, String prenom, String image, String email, String MDP) {
         this.nom = nom;
@@ -35,6 +27,23 @@ public class User {
         this.MDP = MDP;
 
     }
+
+    public User(int userId, String nom, String prenom, String email, String mdp) {
+        this.id = userId;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.MDP = mdp;
+    }
+
+    public User(String nom, String prenom, String email, String image) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.image = image;
+
+    }
+
     // Getter et Setter pour id
     public int getId() {
         return id;
@@ -100,4 +109,6 @@ public class User {
                 ", MDP='" + MDP + '\'' +
                 '}';
     }
+
+
 }

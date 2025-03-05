@@ -35,8 +35,12 @@ public class DashboardRController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        statisticsService = new StatisticsService();
-        
+        try {
+            statisticsService = new StatisticsService();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         // Setup refresh button
         FontIcon refreshIcon = new FontIcon("fas-sync-alt");
         refreshIcon.setIconColor(Color.WHITE);

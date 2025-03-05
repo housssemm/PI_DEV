@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -60,7 +61,7 @@ public class popupSeanceController {
         });
         fieldType.getItems().setAll(Type.values());
     }
-    public void loadAdherents() {
+    public void loadAdherents() throws SQLException {
         PaiementPlanningService paiementService = new PaiementPlanningService();
         List<Integer> adherentsPayeurs = paiementService.getAdherentsPayeByPlanning(idPlanning);
         field_adherent_Id.getItems().setAll(adherentsPayeurs);

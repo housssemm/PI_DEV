@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,9 @@ public class PaiementPopUpController {
     private produitService prodService = new produitService();
     private PanierProduitService paniProdService = new PanierProduitService();
     private SmsService smsService = new SmsService();
+
+    public PaiementPopUpController() throws SQLException {
+    }
 
     public void initialize() {
         payerBtn.setOnAction(this::handlePayment);

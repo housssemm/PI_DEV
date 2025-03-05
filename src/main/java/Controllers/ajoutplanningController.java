@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ajoutplanningController {
 
@@ -28,6 +29,9 @@ public class ajoutplanningController {
 
     private HBox headerRow;
 
+    public ajoutplanningController() throws SQLException {
+    }
+
     @FXML
     public void initialize() {
 
@@ -36,7 +40,7 @@ public class ajoutplanningController {
 
 
     @FXML
-    void ajouterPlanning() {
+    void ajouterPlanning() throws SQLException {
         if (!validerChamps()) {
             return;
         }

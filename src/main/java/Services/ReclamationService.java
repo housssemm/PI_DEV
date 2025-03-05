@@ -19,7 +19,7 @@ public class ReclamationService  {
      * Constructeur du service
      * Initialise la connexion à la base de données
      */
-    public ReclamationService() {
+    public ReclamationService() throws SQLException {
         // Obtention de l'instance unique de la base de données
         MyDb database = MyDb.getInstance();
         // Récupération de la connexion

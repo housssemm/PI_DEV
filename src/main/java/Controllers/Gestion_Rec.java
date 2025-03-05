@@ -82,7 +82,7 @@ public class Gestion_Rec implements Initializable {
             // Add return button handler
             returnButton.setOnAction(event -> {
                 try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/Dashboard.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("/DashboardR.fxml"));
                     Stage stage = (Stage) returnButton.getScene().getWindow();
                     stage.setScene(new Scene(root));
                     stage.show();

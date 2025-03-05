@@ -15,6 +15,7 @@ public class UserData extends User {
     private SpecialiteC specialite;
     private int note;
 
+
     // Attributs spécifiques à l'investisseur de produit
     private String nomEntreprise;
     private String descriptionInvestisseur;
@@ -91,7 +92,8 @@ public class UserData extends User {
 
     public void setCertificatValideCreateur(boolean certificatValideCreateur) { this.certificatValideCreateur = certificatValideCreateur; }
 
-    public UserData(int id, String nom, String prenom, String image, String email, String MDP, float taille, int age, float poids, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, int note, SpecialiteC specialite, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur) {
+
+    public UserData(int id, String nom, String prenom, String image, String email, String MDP, float taille, int age, float poids, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, int note, SpecialiteC specialite, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur ) {
         super(id, nom, prenom, image, email, MDP);
         this.taille = taille;
         this.age = age;
@@ -115,7 +117,7 @@ public class UserData extends User {
         this.certificatValideCreateur = certificatValideCreateur;
     }
 
-    public UserData(String nom, String prenom, String image, String email, String MDP, float poids, float taille, int age, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, SpecialiteC specialite, int note, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur) {
+    public UserData(String nom, String prenom, String image, String email, String MDP, float poids, float taille, int age, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, SpecialiteC specialite, int note, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur ) {
         super(nom, prenom, image, email, MDP);
         this.poids = poids;
         this.taille = taille;
@@ -158,14 +160,13 @@ public class UserData extends User {
                 ", nomEntreprise='" + nomEntreprise + '\'' +
                 ", descriptionInvestisseur='" + descriptionInvestisseur + '\'' +
                 ", adresseInvestisseur='" + adresseInvestisseur + '\'' +
-                ", telephoneInvestisseur=" + telephoneInvestisseur +
+                ", telephoneInvestisseur='" + telephoneInvestisseur + '\'' +
                 ", certificatValideInvestisseur=" + certificatValideInvestisseur +
                 ", nomOrganisation='" + nomOrganisation + '\'' +
                 ", descriptionCreateur='" + descriptionCreateur + '\'' +
                 ", adresseCreateur='" + adresseCreateur + '\'' +
-                ", telephoneCreateur=" + telephoneCreateur +
+                ", telephoneCreateur='" + telephoneCreateur + '\'' +
                 ", certificatValideCreateur=" + certificatValideCreateur +
                 '}';
     }
-
 }

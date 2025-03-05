@@ -21,6 +21,7 @@ import javafx.scene.control.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 
@@ -48,6 +49,9 @@ public class AddOffreCoach {
     private TextField reservationMaxField;
 
     private OffreCoachService offreCoachService = new OffreCoachService();
+
+    public AddOffreCoach() throws SQLException {
+    }
 
     @FXML
     public void initialize() {

@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class UpdateEventController {
@@ -67,6 +68,9 @@ public class UpdateEventController {
     private Evenement event;
     private EvenementService evenementService = new EvenementService();
     private MyEvents parentController; // Pour rafraîchir après modification
+
+    public UpdateEventController() throws SQLException {
+    }
 
     @FXML
     public void initialize() {

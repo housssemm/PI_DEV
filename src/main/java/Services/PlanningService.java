@@ -10,7 +10,7 @@ import java.util.List;
 public class PlanningService implements Crud<Planning> {
     Connection conn = MyDb.getInstance().getConn();
 
-    public PlanningService() {
+    public PlanningService() throws SQLException {
     }
 
     @Override

@@ -2,44 +2,34 @@
 
 package Controllers;
 
-import Models.EtatEvenement;
-import Models.Evenement;
-import Models.ParticipantEvenement;
-import Models.etatPaiement;
-import Services.CreateurEvenementService;
+import Models.*;
 import Services.ParticipantEvenementService;
 import Utils.Session;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
-import com.stripe.model.PaymentMethod;
-import com.stripe.param.PaymentMethodCreateParams;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.awt.*;
+import java.io.*;
 
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +40,8 @@ import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.resource.Emailv31;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -61,37 +51,31 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Token;
-import com.stripe.param.TokenCreateParams;
 import com.stripe.param.ChargeCreateParams;
 
 
-
-
-
-
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.JsonFactory;
 
-import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 
-import com.google.api.services.calendar.model.EventReminder;
-import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.List;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 import static Services.GoogleCalendarService.*;
+
+
+import javafx.scene.control.*;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import java.io.File;
+import java.io.IOException;
+import java.io.File;
+
+import java.io.IOException;
 
 public class EventDetailsController {
 
@@ -239,7 +223,7 @@ private void displayWeatherForEvent(String location) {
     }
     private Evenement event;
     @FXML
-    private void handleReservationClick(ActionEvent event) {
+    private void handleReservationClick(ActionEvent event) throws SQLException {
         if (this.event == null) {
             System.out.println("Erreur : Aucun événement sélectionné.");
             return;
@@ -500,6 +484,8 @@ private void displayWeatherForEvent(String location) {
 
 
 
+
+
     @FXML
     private void handlePayment(ActionEvent event) {
         try {
@@ -507,15 +493,14 @@ private void displayWeatherForEvent(String location) {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun événement sélectionné !");
                 return;
             }
-            if (this.event.getEtat() == EtatEvenement.valueOf("EXPIRE")){
-                System.out.println("Erreur : L'etat de evenement est expire.");
+            if (this.event.getEtat() == EtatEvenement.valueOf("EXPIRE")) {
+                System.out.println("Erreur : L'état de l'événement est expiré.");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Échec de la réservation");
                 alert.setHeaderText(null);
-                alert.setContentText("Erreur : L'etat de evenement est expire.");
+                alert.setContentText("Erreur : L'état de l'événement est expiré.");
                 alert.showAndWait();
                 return;
-
             }
 
             // Vérifier les champs
@@ -549,15 +534,346 @@ private void displayWeatherForEvent(String location) {
                         this.event
                 );
 
+                // Générer le pass pour l'événement
+//                String passFilePath = generateEventPass(this.event);
+                generateModernEventPass(this.event);
+
+                // Afficher un lien de téléchargement ou un bouton pour télécharger le pass
+//                showDownloadLink(passFilePath);
+
                 showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement effectué avec succès !");
+
             } else {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Le paiement a échoué.");
             }
 
         } catch (StripeException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Problème de paiement : " + e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
+
+
+//
+//    public void generateModernEventPass(Evenement event) throws IOException {
+//        try (PDDocument document = new PDDocument()) {
+//            PDPage page = new PDPage(PDRectangle.A4);
+//            document.addPage(page);
+//
+//            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+//                // Setup code remains the same
+//                float margin = 50;
+//                float width = page.getMediaBox().getWidth() - 2 * margin;
+//                float yStart = page.getMediaBox().getHeight() - margin;
+//
+//                // Header drawing code remains the same
+//                contentStream.setNonStrokingColor(23, 107, 135);
+//                contentStream.addRect(0, yStart - 40, page.getMediaBox().getWidth(), 40);
+//                contentStream.fill();
+//
+//                // Title text
+//                contentStream.beginText();
+//                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 24);
+//                contentStream.setNonStrokingColor(255, 255, 255);
+//                contentStream.newLineAtOffset(margin, yStart - 30);
+//                contentStream.showText("EVENT PASS");
+//                contentStream.endText();
+//
+//                float yPosition = yStart - 80;
+//
+//                // Image handling remains the same
+//                if (event.getImage() != null && event.getImage().length > 0) {
+//                    PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, event.getImage(), "event");
+//                    float imageWidth = 150;
+//                    float imageHeight = 150 * pdImage.getHeight() / pdImage.getWidth();
+//                    contentStream.drawImage(pdImage, margin, yPosition - imageHeight, imageWidth, imageHeight);
+//                    yPosition -= imageHeight + 20;
+//                }
+//
+//                // Event details with corrected text handling
+//                contentStream.setNonStrokingColor(0, 0, 0);
+//                addDetailRow(contentStream, margin, yPosition, "DATE:",
+//                        event.getDateDebut() + " - " + event.getDateFin());
+//                yPosition -= 30;
+//
+//                addDetailRow(contentStream, margin, yPosition, "LOCATION:", event.getLieu());
+//                yPosition -= 30;
+//
+//                addDetailRow(contentStream, margin, yPosition, "PRICE:",
+//                        String.format("%.2f TND", event.getPrix()));
+//                yPosition -= 30;
+//
+//                addDetailRow(contentStream, margin, yPosition, "ORGANIZER:", event.getOrganisateur());
+//                yPosition -= 30;
+//
+//                addDetailRow(contentStream, margin, yPosition, "CAPACITY:",
+//                        String.valueOf(event.getCapaciteMaximale()) + " seats");
+//                yPosition -= 40;
+//
+//                // Description box
+//                contentStream.setNonStrokingColor(245, 245, 245);
+//                contentStream.addRect(margin, yPosition - 130, width, 120);
+//                contentStream.fill();
+//
+//                // Récupérer l'utilisateur connecté
+//                User currentUser = Session.getInstance().getCurrentUser();
+//                String userName = currentUser.getNom();
+//                String userEmail = currentUser.getEmail();
+//
+//// Affichage des informations de l'utilisateur
+//                addDetailRow(contentStream, margin, yPosition, "USER:", userName);
+//                yPosition -= 30;
+//                addDetailRow(contentStream, margin, yPosition, "EMAIL:", userEmail);
+//                yPosition -= 40;
+//
+//                // Description text with proper text handling
+//                contentStream.beginText();
+//                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+//                contentStream.newLineAtOffset(margin + 5, yPosition - 20);
+//                contentStream.showText("DESCRIPTION:");
+//                contentStream.setFont(PDType1Font.HELVETICA, 10);
+//                contentStream.newLineAtOffset(0, -15);
+//                addWrappedText(contentStream, event.getDescription(), width - 10, margin + 5);
+//                contentStream.endText();
+//
+//            } // contentStream auto-closed here
+//
+//            // Save and open code remains the same
+//            String fileName = "Event_Pass_" + event.getId() + ".pdf";
+//            File file = new File(System.getProperty("user.home"), "Downloads/" + fileName);
+//            document.save(file);
+//            openPDF(file);
+//        }
+//    }
+public void generateModernEventPass(Evenement event) throws IOException {
+    try (PDDocument document = new PDDocument()) {
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+            // Setup code remains the same
+            float margin = 50;
+            float width = page.getMediaBox().getWidth() - 2 * margin;
+            float yStart = page.getMediaBox().getHeight() - margin;
+
+            // Header drawing code remains the same
+            contentStream.setNonStrokingColor(23, 107, 135); // Blue header background
+            contentStream.addRect(0, yStart - 40, page.getMediaBox().getWidth(), 40);
+            contentStream.fill();
+
+            // Title text
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 24);
+            contentStream.setNonStrokingColor(255, 255, 255); // White title text
+            contentStream.newLineAtOffset(margin, yStart - 30);
+            contentStream.showText("EVENT PASS");
+            contentStream.endText();
+
+            float yPosition = yStart - 80;
+
+            // Image handling remains the same
+            if (event.getImage() != null && event.getImage().length > 0) {
+                PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, event.getImage(), "event");
+                float imageWidth = 150;
+                float imageHeight = 150 * pdImage.getHeight() / pdImage.getWidth();
+                contentStream.drawImage(pdImage, margin, yPosition - imageHeight, imageWidth, imageHeight);
+                yPosition -= imageHeight + 20;
+            }
+
+            // Event details with corrected text handling
+            contentStream.setNonStrokingColor(0, 0, 0); // Ensure black text color
+
+            addDetailRow(contentStream, margin, yPosition, "DATE:", event.getDateDebut() + " - " + event.getDateFin());
+            yPosition -= 30;
+
+            addDetailRow(contentStream, margin, yPosition, "LOCATION:", event.getLieu());
+            yPosition -= 30;
+
+            addDetailRow(contentStream, margin, yPosition, "PRICE:", String.format("%.2f TND", event.getPrix()));
+            yPosition -= 30;
+
+            addDetailRow(contentStream, margin, yPosition, "ORGANIZER:", event.getOrganisateur());
+            yPosition -= 30;
+
+            addDetailRow(contentStream, margin, yPosition, "CAPACITY:", String.valueOf(event.getCapaciteMaximale()) + " seats");
+            yPosition -= 40;
+
+            // Description box
+            contentStream.setNonStrokingColor(245, 245, 245); // Light gray background for description
+            contentStream.addRect(margin, yPosition - 130, width, 120);
+            contentStream.fill();
+
+            // Récupérer l'utilisateur connecté
+            User currentUser = Session.getInstance().getCurrentUser();
+            String userName = "Not Available";
+            String userEmail = "Not Available";
+
+            if (currentUser != null) {
+                userName = currentUser.getNom();
+                userEmail = currentUser.getEmail();
+
+                // Handle cases where getNom() or getEmail() might return null
+                if (userName == null || userName.isEmpty()) {
+                    userName = "Not Available";
+                }
+                if (userEmail == null || userEmail.isEmpty()) {
+                    userEmail = "Not Available";
+                }
+            }
+
+            // Affichage des informations de l'utilisateur
+            contentStream.setNonStrokingColor(0, 0, 0); // Ensure black text color for user details
+            addDetailRow(contentStream, margin, yPosition, "USER:", userName);
+            yPosition -= 30;
+            addDetailRow(contentStream, margin, yPosition, "EMAIL:", userEmail);
+            yPosition -= 40;
+
+            // Description text with proper text handling
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.setNonStrokingColor(0, 0, 0); // Ensure black text color for description
+            contentStream.newLineAtOffset(margin + 5, yPosition - 20);
+            contentStream.showText("DESCRIPTION:");
+            contentStream.setFont(PDType1Font.HELVETICA, 10);
+            contentStream.newLineAtOffset(0, -15);
+            addWrappedText(contentStream, event.getDescription(), width - 10, margin + 5);
+            contentStream.endText();
+
+        } // contentStream auto-closed here
+
+        // Save and open code remains the same
+        String fileName = "Event_Pass_" + event.getId() + ".pdf";
+        File file = new File(System.getProperty("user.home"), "Downloads/" + fileName);
+        document.save(file);
+        openPDF(file);
+    }
+}
+
+    // Helper method to add detail rows
+    private void addDetailRow(PDPageContentStream contentStream, float x, float y, String label, String value) throws IOException {
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+        contentStream.setNonStrokingColor(0, 0, 0); // Ensure black text color
+        contentStream.newLineAtOffset(x, y);
+        contentStream.showText(label);
+
+        contentStream.setFont(PDType1Font.HELVETICA, 12);
+        contentStream.newLineAtOffset(80, 0); // Offset for the value
+        contentStream.showText(value != null ? value : "Not Available");
+        contentStream.endText();
+    }
+
+//    private void addDetailRow(PDPageContentStream contentStream, float x, float y,
+//                              String label, String value) throws IOException {
+//        contentStream.beginText();
+//        try {
+//            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+//            contentStream.newLineAtOffset(x, y);
+//            contentStream.showText(label);
+//            contentStream.setFont(PDType1Font.HELVETICA, 12);
+//            contentStream.newLineAtOffset(100, 0);
+//            contentStream.showText(value);
+//        } finally {
+//            contentStream.endText();
+//        }
+//    }
+
+    private void addWrappedText(PDPageContentStream contentStream, String text,
+                                float maxWidth, float startX) throws IOException {
+        String[] words = text.split(" ");
+        float currentOffset = 0;
+        StringBuilder line = new StringBuilder();
+        PDType1Font font = PDType1Font.HELVETICA;
+        float fontSize = 10;
+
+        for (String word : words) {
+            float wordWidth = font.getStringWidth(word + " ") * fontSize / 1000;
+            if (currentOffset + wordWidth > maxWidth) {
+                // Draw current line
+                contentStream.showText(line.toString());
+                contentStream.newLineAtOffset(0, -15);
+                line = new StringBuilder();
+                currentOffset = 0;
+            }
+            line.append(word).append(" ");
+            currentOffset += wordWidth;
+        }
+
+        if (!line.toString().isEmpty()) {
+            contentStream.showText(line.toString());
+        }
+    }
+    private void openPDF(File file) throws IOException {
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(file);
+        }
+    }
+
+    //
+//    @FXML
+//    private void handlePayment(ActionEvent event) {
+//        try {
+//            if (this.event == null) {
+//                showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun événement sélectionné !");
+//                return;
+//            }
+//            if (this.event.getEtat() == EtatEvenement.valueOf("EXPIRE")){
+//                System.out.println("Erreur : L'etat de evenement est expire.");
+//                Alert alert = new Alert(Alert.AlertType.ERROR);
+//                alert.setTitle("Échec de la réservation");
+//                alert.setHeaderText(null);
+//                alert.setContentText("Erreur : L'etat de evenement est expire.");
+//                alert.showAndWait();
+//                return;
+//
+//            }
+//
+//            // Vérifier les champs
+//            if (!validatePaymentFields()) {
+//                return;
+//            }
+//
+//            // 🔥 Générer un vrai token Stripe
+//            String dynamicToken = createStripeToken();
+//            if (dynamicToken == null || dynamicToken.isEmpty()) {
+//                showAlert(Alert.AlertType.ERROR, "Erreur", "Token de paiement invalide !");
+//                return;
+//            }
+//
+//            long amount = (long) (this.event.getPrix() * 100); // Prix en centimes
+//
+//            Charge charge = Charge.create(ChargeCreateParams.builder()
+//                    .setAmount(amount)
+//                    .setCurrency("usd")
+//                    .setSource(dynamicToken) // 🔥 Utilisation du vrai token reçu
+//                    .setDescription("Paiement pour l'événement: " + this.event.getTitre())
+//                    .build());
+//
+//            if (charge.getPaid()) {
+//                new ParticipantEvenementService().updatePaymentStatus(
+//                        Session.getInstance().getCurrentUser().getId(),
+//                        this.event.getId()
+//                );
+//                sendPaymentConfirmationEmail(
+//                        Session.getInstance().getCurrentUser().getEmail(),
+//                        this.event
+//                );
+//
+//                showAlert(Alert.AlertType.INFORMATION, "Succès", "Paiement effectué avec succès !");
+//            } else {
+//                showAlert(Alert.AlertType.ERROR, "Erreur", "Le paiement a échoué.");
+//            }
+//
+//        } catch (StripeException e) {
+//            showAlert(Alert.AlertType.ERROR, "Erreur", "Problème de paiement : " + e.getMessage());
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     private String createStripeToken() throws StripeException {
         Stripe.apiKey = "sk_test_51QwWQy5NfsiWXvvbzS7EsLjI4Z2CY93sXua9vFXB9WjSAhwimEEQEtXI6Ks3jY6EiOwRAdb7ZrYgPXhpZinTDYz800VyNMFBt4"; // Remplace par ta clé secrète Stripe
 

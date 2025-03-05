@@ -11,7 +11,7 @@ import java.util.List;
 public  class OffreService implements Crud<Offre> {
     protected Connection conn;
 
-    public OffreService() {
+    public OffreService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
 

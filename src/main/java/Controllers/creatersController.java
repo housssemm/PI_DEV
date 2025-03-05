@@ -2,22 +2,26 @@ package Controllers;
 
 import Models.CreateurEvenement;
 import Services.CreateurEvenementService;
+import Services.SmsSender;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -25,11 +29,7 @@ public class creatersController implements Initializable {
 
     private final CreateurEvenementService createurEvenementService = new CreateurEvenementService();
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Récupérer la liste des créateurs d'événements
-        List<CreateurEvenement> createurEvenements = createurEvenementService.getAll();
-        afficherCreateursEvenements(createurEvenements);
+    public creatersController() throws SQLException {
     }
 
     public void afficherCreateursEvenements(List<CreateurEvenement> createurEvenements) {
@@ -59,8 +59,17 @@ public class creatersController implements Initializable {
         ScrollPane scrollPaneValides = new ScrollPane(gridPaneValides);
         ScrollPane scrollPaneDemandes = new ScrollPane(gridPaneDemandes);
 
-        EventersContainer.getChildren().addAll(new Label("Createurs Validés"), scrollPaneValides,
-                new Label("Demandes en attente"), scrollPaneDemandes);
+        // Titre "Createurs Validés" avec style
+        Label labelCreateursValides = new Label("Createurs Validés");
+        labelCreateursValides.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: green; -fx-padding: 10px 0;");
+
+        // Titre "Demandes en attente" avec style
+        Label labelDemandesEnAttente = new Label("Demandes en attente");
+        labelDemandesEnAttente.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: red ; -fx-padding: 10px 0;");
+
+        // Ajout des titres stylisés et des ScrollPane avec contenu
+        EventersContainer.getChildren().addAll(labelCreateursValides, scrollPaneValides,
+                labelDemandesEnAttente, scrollPaneDemandes);
     }
 
     private void configurerGridPane(GridPane gridPane) {
@@ -78,6 +87,7 @@ public class creatersController implements Initializable {
             headerLabel.getStyleClass().add("header-label");
             headerLabel.setAlignment(Pos.CENTER);
             headerLabel.setMinWidth(120);
+            headerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-color: #F58400; -fx-text-fill: white;");
             GridPane.setHalignment(headerLabel, HPos.CENTER);
             gridPane.add(headerLabel, col, 0);
         }
@@ -95,6 +105,7 @@ public class creatersController implements Initializable {
         Label[] labels = {nomLabel, prenomLabel, emailLabel, organisationLabel, descriptionLabel, adresseLabel, telephoneLabel};
         for (Label label : labels) {
             label.setAlignment(Pos.CENTER);
+            label.setStyle("-fx-font-size: 14px; -fx-text-fill: #333;");
             GridPane.setHalignment(label, HPos.CENTER);
         }
 
@@ -108,12 +119,11 @@ public class creatersController implements Initializable {
 
         Button supprimerButton = new Button("Supprimer");
         supprimerButton.getStyleClass().add("supprimer-button");
+        supprimerButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-padding: 10px; -fx-font-size: 14px; -fx-cursor: hand;");
         GridPane.setHalignment(supprimerButton, HPos.CENTER);
 
         supprimerButton.setOnAction(event -> {
-            // Supprimer le créateur d'événement
             if (createurEvenementService.deleteCreateurEvenement(createur.getId())) {
-                // Retirer le créateur de la liste affichée
                 createurEvenements.remove(createur);
                 afficherCreateursEvenements(createurEvenements);  // Rafraîchir l'affichage
             }
@@ -124,12 +134,25 @@ public class creatersController implements Initializable {
         } else {
             Button validerButton = new Button("Valider");
             validerButton.getStyleClass().add("valider-button");
+            validerButton.setStyle("-fx-background-color: green; -fx-text-fill: white; -fx-padding: 10px; -fx-font-size: 14px; -fx-cursor: hand;");
             GridPane.setHalignment(validerButton, HPos.CENTER);
 
             validerButton.setOnAction(event -> {
-                createur.setCertificat_valide((byte) 1);
+                createur.setCertificat_valide((byte) 1); // On marque comme validé
+
                 if (createurEvenementService.updateCreateurEvenement(createur)) {
                     afficherCreateursEvenements(createurEvenements);
+
+                    String telephone = createur.getTelephone();
+                    if (telephone != null) {
+                        if (!telephone.startsWith("+216")) {
+                            telephone = "+216" + telephone;  // Ajout du préfixe +216 si nécessaire
+                        }
+
+                        String message = "Félicitations ! Vous êtes désormais un membre officiel de Coachini.";
+                        SmsSender.envoyerSms(telephone, message);  // Envoi du SMS
+                        System.out.println("SMS envoyé à " + telephone);
+                    }
                 }
             });
 
@@ -139,9 +162,106 @@ public class creatersController implements Initializable {
         }
     }
 
+    @FXML
+    private TextField search;
 
+    @FXML
+    private void rechercherCreateur() {
+        String searchText = search.getText().toLowerCase(); // Récupérer le texte et le mettre en minuscule
 
-@FXML
+        List<CreateurEvenement> filteredCreateurs = createurEvenementService.getAll().stream()
+                .filter(createur -> createur.getNom().toLowerCase().contains(searchText) ||
+                        createur.getPrenom().toLowerCase().contains(searchText) ||
+                        createur.getAdresse().toLowerCase().contains(searchText)) // Exemple de filtrage par secteur
+                .toList();
+
+        afficherCreateursEvenements(filteredCreateurs); // Mettre à jour l'affichage avec les créateurs filtrés
+    }
+
+    @FXML
+    private ComboBox<String> sortComboBox;
+
+    @FXML
+    private void trierCreateurs() {
+        String criteria = sortComboBox.getValue();
+        List<CreateurEvenement> sortedCreateurs = new ArrayList<>(createurEvenementService.getAll());
+
+        switch (criteria) {
+            case "Nom":
+                sortedCreateurs.sort(Comparator.comparing(CreateurEvenement::getNom));
+                break;
+            case "Adresse":
+                sortedCreateurs.sort(Comparator.comparing(CreateurEvenement::getAdresse)); // Tri par secteur
+                break;
+
+        }
+
+        afficherCreateursEvenements(sortedCreateurs);
+    }
+    @FXML
+
+    void goToRECC(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Gestion_Rec.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+
+    void GoToAdherent(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adherents.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToCoach(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adherents.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToInv(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adherents.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void GoToCrea(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adherents.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void goToDach(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/adherents.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private VBox EventersContainer;
 
     @FXML
@@ -183,10 +303,18 @@ public class creatersController implements Initializable {
     @FXML
     private Button seance;
 
-    @FXML
-    private TextField search;
+
 
     @FXML
     private AnchorPane upchart;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Récupérer la liste des investisseurs de produit
+        List<CreateurEvenement> createurEvenements = createurEvenementService.getAll();
+        afficherCreateursEvenements(createurEvenements);
+        sortComboBox.setOnAction(event -> trierCreateurs());
+        search.textProperty().addListener((observable, oldValue, newValue) -> rechercherCreateur());
+    }
 
 }

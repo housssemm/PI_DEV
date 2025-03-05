@@ -12,7 +12,7 @@ import java.util.List;
 public class ParticpationService {
     Connection conn;
 
-    public ParticpationService() {
+    public ParticpationService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
 

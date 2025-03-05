@@ -9,7 +9,7 @@ import java.util.List;
 
 public class panierService implements Crud<panier>{
     Connection conn;
-    public panierService() {
+    public panierService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
     @Override

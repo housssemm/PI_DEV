@@ -25,7 +25,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PanierController {
     @FXML
@@ -38,65 +41,20 @@ public class PanierController {
     private ScrollPane scrollProd;
     @FXML
     private VBox cartBox;
+    @FXML
+    private TextField search;
+    @FXML
+    private ComboBox<String> triComboBox;
+    @FXML
+    private ComboBox<String> filtrer;
 
     private categorieService categService = new categorieService();
     private produitService prodService = new produitService();
     private PanierProduitService paniProdService = new PanierProduitService();
+    private Categorie categorie;
     private produit produitSelectionne;
     private static PanierController instance;
 
-    @FXML
-    public void initialize() throws Exception {
-        // Obtenir les catégories depuis le service
-        List<Categorie> categories = categService.getAll();
-        int col = 0;  // Compteur pour les colonnes du GridPane
-        // Créer les cartes pour chaque catégorie et les ajouter dans le GridPane
-        for (Categorie categorie : categories) {
-            // Créer un texte pour le nom de la catégorie
-            Text text = new Text(categorie.getNom());
-            text.setFont(Font.font("Arial", 12)); // Réduire la taille du texte
-
-            // Charger l'image à partir du classpath
-            InputStream imageStream = getClass().getResourceAsStream("/img/" + categorie.getImage());
-            Image image;
-            image = new Image(imageStream);
-            ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(50); // Ajuster la taille de l'image (taille identique)
-            imageView.setFitWidth(50);  // Ajuster la taille de l'image (taille identique)
-
-            // Créer un VBox pour chaque carte (texte en dessous de l'image)
-            VBox card = new VBox(10, imageView, text); // Espacement de 10 entre l'image et le texte
-            card.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 10;-fx-background-color: white;");
-            card.setPrefWidth(40);  // Largeur fixe pour chaque carte
-            card.setPrefHeight(40); // Hauteur fixe pour chaque carte
-            card.setAlignment(Pos.CENTER); // Centrer les éléments dans la carte
-
-            card.setOnMouseEntered(e -> card.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 10; -fx-background-color: #FFA500;"));
-            card.setOnMouseExited(e -> card.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 10; -fx-background-color: transparent;"));
-
-            // Ajouter un EventHandler pour le clic (afficher les produits de cette catégorie)
-            card.setOnMouseClicked(e -> {
-                try {
-                    showProductsForCategory(categorie);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            });
-            // Ajouter chaque carte dans le GridPane à la position (col, 0)
-            gridPane.add(card, col, 0);  // Toujours dans la première ligne (row = 0)
-            // Incrémenter la colonne
-            col++;
-        }
-        gridPane.setHgap(10);
-        // Mettre le GridPane dans le ScrollPane
-        scrollPane.setContent(gridPane);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Toujours afficher la barre de défilement horizontale
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        // Définir la largeur totale du GridPane en fonction du nombre de produits
-        double largeurCarte = 120; // Largeur approximative de chaque carte + marges
-        gridPane.setPrefWidth(categories.size() * largeurCarte);
-    }
     private void showProductDetailsPopup(produit productItem) {
         try {
             // Charger le fichier FXML du popup
@@ -135,18 +93,157 @@ public class PanierController {
             ex.printStackTrace();
         }
     }
+    @FXML
+    public void initialize() throws Exception {
+        // Initialiser la ComboBox avec des plages de prix et un texte par défaut
+        filtrer.getItems().addAll("Filtrer par prix", "0 - 100", "100 - 200", "200 - 300", "300 - 400");
+        filtrer.setValue("Filtrer par prix");  // Valeur initiale affichée comme "Filtrer par prix"
 
+        // Ajouter un listener sur la ComboBox
+        filtrer.valueProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                // Vérifier si l'élément sélectionné n'est pas "Filtrer par prix"
+                if (!newValue.equals("Filtrer par prix")) {
+                    filterProductsByPriceRange(newValue);  // Appliquer le filtre
+                } else {
+                    resetProductGrid();  // Réinitialiser la vue
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        // Obtenir les catégories depuis le service
+        List<Categorie> categories = categService.getAll();
+        int col = 0;  // Compteur pour les colonnes du GridPane
+
+        // Créer les cartes pour chaque catégorie et les ajouter dans le GridPane
+        for (Categorie categorie : categories) {
+            final Categorie catTemp = categorie;  // Utiliser une variable temporaire finale
+            // Créer un texte pour le nom de la catégorie
+            Text text = new Text(categorie.getNom());
+            text.setFont(Font.font("Arial", 12)); // Réduire la taille du texte
+
+            // Charger l'image à partir du classpath
+            InputStream imageStream = getClass().getResourceAsStream("/img/" + categorie.getImage());
+            Image image = new Image(imageStream);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(50); // Ajuster la taille de l'image (taille identique)
+            imageView.setFitWidth(50);  // Ajuster la taille de l'image (taille identique)
+
+            // Créer un VBox pour chaque carte (texte en dessous de l'image)
+            VBox card = new VBox(10, imageView, text); // Espacement de 10 entre l'image et le texte
+            card.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 10;-fx-background-color: white;");
+            card.setPrefWidth(40);  // Largeur fixe pour chaque carte
+            card.setPrefHeight(40); // Hauteur fixe pour chaque carte
+            card.setAlignment(Pos.CENTER); // Centrer les éléments dans la carte
+
+            // Ajouter un EventHandler pour le clic (afficher les produits de cette catégorie)
+            card.setOnMouseClicked(e -> {
+                try {
+                    // Utiliser une méthode pour affecter la catégorie sélectionnée
+                    selectCategory(catTemp);  // Catégorie sélectionnée temporairement
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            });
+
+            // Ajouter chaque carte dans le GridPane à la position (col, 0)
+            gridPane.add(card, col, 0);  // Toujours dans la première ligne (row = 0)
+            col++;
+        }
+
+        // Mettre les autres configurations de votre gridPane ici
+        gridPane.setHgap(10);
+        scrollPane.setContent(gridPane);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Toujours afficher la barre de défilement horizontale
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        double largeurCarte = 120; // Largeur approximative de chaque carte + marges
+        gridPane.setPrefWidth(categories.size() * largeurCarte);
+    }
+    private void resetProductGrid()throws Exception {
+        List<produit> allProducts = getCurrentProducts();
+        updateProductGrid(allProducts);
+    }
+    private static class PriceRange {
+        final double minPrice;
+        final double maxPrice;
+
+        PriceRange(double minPrice, double maxPrice) {
+            this.minPrice = minPrice;
+            this.maxPrice = maxPrice;
+        }
+    }
+    // Filtrer les produits en fonction de la plage de prix sélectionnée
+    private void filterProductsByPriceRange(String priceRange) throws Exception {
+        // Utilisation de la classe PriceRange pour stocker les valeurs
+        final PriceRange range;
+
+        // Définir les limites de prix selon la plage sélectionnée
+        switch (priceRange) {
+            case "0 - 100":
+                range = new PriceRange(0, 100);
+                break;
+            case "100 - 200":
+                range = new PriceRange(100, 200);
+                break;
+            case "200 - 300":
+                range = new PriceRange(200, 300);
+                break;
+            case "300 - 400":
+                range = new PriceRange(300, 400);
+                break;
+            default:
+                range = new PriceRange(0, 0);  // Valeur par défaut, si nécessaire
+                break;
+        }
+
+        // Utiliser une liste stable (finale ou effectivement finale)
+        final List<produit> allProducts = getCurrentProducts();
+
+        // Filtrer les produits dont le prix est dans la plage sélectionnée
+        List<produit> filteredProducts = allProducts.stream()
+                .filter(product -> product.getPrix() >= range.minPrice && product.getPrix() <= range.maxPrice)
+                .collect(Collectors.toList());
+
+        // Mettre à jour le Grid avec les produits filtrés
+        updateProductGrid(filteredProducts);
+    }
+    private void selectCategory(Categorie selectedCategory) {
+        // Affecter la catégorie sélectionnée à la variable `categorie`
+        this.categorie = selectedCategory;
+        try {
+            showProductsForCategory(selectedCategory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void showProductsForCategory(Categorie categorie) throws Exception {
         List<produit> produits = prodService.getProduitsByCategorie(categorie.getId());
 
-        // Réinitialiser le GridPane pour afficher de nouveaux produits
+        // Ajouter un Listener sur le champ de recherche des produits
+        search.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Filtrer les produits en fonction du texte recherché
+            List<produit> filteredProducts = produits.stream()
+                    .filter(product -> product.getNom() != null && product.getNom().toLowerCase().contains(newValue.toLowerCase()))
+                    .collect(Collectors.toList());
+
+            // Mettre à jour le GridPane avec les produits filtrés
+            updateProductGrid(filteredProducts);
+        });
+
+        // Affichage initial de tous les produits
+        updateProductGrid(produits);
+    }
+
+    private void updateProductGrid(List<produit> produits) {
         gridProd.getChildren().clear();
         int row = 0;  // Variable pour gérer les lignes dans le GridPane
         int col = 0;  // Variable pour gérer les colonnes dans le GridPane
 
         // Espacement entre les cartes
-        gridProd.setHgap(0);
-        gridProd.setVgap(10);
+        gridProd.setHgap(10);
+        gridProd.setVgap(40);
 
         // Dimensions fixes des cartes
         double largeurCarte = 210;  // Largeur des cartes
@@ -163,51 +260,101 @@ public class PanierController {
             productCard.setPrefHeight(hauteurCarte);
 
             // Charger l'image à partir du classpath
-                InputStream imageStream = getClass().getResourceAsStream("/img/" + productItem.getImage());
-                Image image;
-                image = new Image(imageStream);
-                ImageView imageView = new ImageView(image);
-                imageView.setFitHeight(80);  // Ajuster la taille de l'image
-                imageView.setFitWidth(100);  // Ajuster la taille de l'image
+            InputStream imageStream = getClass().getResourceAsStream("/img/" + productItem.getImage());
+            Image image = new Image(imageStream);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(80);  // Ajuster la taille de l'image
+            imageView.setFitWidth(100);  // Ajuster la taille de l'image
 
-                // Créer un texte pour le nom du produit
-                Text productName = new Text(productItem.getNom());
-                productName.setFont(Font.font("Arial", 14));  // Taille de la police
+            // Créer un texte pour le nom du produit
+            Text productName = new Text(productItem.getNom());
+            productName.setFont(Font.font("Arial", 14));  // Taille de la police
 
-                // Créer un texte pour le prix du produit
-                Text productPrice = new Text("Prix: " + productItem.getPrix() + " TND");
-                productPrice.setFont(Font.font("Arial", 12));
+            // Créer un texte pour le prix du produit
+            Text productPrice = new Text("Prix: " + productItem.getPrix() + " TND");
+            productPrice.setFont(Font.font("Arial", 12));
 
-                // Créer un bouton "Ajouter au panier" avec une icône
-                Button addToCartButton = new Button("Voir details");
-                addToCartButton.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-border-radius: 5px; -fx-padding: 5;-fx-font-weight: bold;");
+            // Créer un bouton "Voir détails"
+            Button addToCartButton = new Button("Voir détails");
+            addToCartButton.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-border-radius: 5px; -fx-padding: 5; -fx-font-weight: bold;");
 
-                addToCartButton.setOnAction(e -> {
-                        produitSelectionne = productItem;
-                        showProductDetailsPopup(productItem);
-                });
-                // Ajouter les composants à la carte
-                productCard.getChildren().addAll(imageView, productName, productPrice, addToCartButton);
-                productCard.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 5;-fx-background-color: white;");
-                productCard.setAlignment(Pos.CENTER); // Centrer les éléments dans la carte
+            addToCartButton.setOnAction(e -> {
+                produitSelectionne = productItem;
+                showProductDetailsPopup(productItem);
+            });
 
-                // Ajouter la carte dans le GridPane
-                gridProd.add(productCard, col, row);
-                // Incrémenter la colonne
-                col++;
-                // Si le nombre de colonnes atteint 3, passer à la ligne suivante
-                if (col == 3) {
-                    col = 0;
-                    row++;
-                }
+            // Ajouter les composants à la carte
+            productCard.getChildren().addAll(imageView, productName, productPrice, addToCartButton);
+            productCard.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 5; -fx-background-color: white;");
+            productCard.setAlignment(Pos.CENTER); // Centrer les éléments dans la carte
+            GridPane.setMargin(productCard, new Insets(15, 0, 0, 0));
+            // Ajouter la carte dans le GridPane
+            gridProd.add(productCard, col, row);
+            // Incrémenter la colonne
+            col++;
+            // Si le nombre de colonnes atteint 3, passer à la ligne suivante
+            if (col == 3) {
+                col = 0;
+                row++;
+            }
         }
+
         // Calculer la hauteur totale du GridPane en fonction du nombre de lignes
         double totalHeight = (row + 1) * (hauteurCarte + gridProd.getVgap());
         gridProd.setPrefHeight(totalHeight);
         scrollProd.setContent(gridProd);
         scrollProd.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
     }
-    public PanierController() {
+    @FXML
+    private void onTriComboBoxAction()throws Exception {
+        String selectedOption = triComboBox.getValue();
+
+        if (selectedOption != null) {
+            switch (selectedOption) {
+                case "Trier par Nom":
+                    trierParNom();
+                    break;
+                case "Prix Croissant":
+                    trierPrixCroissant();
+                    break;
+                case "Prix Décroissant":
+                    trierPrixDecroissant();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    private void trierParNom()throws Exception {
+        // Trie les produits par nom
+        List<produit> produits = getCurrentProducts(); // Assurez-vous de récupérer la liste des produits actuels
+        produits.sort(Comparator.comparing(produit::getNom)); // Tri alphabétique croissant par nom
+        updateProductGrid(produits); // Mettez à jour le Grid avec les produits triés
+        System.out.println("Tri par nom activé !");
+    }
+    private void trierPrixCroissant()throws Exception {
+        // Trie les produits par prix croissant
+        List<produit> produits = getCurrentProducts(); // Assurez-vous de récupérer la liste des produits actuels
+        produits.sort(Comparator.comparingDouble(produit::getPrix)); // Tri croissant par prix
+        updateProductGrid(produits); // Mettez à jour le Grid avec les produits triés
+        System.out.println("Tri par prix croissant activé !");
+    }
+
+    private void trierPrixDecroissant()throws Exception {
+        // Trie les produits par prix décroissant
+        List<produit> produits = getCurrentProducts(); // Assurez-vous de récupérer la liste des produits actuels
+        produits.sort(Comparator.comparingDouble(produit::getPrix).reversed()); // Tri décroissant par prix
+        updateProductGrid(produits); // Mettez à jour le Grid avec les produits triés
+        System.out.println("Tri par prix décroissant activé !");
+    }
+
+    // Cette méthode permet de récupérer les produits actuellement affichés dans le Grid
+    private List<produit> getCurrentProducts()throws Exception {
+        // Assurez-vous de récupérer la liste des produits que vous avez déjà affichée ou filtrée
+        return prodService.getProduitsByCategorie(this.categorie.getId());
+    }
+
+    public PanierController() throws SQLException {
         instance = this;
     }
     public static PanierController getInstance() {

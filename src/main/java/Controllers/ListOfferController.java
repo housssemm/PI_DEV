@@ -2,6 +2,8 @@ package Controllers;
 
 import Models.Offre;
 import Models.OffreProduit;
+
+import java.sql.SQLException;
 import java.util.Comparator;
 import Models.OffreCoach;
 import Services.OffreService;
@@ -44,6 +46,8 @@ public class ListOfferController {
     @FXML
     private ComboBox<String> sortComboBox;
 
+    public ListOfferController() throws SQLException {
+    }
 
 
     @FXML

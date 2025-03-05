@@ -9,6 +9,9 @@ import java.util.List;
 
 public class OffreProduitService extends OffreService {
 
+    public OffreProduitService() throws SQLException {
+    }
+
     @Override
     public boolean create(Offre obj) throws Exception {
         if (!(obj instanceof OffreProduit)) {

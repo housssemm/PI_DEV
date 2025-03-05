@@ -24,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,27 +47,34 @@ public class PlanningAdherentController implements Initializable {
     private int idCoach;
     private int idAdherent;
 
+    public PlanningAdherentController() throws SQLException {
+    }
+
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateFocus = ZonedDateTime.now();
         today = ZonedDateTime.now();
-        drawCalendar();
+        try {
+            drawCalendar();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
-    void backOneMonth() {
+    void backOneMonth() throws SQLException {
         dateFocus = dateFocus.minusMonths(1);
         calendar.getChildren().clear();
         drawCalendar();
     }
     @FXML
-    void forwardOneMonth() {
+    void forwardOneMonth() throws SQLException {
         dateFocus = dateFocus.plusMonths(1);
         calendar.getChildren().clear();
         drawCalendar();
     }
 
-    private void drawCalendar() {
+    private void drawCalendar() throws SQLException {
         DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy", Locale.FRENCH);
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", Locale.FRENCH);
 
@@ -120,7 +128,11 @@ public class PlanningAdherentController implements Initializable {
                     }
 
                     stackPane.setOnMouseClicked(event -> {
-                        showSessionsForDate(calculatedDate);
+                        try {
+                            showSessionsForDate(calculatedDate);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                     });
                 }
                 calendar.getChildren().add(stackPane);
@@ -128,7 +140,7 @@ public class PlanningAdherentController implements Initializable {
         }
     }
 
-    public void showSessionsForDate(int dayOfMonth) {
+    public void showSessionsForDate(int dayOfMonth) throws SQLException {
         System.out.println("Affichage des séances pour le jour: " + dayOfMonth);
 
         idAdherent = Session.getInstance().getCurrentUser().getId();
@@ -163,7 +175,7 @@ public class PlanningAdherentController implements Initializable {
     }
 
 
-    private List<Seance> getSessionsForSelectedDay(int dayOfMonth, int id_adherent) {
+    private List<Seance> getSessionsForSelectedDay(int dayOfMonth, int id_adherent) throws SQLException {
         Map<Integer, List<Seance>> seanceMap = getSeancesForMonth(dateFocus, id_adherent);
 
         List<Seance> sessions = seanceMap.getOrDefault(dayOfMonth, new ArrayList<>());
@@ -259,7 +271,7 @@ public class PlanningAdherentController implements Initializable {
         return SeanceMap;
     }
 
-    private Map<Integer, List<Seance>> getSeancesForMonth(ZonedDateTime dateFocus, int idAdherent) {
+    private Map<Integer, List<Seance>> getSeancesForMonth(ZonedDateTime dateFocus, int idAdherent) throws SQLException {
         SeanceService sc = new SeanceService();
         List<Seance> allSeances = sc.getSeancesByAdherentId(idAdherent);
 

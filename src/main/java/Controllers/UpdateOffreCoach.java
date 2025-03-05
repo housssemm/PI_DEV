@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 
@@ -32,6 +33,9 @@ public class UpdateOffreCoach {
 
     private OffreCoachService offreCoachService = new OffreCoachService();
     private OffreCoach offreCoach;
+
+    public UpdateOffreCoach() throws SQLException {
+    }
 
     public void setOffreCoach(OffreCoach offreCoach) {
         this.offreCoach = offreCoach;

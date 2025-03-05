@@ -48,6 +48,9 @@ public class UpdateOfferController {
     private Offre currentOffer;
     private OffreService offreService = new OffreService();
 
+    public UpdateOfferController() throws SQLException {
+    }
+
     @FXML
     public void initialize() {
         etatField.getItems().addAll("ACTIF", "INACTIF");

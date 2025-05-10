@@ -24,6 +24,7 @@ import java.io.File;
 import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class AddEvenement {
@@ -101,6 +102,9 @@ public class AddEvenement {
     private TextField search;
     private File imageFile;
     private EvenementService evenementService = new EvenementService();
+
+    public AddEvenement() throws SQLException {
+    }
 
     // Initialize ChoiceBox with statuses
     @FXML

@@ -47,6 +47,9 @@ public class UserReclamationController implements Initializable {
     private FilteredList<Reclamation> filteredReclamations;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
+    public UserReclamationController() throws SQLException {
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Initialize ComboBox

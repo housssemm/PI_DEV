@@ -1,6 +1,8 @@
 package Services;
-import Models.*;
+
+import Models.InvestisseurProduit;
 import Models.User;
+import Models.UserData;
 import Utils.MyDb;
 
 import java.sql.*;
@@ -13,9 +15,9 @@ public class InvestisseurProduitService {
     private Connection conn;
     private final UserService userService;
 
-    public InvestisseurProduitService() {
+    public InvestisseurProduitService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
-        this.userService = new UserService(MyDb.getInstance().getConn());
+        this.userService = new UserService();
     }
 
     public InvestisseurProduit mapUserDataToInvestisseur(UserData userData) {
@@ -40,7 +42,7 @@ public class InvestisseurProduitService {
             if (userId == -1) return false; // Erreur lors de l'insertion de l'utilisateur
 
             // Étape 2 : Insérer le createur d'evenement avec l'ID récupéré
-            String sql = "INSERT INTO investisseurproduit (id, nom_entreprise, description, adresse, telephone, certificat_valide) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO investisseurproduit (id, Nom_entreprise, description, adresse, telephone, certificat_valide) VALUES (?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement pst = conn.prepareStatement(sql)) {
                 pst.setInt(1, userId);
@@ -84,21 +86,23 @@ public class InvestisseurProduitService {
     public List<InvestisseurProduit> getAll() {
         List<InvestisseurProduit> investisseurProduits = new ArrayList<>();
         String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
-                "i.nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
+                "i.Nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
                 "FROM user u " +
-                "JOIN investisseurproduit i ON u.id = i.id";
-        // Jointure entre les tables user et investisseurProduit
+                "JOIN investisseurproduit i ON u.id = i.id"; // Jointure entre les tables user et investisseurproduit
 
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
+                // Récupérer l'image sous forme de chaîne de caractères (chemin de fichier)
+                String imagePath = rs.getString("image");  // Chemin du fichier image
+
                 // Création d'un investisseurProduit avec les données de la base
                 InvestisseurProduit investisseurProduit = new InvestisseurProduit(
                         rs.getInt("id"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
-                        rs.getString("image"),
+                        imagePath,  // Le chemin de l'image
                         rs.getString("email"),
                         rs.getString("MDP"),
                         rs.getString("nom_entreprise"),
@@ -107,16 +111,54 @@ public class InvestisseurProduitService {
                         rs.getString("telephone"),
                         rs.getByte("certificat_valide")
                 );
-                investisseurProduits.add(investisseurProduit);
-
+                investisseurProduits.add(investisseurProduit);  // Ajouter l'investisseurProduit à la liste
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return investisseurProduits;
     }
+    public InvestisseurProduit getInvestisseurProduitById(int id) {
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+                "i.Nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
+                "FROM user u " +
+                "JOIN investisseurProduit i ON u.id = i.id " +
+                "WHERE u.id = ?";
+// Jointure pour récupérer les informations de l'utilisateur et de l' investisseurProduit
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return new InvestisseurProduit(
+                            rs.getInt("id"),
+                            rs.getString("nom"),
+                            rs.getString("prenom"),
+                            rs.getString("image"),
+                            rs.getString("email"),
+                            rs.getString("MDP"),
+                            rs.getString("nom_entreprise"),
+                            rs.getString("description"),
+                            rs.getString("adresse"),
+                            rs.getString("telephone"),
+                            rs.getByte("certificat_valide")
+                    );
+                } else {
+                    System.out.println("❌ Aucun investisseurProduit trouvé avec l'id : " + id);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
     public boolean updateInvestisseurProduit(InvestisseurProduit investisseurProduit) {
-        String sql = "UPDATE createurevenement SET nom_entreprise = ?, description = ?, adresse = ?, telephone = ?, certificat_valide = ? WHERE id = ?";
+        String sql = "UPDATE createurevenement SET Nom_entreprise = ?, description = ?, adresse = ?, telephone = ?, certificat_valide = ? WHERE id = ?";
 
         try (PreparedStatement pst = conn.prepareStatement(sql)) {
             pst.setString(1, investisseurProduit.getNom_entreprise());
@@ -151,42 +193,20 @@ public class InvestisseurProduitService {
         }
         return false;
     }
-    public InvestisseurProduit getInvestisseurProduitById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
-                "i.nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
-                "FROM user u " +
-                "JOIN investisseurProduit i ON u.id = i.id " +
-                "WHERE u.id = ?";
-// Jointure pour récupérer les informations de l'utilisateur et de l' investisseurProduit
 
-        try (PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setInt(1, id);
 
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    return new InvestisseurProduit(
-                            rs.getInt("id"),
-                            rs.getString("nom"),
-                            rs.getString("prenom"),
-                            rs.getString("image"),
-                            rs.getString("email"),
-                            rs.getString("MDP"),
-                            rs.getString("nom_entreprise"),
-                            rs.getString("description"),
-                            rs.getString("adresse"),
-                            rs.getString("telephone"),
-                            rs.getByte("certificat_valide")
-                    );
-                } else {
-                    System.out.println("❌ Aucun investisseurProduit trouvé avec l'id : " + id);
-                }
+    public int getNombreINV() {
+        String query = "SELECT COUNT(*) FROM investisseurProduit WHERE certificat_valide = 1";  // Assure-toi que le nom de la table est correct
+        try (PreparedStatement statement = conn.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return 0;  // Retourne 0 en cas d'erreur
     }
-
     public boolean isInvestisseurProduit(int id) {
         String sql = "SELECT COUNT(*) FROM investisseurproduit WHERE id = ?";
 
@@ -204,4 +224,5 @@ public class InvestisseurProduitService {
         }
         return false;
     }
+
 }

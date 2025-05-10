@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 
@@ -38,6 +39,9 @@ public class AddOffreProduit {
     private TextField quantiteMaxField;
 
     private OffreProduitService offreProduitService = new OffreProduitService();
+
+    public AddOffreProduit() throws SQLException {
+    }
 
     @FXML
     public void initialize() {

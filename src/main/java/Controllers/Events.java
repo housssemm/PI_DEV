@@ -24,6 +24,7 @@ import Models.Evenement;
 import Services.EvenementService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,9 @@ public class Events {
     private EvenementService evenementService = new EvenementService();
     @FXML
     private TextField searchField; // Champ de recherche
+
+    public Events() throws SQLException {
+    }
 
     @FXML
     public void initialize() {

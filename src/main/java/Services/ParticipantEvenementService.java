@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
     static Connection conn;
-    public ParticipantEvenementService(){
+    public ParticipantEvenementService() throws SQLException {
         this.conn= MyDb.getInstance().getConn();
     }
    @Override
@@ -182,7 +182,7 @@ public class ParticipantEvenementService implements Crud <ParticipantEvenement>{
 
     // Add this to ParticipantEvenementService class
     public void updatePaymentStatus(int userId, int eventId) {
-        String query = "UPDATE participant_evenement SET etat_paiement = ? WHERE participant_id = ? AND evenement_id = ?";
+        String query = "UPDATE participantevenement SET etat_paiement = ? WHERE userId = ? AND evenementId = ?";
         try (
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, etatPaiement.PAYE.name());

@@ -32,7 +32,7 @@ public class CreateurEvenement extends User{
     }
     public void setNom_organisation(String nom_organisation) {}
     public String getDescription() {
-        return "";
+        return description;
     }
     public void setDescription(String description) {
         this.description = description;

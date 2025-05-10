@@ -22,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.List;
 
 public class TousLesCoachsController {
@@ -29,6 +30,9 @@ public class TousLesCoachsController {
     @FXML private GridPane gridPane;
     private final CoachService coachService = new CoachService();
     private final CreateurEvenementService createurEvenementService = new CreateurEvenementService();
+
+    public TousLesCoachsController() throws SQLException {
+    }
 
     public void setCoaches(List<Coach> coaches) {
         afficherCoachs(coaches);

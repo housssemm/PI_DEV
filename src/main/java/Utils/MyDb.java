@@ -8,14 +8,22 @@ public class MyDb {
     private String url = "jdbc:mysql://localhost:3306/pi_dev";
     private String user = "root";
     private String password = "";
-    private Connection conn;
+    private static Connection conn;
     private static MyDb instance;
 
-    public static MyDb getInstance() {
-        if (instance == null) {
-            instance = new MyDb();
+    public static MyDb getInstance() throws SQLException {
+        if (conn == null || conn.isClosed()) {
+            try {
+                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pi_dev", "root", "");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return instance;
+        return new MyDb();
+    }
+
+    public static void setInstance(Connection conn) {
+
     }
 
     public Connection getConn() {

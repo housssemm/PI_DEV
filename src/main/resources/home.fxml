@@ -187,7 +187,7 @@
                                 <Insets right="22.0" />
                             </HBox.margin>
                         </ImageView>
-                        <ImageView fitHeight="41.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="profil" fitHeight="41.0" fitWidth="39.0" onMouseClicked="#GoToProfile" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@img/profile.png" />
                             </image>
@@ -212,12 +212,12 @@
                                     <Font name="Arial Bold" size="24.0" />
                                  </font>
                               </Label>
-                              <Label text="Votre destination ultime pour le coaching en ligne et les équipements sportifs." textFill="#333333">
+                              <Label text="Besoin d’un guide ou d’un tour ? Posez vos questions à notre chatbot en cliquant ci-dessous. " textFill="#333333">
                                  <font>
                                     <Font name="Arial" size="16.0" />
                                  </font>
                               </Label>
-                              <Button style="-fx-background-color: #FA2C56; -fx-text-fill: WHITE;" styleClass="button1" text="Explorez maintenant">
+                              <Button onAction="#GoToChat" style="-fx-background-color: #FA2C56; -fx-text-fill: WHITE;" styleClass="button1" text="Posez Nous Des Questions ">
                                  <font>
                                     <Font name="Arial Bold" size="14.0" />
                                  </font>
@@ -231,7 +231,7 @@
                                     <Font name="Arial Bold" size="20.0" />
                                  </font>
                               </Label>
-                              <ScrollPane fx:id="scrollPane" pannable="true" hbarPolicy="NEVER" prefHeight="272.0" prefWidth="1150.0" vbarPolicy="NEVER" fitToHeight="true">
+                              <ScrollPane fx:id="scrollPane" fitToHeight="true" hbarPolicy="NEVER" pannable="true" prefHeight="272.0" prefWidth="1150.0" vbarPolicy="NEVER">
                                  <content>
                                     <HBox fx:id="coachcard" prefHeight="269.0" prefWidth="1150.0" spacing="20.0" />
                                  </content>

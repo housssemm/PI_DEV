@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
 
@@ -34,6 +35,9 @@ public class UpdateOffreProduit {
 
     private OffreProduitService offreProduitService = new OffreProduitService();
     private OffreProduit offreProduit;
+
+    public UpdateOffreProduit() throws SQLException {
+    }
 
     // Méthode pour initialiser l'offre produit dans le formulaire
     public void setOffreProduit(OffreProduit offreProduit) {

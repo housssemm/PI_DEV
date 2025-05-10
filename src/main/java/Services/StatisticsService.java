@@ -14,7 +14,7 @@ import java.util.Map;
 public class StatisticsService {
     private Connection conn;
 
-    public StatisticsService() {
+    public StatisticsService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
 

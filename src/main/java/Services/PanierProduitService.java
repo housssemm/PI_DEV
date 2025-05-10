@@ -16,7 +16,7 @@ import java.util.List;
 public class PanierProduitService implements Crud<panierProduit> {
     Connection conn;
 
-    public PanierProduitService() {
+    public PanierProduitService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
     @Override

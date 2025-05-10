@@ -23,9 +23,11 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ProduitController {
     @FXML
@@ -60,11 +62,16 @@ public class ProduitController {
     private ImageView imgView;
     @FXML
     private ScrollPane scrollPaneProd;
+    @FXML
+    private TextField search;
     private File selectedImageFile;
     private produitService produitService = new produitService();
     private produit produitUpdated=new produit();
     private categorieService categService = new categorieService();
     private int selectedProduitId;
+
+    public ProduitController() throws SQLException {
+    }
 
     @FXML
     void Ajouter()throws Exception {
@@ -110,7 +117,6 @@ public class ProduitController {
         Id_categorie1.getItems().addAll(uniqueCategoryIds);
     }
     public void initialize() throws Exception {
-
         // Remplir le ChoiceBox pour l'état
         etat_produit.getItems().setAll(etat.values());
         etat_produit1.getItems().setAll(etat.values());
@@ -128,8 +134,33 @@ public class ProduitController {
         // Ajouter un espacement entre les éléments du GridPane
         GridPaneProd.setHgap(20); // Espacement horizontal entre les colonnes
         GridPaneProd.setAlignment(Pos.CENTER); // Centrer le contenu dans le GridPane
+
+        // Charger et afficher initialement tous les produits de l'investisseur
         int idInvestisseur = Session.getInstance().getCurrentUser().getId();
         List<produit> produits = produitService.getAll_ByInvestisseur(idInvestisseur);
+        updateGrid(produits);
+
+        // Ajout d'un listener sur le TextField pour la recherche dynamique
+        search.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                // On récupère la liste des produits pour l'investisseur
+                List<produit> allProduits = produitService.getAll_ByInvestisseur(idInvestisseur);
+                // Filtrer en fonction du texte saisi (ici on peut filtrer sur le nom du produit par exemple)
+                List<produit> filteredProduits = allProduits.stream()
+                        .filter(prod -> prod.getNom().toLowerCase().contains(newValue.toLowerCase()))
+                        .collect(Collectors.toList());
+                // Mettre à jour l'affichage
+                updateGrid(filteredProduits);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * Méthode pour mettre à jour le GridPane avec la liste fournie de produits.
+     */
+    private void updateGrid(List<produit> produits) {
         // Nettoyer le GridPane
         GridPaneProd.getChildren().clear();
 
@@ -140,9 +171,7 @@ public class ProduitController {
             imageView.setFitHeight(50); // Taille de l'image (ajustée)
 
             // Créer le chemin relatif de l'image dans resources/img
-            String imagePath = "/img/" + prod.getImage(); // Utilisation du chemin relatif à resources
-
-            // Vérifier si l'image existe et l'afficher
+            String imagePath = "/img/" + prod.getImage();
             InputStream imageStream = getClass().getResourceAsStream(imagePath);
             if (imageStream != null) {
                 Image image = new Image(imageStream);
@@ -151,7 +180,7 @@ public class ProduitController {
                 System.out.println("Image non trouvée : " + imagePath);
             }
 
-            // Ajouter les informations du produit dans des Texts
+            // Création des textes pour les informations produit
             Text nomText = new Text("Nom : " + prod.getNom());
             Text descText = new Text("Description : " + prod.getDescription());
             Text etatText = new Text("État : " + prod.getEtat());
@@ -160,31 +189,34 @@ public class ProduitController {
             Text investisseurText = new Text("Investisseur : " + prod.getIdInvestisseur());
             Text categorieText = new Text("Catégorie : " + prod.getCategorieId());
 
-            nomText.setWrappingWidth(150); // Ajuster cette valeur selon la largeur de votre carte
-            descText.setWrappingWidth(150); // Ajuster cette valeur selon la largeur de votre carte
-
-            // Appliquer l'alignement à gauche directement sur les Texts
+            // Ajuster la largeur pour permettre le wrapping du texte
+            nomText.setWrappingWidth(150);
+            descText.setWrappingWidth(150);
+            // Centrer le texte
             nomText.setTextAlignment(TextAlignment.CENTER);
             descText.setTextAlignment(TextAlignment.CENTER);
 
-            // Ajouter le bouton "supprimer"
+            // Bouton "Supprimer"
             Button deleteButton = new Button("Supprimer");
-            deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
+            deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-border-radius: 5; -fx-font-weight: bold;");
             deleteButton.setOnAction(event -> {
                 if (confirmerSuppression()) {
                     try {
                         produitService.delete(prod.getId());
-                        initialize(); // Rafraîchir l'interface après la suppression
+                        // Rafraîchir l'affichage après suppression
+                        int idInvestisseur = Session.getInstance().getCurrentUser().getId();
+                        List<produit> newProduits = produitService.getAll_ByInvestisseur(idInvestisseur);
+                        updateGrid(newProduits);
                         System.out.println("Produit supprimé avec succès.");
                     } catch (Exception e) {
                         System.out.println("Erreur lors de la suppression du produit : " + e.getMessage());
                     }
                 }
             });
-            // Ajouter le bouton "Modifier"
-            Button modifyButton = new Button("Modifier");
-            modifyButton.setStyle("-fx-background-color: #f58400; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
 
+            // Bouton "Modifier"
+            Button modifyButton = new Button("Modifier");
+            modifyButton.setStyle("-fx-background-color: #f58400; -fx-text-fill: white; -fx-border-radius: 5; -fx-font-weight: bold;");
             modifyButton.setOnAction(event -> {
                 Nom_Produit1.setText(prod.getNom());
                 desc_prod1.setText(prod.getDescription());
@@ -192,37 +224,35 @@ public class ProduitController {
                 prix1.setText(String.valueOf(prod.getPrix()));
                 Id_categorie1.setValue(prod.getCategorieId());
                 etat_produit1.setValue(prod.getEtat());
-                selectedProduitId= prod.getId();
+                selectedProduitId = prod.getId();
 
                 String imageName = prod.getImage();
                 String imagePath1 = "/img/" + imageName;
-
-                // Vérifier si l'image existe dans resources
                 InputStream imageStream1 = getClass().getResourceAsStream(imagePath1);
                 if (imageStream1 != null) {
                     Image image = new Image(imageStream1);
-                    imgView.setImage(image);  // Afficher l'image dans l'ImageView
+                    imgView.setImage(image);
                 } else {
                     System.out.println("L'image n'a pas été trouvée : " + imagePath1);
                 }
             });
-            // Créer une VBox pour chaque produit
+
+            // Création d'une VBox pour contenir les informations du produit
             VBox produitBox = new VBox(10); // Espacement vertical de 10 pixels
             produitBox.setStyle("-fx-padding: 15; -fx-border-color: gray; -fx-border-width: 1; -fx-background-color: white; -fx-background-radius: 10;");
             produitBox.setAlignment(Pos.CENTER);
+            produitBox.setPrefWidth(200);
+            produitBox.setMinHeight(330);
 
-            // Fixer la largeur des cartes
-            produitBox.setPrefWidth(200); // Largeur fixe pour toutes les cartes
-            produitBox.setMinHeight(330); // Fixer la hauteur minimale des cartes pour qu'elle reste inchangée même si le texte dépasse
-            // Ajouter l'image et les informations dans la VBox
-            produitBox.getChildren().addAll(imageView, nomText, descText, etatText, quantiteText, prixText, investisseurText, categorieText,deleteButton,modifyButton);
+            // Ajout de tous les éléments à la VBox
+            produitBox.getChildren().addAll(imageView, nomText, descText, etatText, quantiteText, prixText, investisseurText, categorieText, deleteButton, modifyButton);
 
-            // Ajouter la VBox dans le GridPane
+            // Ajout de la VBox dans le GridPane
             GridPaneProd.add(produitBox, columnIndex, 0);
-            columnIndex++; // Passer à la colonne suivante
+            columnIndex++;
         }
-        // Définir la largeur totale du GridPane en fonction du nombre de produits
-        double largeurCarte = 220; // Largeur approximative de chaque carte + marges
+        // Ajustement de la largeur totale du GridPane en fonction du nombre de produits affichés
+        double largeurCarte = 220;
         GridPaneProd.setPrefWidth(produits.size() * largeurCarte);
     }
     @FXML

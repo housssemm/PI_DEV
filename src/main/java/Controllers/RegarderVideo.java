@@ -22,6 +22,7 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.sql.SQLException;
 
 public class RegarderVideo {
     public Button btnPlay;
@@ -69,6 +70,10 @@ public class RegarderVideo {
     private Seance Seance;
 
     private boolean isPlayed = false;
+
+    public RegarderVideo() throws SQLException {
+    }
+
     @FXML
     void PlayVideo(ActionEvent event) {
         if(!isPlayed){

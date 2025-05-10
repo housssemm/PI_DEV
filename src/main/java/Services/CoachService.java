@@ -1,6 +1,10 @@
 
 package Services;
-import Models.*;
+
+import Models.Coach;
+import Models.SpecialiteC;
+import Models.User;
+import Models.UserData;
 import Utils.MyDb;
 
 import java.sql.*;
@@ -14,9 +18,9 @@ public class CoachService {
     private Connection conn;
     private final UserService userService;
 
-    public CoachService() {
+    public CoachService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
-        this.userService = new UserService(MyDb.getInstance().getConn());
+        this.userService = new UserService();
     }
     public Coach mapUserDataToCoach(UserData userData) {
         Coach coach = new Coach();
@@ -25,7 +29,7 @@ public class CoachService {
         coach.setEmail(userData.getEmail());
         coach.setMDP(userData.getMDP());
         coach.setSpecialite(userData.getSpecialite()); // Ajoute la spécialité du coach
-        coach.setAnnee_experience(userData.getAnneeExperience()); // Ajoute les années d'expérience
+        coach.setAnnee_experience(userData.getAnneeExperience());// Ajoute les années d'expérience
         return coach;
     }
 
@@ -37,7 +41,7 @@ public class CoachService {
             if (userId == -1) return false; // Erreur lors de l'insertion de l'utilisateur
 
             // Étape 2 : Insérer le coach avec l'ID récupéré
-            String sql = "INSERT INTO coach (id, annee_experience, certificat_valide, specialite, note) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO coach (id, annee_experience, certificat_valide, specialite, note ) VALUES (?, ?, ?, ?, ? )";
 
             try (PreparedStatement pst = conn.prepareStatement(sql)) {
                 pst.setInt(1, userId);
@@ -45,6 +49,7 @@ public class CoachService {
                 pst.setBoolean(3, coach.getCertificat_valide() == 1);
                 pst.setString(4, coach.getSpecialite().toString());
                 pst.setInt(5, coach.getNote());
+
 
                 int res = pst.executeUpdate();
                 if (res > 0) {
@@ -79,7 +84,7 @@ public class CoachService {
     public List<Coach> getAll() {
         List<Coach> coaches = new ArrayList<>();
         String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
-                "c.annee_experience, c.certificat_valide, c.specialite, c.note " +
+                "c.annee_experience, c.certificat_valide, c.specialite, c.note  " +
                 "FROM user u " +
                 "JOIN coach c ON u.id = c.id"; // Jointure entre les tables user et coach
 
@@ -87,20 +92,24 @@ public class CoachService {
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
+                // Récupérer l'image comme une chaîne de caractères (chemin de fichier)
+                String imagePath = rs.getString("image");  // Chemin du fichier image
+
                 // Création d'un coach avec les données de la base
                 Coach coach = new Coach(
                         rs.getInt("id"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
-                        rs.getString("image"),
+                        imagePath,  // Le chemin de l'image
                         rs.getString("email"),
                         rs.getString("MDP"),
                         rs.getByte("certificat_valide"),
                         SpecialiteC.valueOf(rs.getString("specialite")), // Assurez-vous que la spécialité est bien stockée en tant que String dans la base
                         rs.getInt("note"),
                         rs.getInt("annee_experience")
+
                 );
-                coaches.add(coach);
+                coaches.add(coach);  // Ajouter le coach à la liste
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,39 +117,6 @@ public class CoachService {
         return coaches;
     }
 
-    public boolean updateCoach(Coach coach) {
-        String sql = "UPDATE coach SET annee_experience = ?, certificat_valide = ?, specialite = ?, note = ? WHERE id = ?";
-
-        try (PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setInt(1, coach.getAnnee_experience());
-            pst.setByte(2, coach.getCertificat_valide());
-            pst.setString(3, coach.getSpecialite().name()); // Assurez-vous que `specialite` est bien un enum ou une string
-            pst.setInt(4, coach.getNote());
-            pst.setInt(5, coach.getId());
-
-            int rowsUpdated = pst.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println(" ✅ Coach mis à jour avec succès !");
-                return true;
-            } else {
-                System.out.println(" ❌ Aucune mise à jour pour le coach.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public boolean updateCoachWithUser(Coach coach) {
-        // Mise à jour de l'utilisateur
-        User user = new User(coach.getId(), coach.getNom(), coach.getPrenom(), coach.getImage(), coach.getEmail(), coach.getMDP());
-        boolean userUpdated = userService.updateUser(user);
-
-        // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach
-        if (userUpdated) {
-            return updateCoach(coach);
-        }
-        return false;
-    }
     public Coach getCoachById(int id) {
         String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
                 "c.annee_experience, c.certificat_valide, c.specialite, c.note " +
@@ -175,6 +151,57 @@ public class CoachService {
         return null;
     }
 
+
+
+
+
+public boolean updateCoach(Coach coach) {
+        String sql = "UPDATE coach SET annee_experience = ?, certificat_valide = ?, specialite = ?, note = ?   WHERE id = ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, coach.getAnnee_experience());
+            pst.setByte(2, coach.getCertificat_valide());
+            pst.setString(3, coach.getSpecialite().name()); // Assurez-vous que `specialite` est bien un enum ou une string
+            pst.setInt(4, coach.getNote());
+            pst.setInt(5, coach.getId());
+
+            int rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println(" ✅ Coach mis à jour avec succès !");
+                return true;
+            } else {
+                System.out.println(" ❌ Aucune mise à jour pour le coach.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean updateCoachWithUser(Coach coach) {
+        // Mise à jour de l'utilisateur
+        User user = new User(coach.getId(), coach.getNom(), coach.getPrenom(), coach.getImage(), coach.getEmail(), coach.getMDP());
+        boolean userUpdated = userService.updateUser(user);
+
+        // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach
+        if (userUpdated) {
+            return updateCoach(coach);
+        }
+        return false;
+    }
+
+
+    public int getNombreCoaches() {
+        String query = "SELECT COUNT(*) FROM coach WHERE certificat_valide = 1";  // Assure-toi que le nom de la table est correct
+        try (PreparedStatement statement = conn.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;  // Retourne 0 en cas d'erreur
+    }
     public boolean isCoach(int id) {
         String sql = "SELECT COUNT(*) FROM coach WHERE id = ?";
 
@@ -225,5 +252,4 @@ public class CoachService {
         }
         return coaches;
     }
-
 }

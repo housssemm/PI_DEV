@@ -17,6 +17,7 @@ import javafx.scene.control.ButtonType;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class OfferDetailsController {
 
@@ -34,6 +35,9 @@ public class OfferDetailsController {
 
     private Offre currentOffer;
     private OffreService offreService = new OffreService();
+
+    public OfferDetailsController() throws SQLException {
+    }
 
     public void setOfferDetails(Offre offer) {
         this.currentOffer = offer;

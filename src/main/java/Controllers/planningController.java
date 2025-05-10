@@ -30,6 +30,7 @@ import video.api.client.api.models.LiveStreamCreationPayload;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,36 +66,47 @@ public class planningController implements Initializable {
     private String liveStreamId;
     private ApiVideoClient client;
 
+    public planningController() throws SQLException {
+    }
+
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateFocus = ZonedDateTime.now();
         today = ZonedDateTime.now();
-        drawCalendar();
+        try {
+            drawCalendar();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         client = new ApiVideoClient(apiKey);
 
         search.textProperty().addListener((observable, oldValue, newValue) -> {
-            RechercheSeance();
+            try {
+                RechercheSeance();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
 
 
     }
     @FXML
-    void backOneMonth() {
+    void backOneMonth() throws SQLException {
         dateFocus = dateFocus.minusMonths(1);
         System.out.println("⬅ Mois précédent : " + dateFocus.getMonthValue() + " - Année : " + dateFocus.getYear());
         refreshCalendar();
     }
     @FXML
-    void forwardOneMonth() {
+    void forwardOneMonth() throws SQLException {
         dateFocus = dateFocus.plusMonths(1);
         System.out.println("➡ Mois suivant : " + dateFocus.getMonthValue() + " - Année : " + dateFocus.getYear());
         refreshCalendar();
     }
-    void refreshCalendar() {
+    void refreshCalendar() throws SQLException {
         calendar.getChildren().clear();
         drawCalendar();
     }
-    private void drawCalendar() {
+    private void drawCalendar() throws SQLException {
         DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy", Locale.FRENCH);
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", Locale.FRENCH);
 
@@ -149,7 +161,11 @@ public class planningController implements Initializable {
 
                     // Gérer le clic sur la case du calendrier
                     stackPane.setOnMouseClicked(event -> {
-                        showSessionsForDate(calculatedDate);
+                        try {
+                            showSessionsForDate(calculatedDate);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                     });
                 }
                 calendar.getChildren().add(stackPane);
@@ -179,7 +195,7 @@ public class planningController implements Initializable {
         double gridHeight = cardHeight * sessions.size() + gridSeance.getVgap() * (sessions.size() - 1);
         gridSeance.setPrefHeight(gridHeight);
     }
-    public void showSessionsForDate(int dayOfMonth) {
+    public void showSessionsForDate(int dayOfMonth) throws SQLException {
         System.out.println("Jour sélectionné : " + dayOfMonth);
 
         // Mémoriser le jour sélectionné
@@ -197,7 +213,7 @@ public class planningController implements Initializable {
     }
 
 
-    private List<Seance> getSessionsForSelectedDay(int dayOfMonth, int idPlanning) {
+    private List<Seance> getSessionsForSelectedDay(int dayOfMonth, int idPlanning) throws SQLException {
         Map<Integer, List<Seance>> seanceMap = getSeancesForMonth(dateFocus, idPlanning);
         return seanceMap.getOrDefault(dayOfMonth, new ArrayList<>());
     }
@@ -262,7 +278,13 @@ public class planningController implements Initializable {
 
         Button btnSupprimer = new Button("🗑 Supprimer");
         btnSupprimer.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnSupprimer.setOnAction(event -> supprimerSeance(seance));
+        btnSupprimer.setOnAction(event -> {
+            try {
+                supprimerSeance(seance);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         Button btnLive = new Button();
         btnLive.setStyle("-fx-background-color: #F58400; -fx-text-fill: white; -fx-font-weight: bold;");
@@ -349,7 +371,7 @@ public class planningController implements Initializable {
         return SeanceMap;
     }
 
-    private Map<Integer, List<Seance>> getSeancesForMonth(ZonedDateTime dateFocus, int idPlanning) {
+    private Map<Integer, List<Seance>> getSeancesForMonth(ZonedDateTime dateFocus, int idPlanning) throws SQLException {
         SeanceService sc = new SeanceService();
         List<Seance> seances = sc.getSeancesByPlanningId(idPlanning);
         System.out.println("🔄 Chargement des séances pour le mois : " + dateFocus.getMonthValue() + " - Année : " + dateFocus.getYear());
@@ -389,7 +411,7 @@ public class planningController implements Initializable {
 
         }
     }
-    private void supprimerSeance(Seance seance) {
+    private void supprimerSeance(Seance seance) throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Supprimer la séance ?");
@@ -414,7 +436,7 @@ public class planningController implements Initializable {
 
 
 
-    public void ajouterSeance(ActionEvent actionEvent) throws IOException {
+    public void ajouterSeance(ActionEvent actionEvent) throws IOException, SQLException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/popupSeance.fxml"));
         DialogPane dialogPane = loader.load();
 
@@ -428,7 +450,7 @@ public class planningController implements Initializable {
         dialog.setDialogPane(dialogPane);
         dialog.showAndWait();
     }
-    public void TriParHeureDebut(ActionEvent event) {
+    public void TriParHeureDebut(ActionEvent event) throws SQLException {
         // Vérifier qu'un jour est sélectionné
         if (selectedDayOfMonth == 0) {
             System.out.println("Aucun jour sélectionné !");
@@ -544,7 +566,7 @@ public class planningController implements Initializable {
     }
 
     @FXML
-    private void RechercheSeance() {
+    private void RechercheSeance() throws SQLException {
         // Récupérer le texte saisi
         String query = search.getText().toLowerCase().trim();
 

@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +66,10 @@ public class PaiementCoachPlan {
     private Coach coach;
     CoachService coachService = new CoachService();
     private final CreateurEvenementService createurEvenementService = new CreateurEvenementService();
+
+    public PaiementCoachPlan() throws SQLException {
+    }
+
     @FXML
     public void initialize() {
         
@@ -73,7 +78,7 @@ public class PaiementCoachPlan {
 
     }
 
-    public void setCoach(Coach coach) {
+    public void setCoach(Coach coach) throws SQLException {
         this.coach = coach;
         updateUI();
         PlanningService ps = new PlanningService();
@@ -87,7 +92,7 @@ public class PaiementCoachPlan {
     }
 
 
-    private void updateUI() {
+    private void updateUI() throws SQLException {
         // Afficher les informations du coach
         labelNometPrenom.setText(coach.getNom() + " " + coach.getPrenom());
         specialite.setText(coach.getSpecialite().toString());
@@ -180,6 +185,8 @@ public class PaiementCoachPlan {
 
         } catch (StripeException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Problème de paiement : " + e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -326,7 +333,7 @@ public class PaiementCoachPlan {
         }
     }
 
-    public void reserverCoach(ActionEvent event) {
+    public void reserverCoach(ActionEvent event) throws SQLException {
         if (this.coach == null) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Aucun coach sélectionné !");
             return;

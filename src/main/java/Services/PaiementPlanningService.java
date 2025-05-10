@@ -12,7 +12,7 @@ import java.util.List;
 public class PaiementPlanningService {
     Connection conn = MyDb.getInstance().getConn();
 
-public PaiementPlanningService() {}
+public PaiementPlanningService() throws SQLException {}
 
 
     public void updatePaymentStatus(int id_adherent, int PlanningId) {

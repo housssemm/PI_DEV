@@ -23,7 +23,9 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AjoutercategorieController {
     @FXML
@@ -36,10 +38,15 @@ public class AjoutercategorieController {
     private TextField label_Nom_categ;
     @FXML
     private GridPane GridPane;
+    @FXML
+    private TextField search;
     private File selectedImageFile;
     private categorieService categService = new categorieService();
     private int selectedCategorieId;
     private Categorie CategorieUpdated=new Categorie();
+
+    public AjoutercategorieController() throws SQLException {
+    }
 
     @FXML
     void AjouterCategorie() throws Exception {
@@ -98,7 +105,6 @@ public class AjoutercategorieController {
         if (GridPane == null) {
             System.out.println("GridPane is null! Check FXML configuration.");
         } else {
-            // Exemple d'ajout d'un élément au GridPane
             System.out.println("GridPane initialized successfully.");
         }
 
@@ -108,18 +114,34 @@ public class AjoutercategorieController {
         // Nettoyer le GridPane avant d'ajouter de nouveaux éléments
         GridPane.getChildren().clear();
 
+        // Ajouter un listener sur le champ de recherche
+        search.textProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Texte recherché : " + newValue); // Debug
+            List<Categorie> filteredCategories = categories.stream()
+                    .filter(categorie -> categorie.getNom() != null
+                            && categorie.getNom().toLowerCase().contains(newValue.toLowerCase()))
+                    .collect(Collectors.toList());
+            System.out.println("Nombre de catégories trouvées : " + filteredCategories.size()); // Debug
+            updateGridPane(filteredCategories);
+        });
+
+        // Affichage initial des catégories (sans filtre)
+        updateGridPane(categories);
+    }
+
+    private void updateGridPane(List<Categorie> categories) {
+        GridPane.getChildren().clear(); // Nettoyer le GridPane avant ajout
         int row = 0;
         int col = 0;
 
         for (Categorie categorie : categories) {
+            // Création de l'image
             ImageView imageView = new ImageView();
-            imageView.setStyle("-fx-start-margin: 30");
-            imageView.setFitWidth(60); // Taille de l'image (ajustée)
-            imageView.setFitHeight(50); // Taille de l'image (ajustée)
+            imageView.setFitWidth(60);
+            imageView.setFitHeight(50);
 
-            // Créer le chemin relatif de l'image dans resources/img
+            // Charger l'image
             String imagePath = "/img/" + categorie.getImage();
-            // Vérifier si l'image existe et l'afficher
             InputStream imageStream = getClass().getResourceAsStream(imagePath);
             if (imageStream != null) {
                 Image image = new Image(imageStream);
@@ -127,56 +149,53 @@ public class AjoutercategorieController {
             } else {
                 System.out.println("Image non trouvée : " + imagePath);
             }
-            // Créer un Text pour le nom de la catégorie
+
+            // Nom de la catégorie
             Text nameText = new Text("Nom : " + categorie.getNom());
             nameText.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
 
-            // Ajouter le bouton "supprimer"
+            // Bouton Supprimer
             Button deleteButton = new Button("Supprimer");
             deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
             deleteButton.setOnAction(event -> {
                 if (confirmerSuppression()) {
                     try {
                         categService.delete(categorie.getId());
-                        initialize();
+                        initialize(); // Recharger après suppression
                     } catch (Exception e) {
                         System.out.println("Erreur lors de la suppression de la catégorie : " + e.getMessage());
                     }
                 }
             });
 
-            // Ajouter le bouton "Modifier"
+            // Bouton Modifier
             Button modifyButton = new Button("Modifier");
             modifyButton.setStyle("-fx-background-color: #f58400; -fx-text-fill: white; -fx-border-radius: 5;-fx-font-weight: bold;");
-
             modifyButton.setOnAction(event -> {
-
-                // Remplir les champs avec les informations de la catégorie sélectionnée
                 Nom_categ.setText(categorie.getNom());
                 selectedCategorieId = categorie.getId();
                 String imageName = categorie.getImage();
                 String imagePath1 = "/img/" + imageName;
 
-                // Vérifier si l'image existe dans resources
                 InputStream imageStream1 = getClass().getResourceAsStream(imagePath1);
                 if (imageStream1 != null) {
                     Image image = new Image(imageStream1);
-                    imgView.setImage(image);  // Afficher l'image dans l'ImageView
+                    imgView.setImage(image);
                 } else {
                     System.out.println("L'image n'a pas été trouvée : " + imagePath1);
                 }
             });
 
-            // Créer un VBox pour organiser l'image, l'ID, et le nom
+            // Créer une boîte pour le contenu
             VBox contentBox = new VBox(3);
-            contentBox.setAlignment(Pos.CENTER); // Centrer le contenu
-            contentBox.getChildren().addAll(imageView,nameText, deleteButton, modifyButton);
-            contentBox.setStyle("-fx-background-color: white; -fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 10; -fx-padding: 10; -fx-spacing: 10;-fx-start-margin-right: 30; ");
+            contentBox.setAlignment(Pos.CENTER);
+            contentBox.getChildren().addAll(imageView, nameText, deleteButton, modifyButton);
+            contentBox.setStyle("-fx-background-color: white; -fx-border-color: gray; -fx-border-width: 2; -fx-border-radius: 10; -fx-padding: 10; -fx-spacing: 10;");
 
-            // Ajouter la VBox au GridPane
+            // Ajouter au GridPane
             GridPane.add(contentBox, col, row);
 
-            // Gérer les colonnes et les lignes du GridPane
+            // Gérer la disposition
             col++;
             if (col == 5) { // 5 colonnes par ligne
                 col = 0;

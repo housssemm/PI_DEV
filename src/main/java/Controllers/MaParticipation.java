@@ -25,6 +25,7 @@ import Models.Evenement;
 import Services.EvenementService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,9 @@ public class MaParticipation {
     private ParticipantEvenementService pr = new ParticipantEvenementService();
     @FXML
     private TextField searchField; // Champ de recherche
+
+    public MaParticipation() throws SQLException {
+    }
 
     @FXML
     public void initialize() {

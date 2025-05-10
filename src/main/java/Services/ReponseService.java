@@ -10,7 +10,7 @@ import java.util.List;
 public class ReponseService {
     private Connection conn;
 
-    public ReponseService() {
+    public ReponseService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
 

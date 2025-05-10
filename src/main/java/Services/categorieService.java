@@ -9,7 +9,7 @@ import java.util.List;
 
 public class categorieService implements Crud<Categorie> {
     Connection conn;
-    public categorieService() {
+    public categorieService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
     }
     @Override

@@ -18,6 +18,7 @@ import Models.User;
 import Services.ParticipantEvenementService;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MesParticpent {
@@ -26,6 +27,9 @@ public class MesParticpent {
     @FXML private VBox participantsContainer;  // Updated to reference VBox for cards
 
     private ParticipantEvenementService participantService = new ParticipantEvenementService();
+
+    public MesParticpent() throws SQLException {
+    }
 
     public void initialize() {
         // No need for TableColumn and TableView initialization anymore

@@ -23,7 +23,7 @@ public class OffreCoachService extends OffreService {
         // Créer d'abord l'offre dans la table offre
         super.create(offreCoach);
 
-        String sql = "INSERT INTO offrecoach (offre_id, idCoach, nouveauTarif, reservationActuelle, reservationMax) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO offrecoach (offre_id, idCoach, nouveau_tarif, reservationActuelle, reservationMax) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, offreCoach.getId()); // Utiliser l'ID généré de l'offre
@@ -47,7 +47,7 @@ public class OffreCoachService extends OffreService {
         }
 
         OffreCoach offreCoach = (OffreCoach) obj;
-        String sql = "UPDATE offrecoach SET idCoach = ?, nouveauTarif = ?, reservationActuelle = ?, reservationMax = ? WHERE offre_id = ?";
+        String sql = "UPDATE offrecoach SET idCoach = ?, nouveau_tarif = ?, reservationActuelle = ?, reservationMax = ? WHERE offre_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, offreCoach.getIdCoach());
@@ -100,7 +100,7 @@ public class OffreCoachService extends OffreService {
                         rs.getDate("duree_validite"),
                         Etato.valueOf(rs.getString("etat")),
                         rs.getInt("idCoach"),
-                        rs.getDouble("nouveauTarif"),
+                        rs.getDouble("nouveau_tarif"),
                         rs.getInt("reservationActuelle"),
                         rs.getInt("reservationMax")
                 );
@@ -130,7 +130,7 @@ public class OffreCoachService extends OffreService {
                         rs.getDate("duree_validite"),
                         Etato.valueOf(rs.getString("etat")),
                         rs.getInt("idCoach"),
-                        rs.getDouble("nouveauTarif"),
+                        rs.getDouble("nouveau_tarif"),
                         rs.getInt("reservationActuelle"),
                         rs.getInt("reservationMax")
                 );

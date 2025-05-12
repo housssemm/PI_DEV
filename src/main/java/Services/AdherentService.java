@@ -25,6 +25,7 @@ public class AdherentService {
         adherent.setPrenom(userData.getPrenom());
         adherent.setEmail(userData.getEmail());
         adherent.setMDP(userData.getMDP());
+        adherent.setDiscr(userData.getDiscr());
         adherent.setPoids(userData.getPoids());
         adherent.setTaille(userData.getTaille());
         adherent.setAge(userData.getAge());
@@ -85,7 +86,7 @@ public class AdherentService {
     }
     public List<Adherent> getAll() {
         List<Adherent> adherents = new ArrayList<>();
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, a.Niveau_activites, a.Objectif_personnelle, a.genre, a.age, a.taille, a.poids FROM user u JOIN adherent a ON u.id = a.id";
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, a.Niveau_activites, a.Objectif_personnelle, a.genre, a.age, a.taille, a.poids FROM user u JOIN adherent a ON u.id = a.id";
 
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
@@ -99,6 +100,7 @@ public class AdherentService {
                         rs.getString("image"),  // Le champ image est une chaîne (chemin du fichier)
                         rs.getString("email"),
                         rs.getString("MDP"),
+                        rs.getString("discr"),
                         NiveauA.valueOf(rs.getString("niveau_activites")),
                         ObjP.valueOf(rs.getString("objectif_personnelle")),
                         GenreG.valueOf(rs.getString("genre")),
@@ -142,7 +144,7 @@ public class AdherentService {
     }
     public boolean updateAdherentWithUser(Adherent adherent) {
         // Mise à jour de l'utilisateur
-        User user = new User(adherent.getId(), adherent.getNom(), adherent.getPrenom(), adherent.getImage(), adherent.getEmail(), adherent.getMDP());
+        User user = new User(adherent.getId(), adherent.getNom(), adherent.getPrenom(), adherent.getImage(), adherent.getEmail(), adherent.getMDP() , adherent.getDiscr());
         boolean userUpdated = userService.updateUser(user);
 
         // Si l'utilisateur est mis à jour avec succès, mettre à jour l'adhérent
@@ -167,7 +169,7 @@ public class AdherentService {
         return 0;  // Retourne 0 en cas d'erreur
     }
     public Adherent getAdherentById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, u.discr, " +
                 "a.Niveau_activites, a.Objectif_personnelle, a.genre, a.age , a.taille , a.poids " +
                 "FROM user u " +
                 "JOIN adherent a ON u.id = a.id " +
@@ -185,6 +187,7 @@ public class AdherentService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             NiveauA.valueOf(rs.getString("niveau_activites")),
                             ObjP.valueOf(rs.getString("objectif_personnelle")),
                             GenreG.valueOf(rs.getString("genre")),

@@ -121,8 +121,8 @@ public class UserData extends User {
         this.certificatValideCreateur = certificatValideCreateur;
     }
 
-    public UserData(String nom, String prenom, String image, String email, String MDP, float poids, float taille, int age, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, SpecialiteC specialite, int note, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur) {
-        super(nom, prenom, image, email, MDP);
+    public UserData(String nom, String prenom, String image, String email, String MDP, String discr , float poids, float taille, int age, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, SpecialiteC specialite, int note, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur) {
+        super(nom, prenom, image, email, MDP, discr);
         this.poids = poids;
         this.taille = taille;
         this.age = age;

@@ -8,10 +8,7 @@ import Services.produitService;
 import Utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -32,18 +29,30 @@ public class PopUpDetailsProduitController {
     private Spinner<Integer> quantite;
     private produit produitSelectionne;
 
-    public void setProductDetails(String nom, String cat, String desc, String dispo, float prixValue, String imagePath,int stock) {
+    public void setProductDetails(String nom, String cat, String desc, String dispo, float prixValue, String imagePath, int stock) {
         // Remplir les labels
         nom_produit.setText(nom);
         categorie.setText(cat);
-        description.setText(desc);
+
+        // Troncation du texte de description si trop long (limite à 100 caractères par exemple)
+        String truncatedDesc = desc.length() > 40 ? desc.substring(0, 40) + "..." : desc;
+        description.setText(truncatedDesc);
+
+        // Ajouter un Tooltip pour la description complète
+        Tooltip descTooltip = new Tooltip(desc);
+        Tooltip.install(description, descTooltip);
+
         disponibilité.setText(dispo);
-        prix.setText(prixValue + "TND");
+        prix.setText(prixValue + " TND");
+
+        // Charger l'image
         Image image = new Image(imagePath);
         ViewImage.setImage(image);
+
         // Configurer le Spinner pour la quantité
         quantite.setValueFactory(new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, stock, 1));
     }
+
     @FXML
     public void AjouterProduitAupanier() {
         try {

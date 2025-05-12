@@ -1,9 +1,7 @@
 package Controllers;
-
 import Models.panierProduit;
 import Models.produit;
 import Services.PanierProduitService;
-import Services.SmsService;
 import Services.produitService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -15,6 +13,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import Services.SmsService;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -65,12 +65,30 @@ public class PaiementPopUpController {
     }
 
     // Méthode pour configurer l'ID du panier
-    public void setPanierId(int panierId) throws Exception {
-        System.out.println("Panier ID reçu : " + panierId); // Debug
+    public void setPanierId(int panierId)throws Exception {
+        System.out.println("PaiementPopUpController - Panier ID reçu : " + panierId);
         this.panierId = panierId;
-        this.panierProduit = panierService.getById(panierId);
-        if (this.panierProduit == null) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Panier introuvable !");
+        try {
+            List<panierProduit> produits = new PanierProduitService().getProduitsDansPanier(panierId);
+            if (produits.isEmpty()) {
+                System.out.println("Aucun panier produit trouvé avec l'ID : " + panierId);
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Panier vide");
+                alert.setHeaderText("Aucun produit dans le panier");
+                alert.setContentText("Votre panier est vide. Veuillez ajouter des produits avant de procéder au paiement.");
+                alert.showAndWait();
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.close();
+                return;
+            }
+            // Continuer avec le traitement des produits (à compléter selon votre logique)
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Erreur lors de la récupération du panier");
+            alert.setContentText("Impossible de récupérer les produits du panier. Veuillez réessayer.");
+            alert.showAndWait();
         }
     }
 
@@ -100,22 +118,28 @@ public class PaiementPopUpController {
 
     @FXML
     private void handlePayment(ActionEvent event) {
+        System.out.println("handlePayment - Panier ID utilisé : " + panierId);
         try {
-            // Vérifier si le panier est valide
-            if (this.panierProduit == null) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Panier introuvable !");
+            // Vérifier si le panier contient des produits
+            List<panierProduit> produits = paniProdService.getProduitsDansPanier(panierId);
+            if (produits == null || produits.isEmpty()) {
+                System.out.println("Panier introuvable ou vide pour l'ID : " + panierId);
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Panier introuvable ou vide pour l'ID : " + panierId);
                 return;
             }
+
             // Valider les champs de paiement
             if (!validatePaymentFields()) {
                 return;
             }
+
             // Créer un token Stripe
             String stripeToken = createStripeToken();
             if (stripeToken == null || stripeToken.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la génération du token Stripe !");
                 return;
             }
+
             // Calculer le montant en centimes
             long amount = (long) (totalMontant * 100); // Montant en centimes
 
@@ -139,33 +163,36 @@ public class PaiementPopUpController {
                     // Créer le message de confirmation avec les détails des produits
                     StringBuilder messageBuilder = new StringBuilder();
                     messageBuilder.append("Votre paiement de ").append(totalMontant).append(" TND a été effectué avec succès.\n\n");
-
-                    // Ajouter les détails des produits achetés
                     messageBuilder.append("Détails de votre panier :\n");
-                    // Parcourir chaque produit dans panierProduit
-                    List<panierProduit> panierProduits = paniProdService.getProduitsDansPanier(panierId);
-                    for (panierProduit produitPanier : panierProduits) {
-                        // Récupérer les informations du produit via produitId
+                    for (panierProduit produitPanier : produits) {
                         produit produit = prodService.getById(produitPanier.getProduitId());
                         if (produit != null) {
-                            messageBuilder.append("Produit : ").append(produit.getNom())  // Utiliser getNom() pour le nom du produit
-                                    .append(" | Quantité : ").append(produitPanier.getQuantite()) // Utiliser la quantité de panierProduit
+                            messageBuilder.append("Produit : ").append(produit.getNom())
+                                    .append(" | Quantité : ").append(produitPanier.getQuantite())
                                     .append("\n");
                         }
                     }
                     String message = messageBuilder.toString();
                     smsService.sendSms(userPhoneNumber, message);
 
+                    // Supprimer les produits du panier après paiement
                     paniProdService.supprimerProduitsParPanierId(panierId);
-                    paniProdService.getProduitsDansPanier(panierId);
                 } catch (Exception e) {
                     showAlert(Alert.AlertType.ERROR, "Erreur", "Échec de la mise à jour de l'état du paiement : " + e.getMessage());
                 }
             } else {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Échec du paiement.");
             }
+
+            // Fermer la fenêtre après le traitement
+            Stage stage = (Stage) payerBtn.getScene().getWindow();
+            stage.close();
+
         } catch (StripeException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", "Problème de paiement : " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur inattendue s'est produite : " + e.getMessage());
         }
     }
     private boolean validatePaymentFields() {

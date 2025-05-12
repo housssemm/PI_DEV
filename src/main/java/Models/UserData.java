@@ -93,8 +93,8 @@ public class UserData extends User {
     public void setCertificatValideCreateur(boolean certificatValideCreateur) { this.certificatValideCreateur = certificatValideCreateur; }
 
 
-    public UserData(int id, String nom, String prenom, String image, String email, String MDP, float taille, int age, float poids, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, int note, SpecialiteC specialite, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur ) {
-        super(id, nom, prenom, image, email, MDP);
+    public UserData(int id, String nom, String prenom, String image, String email, String MDP,String discr, float taille, int age, float poids, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, int note, SpecialiteC specialite, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur ) {
+        super(id, nom, prenom, image, email, MDP, discr);
         this.taille = taille;
         this.age = age;
         this.poids = poids;
@@ -117,8 +117,8 @@ public class UserData extends User {
         this.certificatValideCreateur = certificatValideCreateur;
     }
 
-    public UserData(String nom, String prenom, String image, String email, String MDP, float poids, float taille, int age, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, SpecialiteC specialite, int note, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur ) {
-        super(nom, prenom, image, email, MDP);
+    public UserData(String nom, String prenom, String image, String email, String MDP, String discr, float poids, float taille, int age, GenreG genre, ObjP objectifPersonnel, NiveauA niveauActivite, int anneeExperience, boolean certificatValideCoach, SpecialiteC specialite, int note, String nomEntreprise, String descriptionInvestisseur, String adresseInvestisseur, String telephoneInvestisseur, boolean certificatValideInvestisseur, String nomOrganisation, String descriptionCreateur, String adresseCreateur, String telephoneCreateur, boolean certificatValideCreateur ) {
+        super(nom, prenom, image, email, MDP, discr);
         this.poids = poids;
         this.taille = taille;
         this.age = age;

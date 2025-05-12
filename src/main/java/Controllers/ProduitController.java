@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
-
 import java.io.File;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -180,9 +179,20 @@ public class ProduitController {
                 System.out.println("Image non trouvée : " + imagePath);
             }
 
-            // Création des textes pour les informations produit
+            // Créer un texte pour le nom du produit
             Text nomText = new Text("Nom : " + prod.getNom());
-            Text descText = new Text("Description : " + prod.getDescription());
+
+            // Création de la description avec un texte abrégé (truncation)
+            String descriptionAbrigee = prod.getDescription();
+            if (descriptionAbrigee.length() > 40) {  // Limiter à 40 caractères
+                descriptionAbrigee = descriptionAbrigee.substring(0, 40) + "...";  // Ajouter "..." pour l'abréviation
+            }
+            Text descText = new Text("Description : " + descriptionAbrigee);
+
+            // Créer un Tooltip avec la description complète
+            Tooltip descTooltip = new Tooltip("Description complète : " + prod.getDescription());
+            Tooltip.install(descText, descTooltip);  // Associer le Tooltip à la description
+
             Text etatText = new Text("État : " + prod.getEtat());
             Text quantiteText = new Text("Quantité : " + prod.getQuantite());
             Text prixText = new Text("Prix : " + prod.getPrix() + " TND");
@@ -191,7 +201,7 @@ public class ProduitController {
 
             // Ajuster la largeur pour permettre le wrapping du texte
             nomText.setWrappingWidth(150);
-            descText.setWrappingWidth(150);
+            descText.setWrappingWidth(150);  // Largeur fixe pour éviter que la description prenne trop de place
             // Centrer le texte
             nomText.setTextAlignment(TextAlignment.CENTER);
             descText.setTextAlignment(TextAlignment.CENTER);
@@ -255,6 +265,7 @@ public class ProduitController {
         double largeurCarte = 220;
         GridPaneProd.setPrefWidth(produits.size() * largeurCarte);
     }
+
     @FXML
     void upload_Image() {
         FileChooser fileChooser = new FileChooser();
@@ -468,16 +479,16 @@ public class ProduitController {
         }
     }
 
-   @FXML
-   void GoToCategorie(ActionEvent actionEvent) {
-       try {
-           FXMLLoader loader = new FXMLLoader(getClass().getResource("/Categorie.fxml"));
-           Parent root = loader.load();
-           ((Button) actionEvent.getSource()).getScene().setRoot(root);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-   }
+    @FXML
+    void GoToCategorie(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Categorie.fxml"));
+            Parent root = loader.load();
+            ((Button) actionEvent.getSource()).getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     void GoToSeance(ActionEvent actionEvent) {
         try {

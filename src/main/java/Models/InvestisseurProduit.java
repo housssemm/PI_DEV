@@ -10,8 +10,8 @@ public class InvestisseurProduit extends User{
     public InvestisseurProduit() {
     }
 
-    public InvestisseurProduit(int id, String nom, String prenom, String image, String email, String MDP, String nom_entreprise, String description, String adresse, String telephone, byte certificat_valide) {
-        super(id, nom, prenom, image, email, MDP);
+    public InvestisseurProduit(int id, String nom, String prenom, String image, String email, String MDP,String discr, String nom_entreprise, String description, String adresse, String telephone, byte certificat_valide) {
+        super(id, nom, prenom, image, email, MDP , discr);
         this.nom_entreprise = nom_entreprise;
         this.description = description;
         this.adresse = adresse;
@@ -19,8 +19,8 @@ public class InvestisseurProduit extends User{
         this.certificat_valide = certificat_valide;
     }
 
-    public InvestisseurProduit(String nom, String prenom, String image, String email, String MDP, String nom_entreprise, String description, String adresse, String telephone, byte certificat_valide) {
-        super(nom, prenom, image, email, MDP);
+    public InvestisseurProduit(String nom, String prenom, String image, String email, String MDP,String discr, String nom_entreprise, String description, String adresse, String telephone, byte certificat_valide) {
+        super(nom, prenom, image, email, MDP , discr);
         this.nom_entreprise = nom_entreprise;
         this.description = description;
         this.adresse = adresse;

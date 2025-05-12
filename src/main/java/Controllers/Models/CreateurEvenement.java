@@ -21,8 +21,8 @@ public class CreateurEvenement extends User {
         this.certificat_valide = certificat_valide;
     }
 
-    public CreateurEvenement(String nom, String prenom, String image, String email, String MDP, String nom_organisation, String description, String adresse, String telephone, byte certificat_valide) {
-        super(nom, prenom, image, email, MDP);
+    public CreateurEvenement(String nom, String prenom, String image, String email, String MDP,String discr, String nom_organisation, String description, String adresse, String telephone, byte certificat_valide) {
+        super(nom, prenom, image, email, MDP, discr);
         this.nom_organisation = nom_organisation;
         this.description = description;
         this.adresse = adresse;

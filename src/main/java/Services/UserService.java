@@ -5,6 +5,7 @@ import Models.*;
 import Utils.MyDb;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.ByteArrayInputStream;
 import java.sql.*;
@@ -13,9 +14,11 @@ import java.util.List;
 
 public class UserService {
     Connection conn;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public UserService() throws SQLException {
         this.conn = MyDb.getInstance().getConn();
+        this.passwordEncoder = new BCryptPasswordEncoder(13);
     }
 
 
@@ -33,7 +36,8 @@ public class UserService {
             }
 
             // Paramétrer la requête
-            statement.setString(1, newPassword);
+            String hashedPassword = new BCryptPasswordEncoder(13).encode(newPassword);
+            statement.setString(1, hashedPassword);
             statement.setString(2, email);
 
             // Exécution de la mise à jour
@@ -73,13 +77,14 @@ public class UserService {
         // Vérifier si l'image est nulle ou vide, et utiliser l'image par défaut si c'est le cas
         String imageToInsert = (obj.getImage() == null || obj.getImage().isEmpty()) ? defaultImage : obj.getImage();
 
-        String sql = "INSERT INTO user (nom, prenom, image, email, MDP) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (nom, prenom, image, email, MDP, discr) VALUES (?, ?, ?, ?, ?,?)";
         try (PreparedStatement pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, obj.getNom());
             pst.setString(2, obj.getPrenom());
             pst.setString(3, imageToInsert); // Utiliser l'image par défaut ou celle fournie par l'utilisateur
             pst.setString(4, obj.getEmail());
             pst.setString(5, obj.getMDP());
+            pst.setString(6, obj.getDiscr());
 
             int res = pst.executeUpdate();
             if (res > 0) {
@@ -148,7 +153,7 @@ public class UserService {
 
 
     public boolean updateUser(User user) {
-        String sql = "UPDATE user SET nom = ?, prenom = ?, image = ?, email = ?, MDP = ? WHERE id = ?";
+        String sql = "UPDATE user SET nom = ?, prenom = ?, image = ?, email = ?, MDP = ? , discr=? WHERE id = ?";
         try (Connection conn = MyDb.getInstance().getConn(); // Get a new connection each time
              PreparedStatement pst = conn.prepareStatement(sql)) {
 
@@ -157,7 +162,8 @@ public class UserService {
             pst.setString(3, user.getImage());
             pst.setString(4, user.getEmail());
             pst.setString(5, user.getMDP());
-            pst.setInt(6, user.getId());
+            pst.setString(6, user.getDiscr());
+            pst.setInt(7, user.getId());
 
             int rowsUpdated = pst.executeUpdate();
             return rowsUpdated > 0;
@@ -314,7 +320,8 @@ public class UserService {
                         rs.getString("prenom"),
                         rs.getString("image"),
                         rs.getString("email"),
-                        rs.getString("MDP")
+                        rs.getString("MDP"),
+                        rs.getString("discr")
                 );
                 users.add(user);
             }
@@ -338,7 +345,8 @@ public class UserService {
                             rs.getString("prenom"),
                             rs.getString("image"),
                             rs.getString("email"),
-                            rs.getString("MDP")
+                            rs.getString("MDP"),
+                            rs.getString("discr")
                     );
                 } else {
                     System.out.println("Aucun utilisateur trouvé avec l'id : " + id);
@@ -350,25 +358,38 @@ public class UserService {
         return null;
     }
 
+
     public boolean login(String email, String password) {
-        String sql = "SELECT * FROM user WHERE email = ? AND MDP = ?";
+        String sql = "SELECT MDP FROM user WHERE email = ?";
 
-        try {
-            PreparedStatement prepare = conn.prepareStatement(sql);
-            prepare.setString(1, email);
-            prepare.setString(2, password);
-            ResultSet result = prepare.executeQuery();
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, email);
+            ResultSet rs = pst.executeQuery();
 
-            return result.next(); // Retourne vrai si un utilisateur existe
+            if (rs.next()) {
+                String hashedPassword = rs.getString("MDP");
+                if (hashedPassword == null || !hashedPassword.startsWith("$2") || hashedPassword.length() < 59 || hashedPassword.length() > 61) {
+                    System.out.println("Erreur : Le mot de passe stocké pour l'email " + email + " n'est pas un hachage bcrypt valide. Hachage : " + hashedPassword);
+                    return false;
+                }
+                try {
+                    return passwordEncoder.matches(password, hashedPassword); // Vérifier le mot de passe
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Erreur lors de la vérification du mot de passe pour l'email " + email + " : " + e.getMessage());
+                    return false;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
-
+        return false;
     }
 
 
-    public String getUserType(int userId) {
+
+
+
+public String getUserType(int userId) {
         try {
             // Vérifier d'abord si l'utilisateur est un Adherent
             String queryAdherent = "SELECT id FROM adherent WHERE id = ?";
@@ -416,14 +437,45 @@ public class UserService {
 
         return "unknown"; // Si l'ID ne correspond à aucune catégorie
     }
-    public User getUserByEmailAndPassword(String email, String password) {
-        String query = "SELECT * FROM user WHERE email = ? AND MDP = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, email);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
+//    public User getUserByEmailAndPassword(String email, String password) {
+//        String query = "SELECT * FROM user WHERE email = ? AND MDP = ?";
+//        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+//            stmt.setString(1, email);
+//            stmt.setString(2, password);
+//            ResultSet rs = stmt.executeQuery();
+//
+//            if (rs.next()) {
+//                int userId = rs.getInt("id");
+//                String userType = getUserType(userId);
+//
+//                switch (userType) {
+//                    case "adherent":
+//                        return getAdherentById(userId);
+//                    case "coach":
+//                        return getCoachById(userId);
+//                    case "investisseur":
+//                        return getInvestisseurProduitById(userId);
+//                    case "createur":
+//                        return getCreateurEvenementById(userId);
+//                    default:
+//                        return new User(userId, rs.getString("nom"), rs.getString("prenom"),
+//                                rs.getString("email"), rs.getString("MDP") , rs.getString("discr"));
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+public User getUserByEmailAndPassword(String email, String password) {
+    String query = "SELECT * FROM user WHERE email = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
+        if (rs.next()) {
+            String hashedPassword = rs.getString("MDP");
+            if (passwordEncoder.matches(password, hashedPassword)) {
                 int userId = rs.getInt("id");
                 String userType = getUserType(userId);
 
@@ -437,17 +489,27 @@ public class UserService {
                     case "createur":
                         return getCreateurEvenementById(userId);
                     default:
-                        return new User(userId, rs.getString("nom"), rs.getString("prenom"),
-                                rs.getString("email"), rs.getString("MDP"));
+                        return new User(
+                                rs.getInt("id"),
+                                rs.getString("nom"),
+                                rs.getString("prenom"),
+                                rs.getString("image"),
+                                rs.getString("email"),
+                                rs.getString("MDP"),
+                                rs.getString("discr")
+                        );
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return null;
+}
+
+
     public Coach getCoachById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "c.annee_experience, c.certificat_valide, c.specialite, c.note " +
                 "FROM user u " +
                 "JOIN coach c ON u.id = c.id " +
@@ -465,6 +527,7 @@ public class UserService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             rs.getByte("certificat_valide"),
                             SpecialiteC.valueOf(rs.getString("specialite")), // Assurez-vous que la spécialité est bien un enum
                             rs.getInt("note"),
@@ -480,7 +543,7 @@ public class UserService {
         return null;
     }
     public CreateurEvenement getCreateurEvenementById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "c.nom_organisation, c.description, c.adresse, c.telephone, c.certificat_valide " +
                 "FROM user u " +
                 "JOIN createurevenement c ON u.id = c.id " +
@@ -499,6 +562,7 @@ public class UserService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             rs.getString("nom_organisation"),
                             rs.getString("description"),
                             rs.getString("adresse"),
@@ -515,7 +579,7 @@ public class UserService {
         return null;
     }
     public InvestisseurProduit getInvestisseurProduitById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "i.nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
                 "FROM user u " +
                 "JOIN investisseurProduit i ON u.id = i.id " +
@@ -534,6 +598,7 @@ public class UserService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             rs.getString("nom_entreprise"),
                             rs.getString("description"),
                             rs.getString("adresse"),
@@ -550,7 +615,7 @@ public class UserService {
         return null;
     }
     public Adherent getAdherentById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "a.Niveau_activites, a.Objectif_personnelle, a.genre, a.age , a.taille , a.poids " +
                 "FROM user u " +
                 "JOIN adherent a ON u.id = a.id " +
@@ -568,6 +633,7 @@ public class UserService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             NiveauA.valueOf(rs.getString("niveau_activites")),
                             ObjP.valueOf(rs.getString("objectif_personnelle")),
                             GenreG.valueOf(rs.getString("genre")),

@@ -26,6 +26,7 @@ public class CreateurEvenementService {
         createurEvenement.setPrenom(userData.getPrenom());
         createurEvenement.setEmail(userData.getEmail());
         createurEvenement.setMDP(userData.getMDP());
+        createurEvenement.setDiscr(userData.getDiscr());
         createurEvenement.setNom_organisation(userData.getNomOrganisation());
         createurEvenement.setDescription(userData.getDescriptionCreateur());
         createurEvenement.setAdresse(userData.getAdresseCreateur());
@@ -83,7 +84,7 @@ public class CreateurEvenementService {
     }
     public List<CreateurEvenement> getAll() {
         List<CreateurEvenement> createurEvenements = new ArrayList<>();
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "c.nom_organisation, c.description, c.adresse, c.telephone, c.certificat_valide " +
                 "FROM user u " +
                 "JOIN createurevenement c ON u.id = c.id"; // Jointure entre les tables user et createur d'evenement
@@ -103,6 +104,7 @@ public class CreateurEvenementService {
                         imagePath,  // Le chemin de l'image
                         rs.getString("email"),
                         rs.getString("MDP"),
+                        rs.getString("discr"),
                         rs.getString("nom_organisation"),
                         rs.getString("description"),
                         rs.getString("adresse"),
@@ -117,7 +119,7 @@ public class CreateurEvenementService {
         return createurEvenements;
     }
     public CreateurEvenement getCreateurEvenementById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "c.nom_organisation, c.description, c.adresse, c.telephone, c.certificat_valide " +
                 "FROM user u " +
                 "JOIN createurevenement c ON u.id = c.id " +
@@ -136,6 +138,7 @@ public class CreateurEvenementService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             rs.getString("nom_organisation"),
                             rs.getString("description"),
                             rs.getString("adresse"),
@@ -180,7 +183,7 @@ public class CreateurEvenementService {
     }
     public boolean updateCreateurEvenementWithUser(CreateurEvenement createurEvenement) {
         // Mise à jour de l'utilisateur
-        User user = new User(createurEvenement.getId(), createurEvenement.getNom(), createurEvenement.getPrenom(), createurEvenement.getImage(), createurEvenement.getEmail(), createurEvenement.getMDP());
+        User user = new User(createurEvenement.getId(), createurEvenement.getNom(), createurEvenement.getPrenom(), createurEvenement.getImage(), createurEvenement.getEmail(), createurEvenement.getMDP() , createurEvenement.getDiscr());
         boolean userUpdated = userService.updateUser(user);
 
         // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach

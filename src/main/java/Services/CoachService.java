@@ -28,6 +28,7 @@ public class CoachService {
         coach.setPrenom(userData.getPrenom());
         coach.setEmail(userData.getEmail());
         coach.setMDP(userData.getMDP());
+        coach.setDiscr(userData.getDiscr());
         coach.setSpecialite(userData.getSpecialite()); // Ajoute la spécialité du coach
         coach.setAnnee_experience(userData.getAnneeExperience());// Ajoute les années d'expérience
         return coach;
@@ -83,7 +84,7 @@ public class CoachService {
     }
     public List<Coach> getAll() {
         List<Coach> coaches = new ArrayList<>();
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, u.discr," +
                 "c.annee_experience, c.certificat_valide, c.specialite, c.note  " +
                 "FROM user u " +
                 "JOIN coach c ON u.id = c.id"; // Jointure entre les tables user et coach
@@ -103,6 +104,7 @@ public class CoachService {
                         imagePath,  // Le chemin de l'image
                         rs.getString("email"),
                         rs.getString("MDP"),
+                        rs.getString("discr"),
                         rs.getByte("certificat_valide"),
                         SpecialiteC.valueOf(rs.getString("specialite")), // Assurez-vous que la spécialité est bien stockée en tant que String dans la base
                         rs.getInt("note"),
@@ -118,7 +120,7 @@ public class CoachService {
     }
 
     public Coach getCoachById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "c.annee_experience, c.certificat_valide, c.specialite, c.note " +
                 "FROM user u " +
                 "JOIN coach c ON u.id = c.id " +
@@ -136,6 +138,7 @@ public class CoachService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             rs.getByte("certificat_valide"),
                             SpecialiteC.valueOf(rs.getString("specialite")), // Assurez-vous que la spécialité est bien un enum
                             rs.getInt("note"),
@@ -179,7 +182,7 @@ public boolean updateCoach(Coach coach) {
     }
     public boolean updateCoachWithUser(Coach coach) {
         // Mise à jour de l'utilisateur
-        User user = new User(coach.getId(), coach.getNom(), coach.getPrenom(), coach.getImage(), coach.getEmail(), coach.getMDP());
+        User user = new User(coach.getId(), coach.getNom(), coach.getPrenom(), coach.getImage(), coach.getEmail(), coach.getMDP() , coach.getDiscr());
         boolean userUpdated = userService.updateUser(user);
 
         // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach
@@ -222,7 +225,7 @@ public boolean updateCoach(Coach coach) {
 
     public List<Coach> getAllValide() {
         List<Coach> coaches = new ArrayList<>();
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "c.annee_experience, c.certificat_valide, c.specialite, c.note " +
                 "FROM user u " +
                 "JOIN coach c ON u.id = c.id " + // Jointure entre les tables user et coach
@@ -240,6 +243,7 @@ public boolean updateCoach(Coach coach) {
                         rs.getString("image"),
                         rs.getString("email"),
                         rs.getString("MDP"),
+                        rs.getString("discr"),
                         rs.getByte("certificat_valide"),
                         SpecialiteC.valueOf(rs.getString("specialite")), // Assurez-vous que la spécialité est bien stockée en tant que String dans la base
                         rs.getInt("note"),

@@ -27,6 +27,7 @@ public class InvestisseurProduitService {
         investisseurProduit.setPrenom(userData.getPrenom());
         investisseurProduit.setEmail(userData.getEmail());
         investisseurProduit.setMDP(userData.getMDP());
+        investisseurProduit.setDiscr(userData.getDiscr());
         investisseurProduit.setNom_entreprise(userData.getNomEntreprise());
         investisseurProduit.setDescription(userData.getDescriptionInvestisseur());
         investisseurProduit.setAdresse(userData.getAdresseInvestisseur());
@@ -85,7 +86,7 @@ public class InvestisseurProduitService {
     }
     public List<InvestisseurProduit> getAll() {
         List<InvestisseurProduit> investisseurProduits = new ArrayList<>();
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "i.Nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
                 "FROM user u " +
                 "JOIN investisseurproduit i ON u.id = i.id"; // Jointure entre les tables user et investisseurproduit
@@ -105,6 +106,7 @@ public class InvestisseurProduitService {
                         imagePath,  // Le chemin de l'image
                         rs.getString("email"),
                         rs.getString("MDP"),
+                        rs.getString("discr"),
                         rs.getString("nom_entreprise"),
                         rs.getString("description"),
                         rs.getString("adresse"),
@@ -119,7 +121,7 @@ public class InvestisseurProduitService {
         return investisseurProduits;
     }
     public InvestisseurProduit getInvestisseurProduitById(int id) {
-        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP, " +
+        String sql = "SELECT u.id, u.nom, u.prenom, u.image, u.email, u.MDP,u.discr, " +
                 "i.Nom_entreprise, i.description, i.adresse, i.telephone, i.certificat_valide " +
                 "FROM user u " +
                 "JOIN investisseurProduit i ON u.id = i.id " +
@@ -138,6 +140,7 @@ public class InvestisseurProduitService {
                             rs.getString("image"),
                             rs.getString("email"),
                             rs.getString("MDP"),
+                            rs.getString("discr"),
                             rs.getString("nom_entreprise"),
                             rs.getString("description"),
                             rs.getString("adresse"),
@@ -184,7 +187,7 @@ public class InvestisseurProduitService {
     }
     public boolean updateInvestisseurProduitWithUser(InvestisseurProduit investisseurProduit) {
         // Mise à jour de l'utilisateur
-        User user = new User(investisseurProduit.getId(), investisseurProduit.getNom(), investisseurProduit.getPrenom(), investisseurProduit.getImage(), investisseurProduit.getEmail(), investisseurProduit.getMDP());
+        User user = new User(investisseurProduit.getId(), investisseurProduit.getNom(), investisseurProduit.getPrenom(), investisseurProduit.getImage(), investisseurProduit.getEmail(), investisseurProduit.getMDP(), investisseurProduit.getDiscr());
         boolean userUpdated = userService.updateUser(user);
 
         // Si l'utilisateur est mis à jour avec succès, mettre à jour le coach

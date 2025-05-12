@@ -12,8 +12,8 @@ public class Adherent extends User {
     public Adherent() {
     }
 
-    public Adherent(int id, String nom, String prenom, String image, String email, String MDP, NiveauA niveau_activites, ObjP objectif_personnelle, GenreG genre, int age, float taille, float poids) {
-        super(id, nom, prenom, image, email, MDP);
+    public Adherent(int id, String nom, String prenom, String image, String email, String MDP,String discr, NiveauA niveau_activites, ObjP objectif_personnelle, GenreG genre, int age, float taille, float poids) {
+        super(id, nom, prenom, image, email, MDP, discr);
         this.niveau_activites = niveau_activites;
         this.objectif_personnelle = objectif_personnelle;
         this.genre = genre;
@@ -22,8 +22,8 @@ public class Adherent extends User {
         this.poids = poids;
     }
 
-    public Adherent(String nom, String prenom, String image, String email, String MDP, float poids, float taille, int age, GenreG genre, ObjP objectif_personnelle, NiveauA niveau_activites) {
-        super(nom, prenom, image, email, MDP ); // Appel du constructeur de la classe parente User
+    public Adherent(String nom, String prenom, String image, String email, String MDP,String discr, float poids, float taille, int age, GenreG genre, ObjP objectif_personnelle, NiveauA niveau_activites) {
+        super(nom, prenom, image, email, MDP, discr ); // Appel du constructeur de la classe parente User
         this.poids = poids;
         this.taille = taille;
         this.age = age;

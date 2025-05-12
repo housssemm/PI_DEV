@@ -2,38 +2,41 @@ package Models;
 
 public class User {
     private int id;
-    private String nom, prenom  , email , MDP;
+    private String nom, prenom  , email , MDP , discr ;
     private String image;
 
 
     public User() {
     }
 
-    public User(int id, String nom, String prenom, String image, String email, String MDP) {
+    public User(int id, String nom, String prenom, String image, String email, String MDP , String discr) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.image = image;
         this.email = email;
         this.MDP = MDP;
+        this.discr = discr;
 
     }
 
-    public User(String nom, String prenom, String image, String email, String MDP) {
+    public User(String nom, String prenom, String image, String email, String MDP , String discr) {
         this.nom = nom;
         this.prenom = prenom;
         this.image = image;
         this.email = email;
         this.MDP = MDP;
+        this.discr = discr;
 
     }
 
-    public User(int userId, String nom, String prenom, String email, String mdp) {
+    public User(int userId, String nom, String prenom, String email, String mdp , String discr) {
         this.id = userId;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.MDP = mdp;
+        this.discr = discr;
     }
 
     public User(String nom, String prenom, String email, String image) {
@@ -96,6 +99,13 @@ public class User {
         this.MDP = MDP;
     }
 
+    public String getDiscr() {
+        return discr;
+    }
+    public void setDiscr(String discr) {
+        this.discr = discr;
+    }
+
 
     // Méthode toString pour afficher les infos de l'utilisateur
     @Override
@@ -107,6 +117,7 @@ public class User {
                 ", image='" + image + '\'' +
                 ", email='" + email + '\'' +
                 ", MDP='" + MDP + '\'' +
+                ", discr='" + discr + '\'' +
                 '}';
     }
 

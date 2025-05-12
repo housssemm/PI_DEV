@@ -21,8 +21,8 @@ public class Coach extends User {
         Annee_experience = annee_experience;
     }
 
-    public Coach(String nom, String prenom, String image, String email, String MDP, int Annee_experience, byte Certificat_valide, Models.SpecialiteC Specialite, int Note) {
-        super(nom, prenom, image, email, MDP );
+    public Coach(String nom, String prenom, String image, String email, String MDP,String discr, int Annee_experience, byte Certificat_valide, Models.SpecialiteC Specialite, int Note) {
+        super(nom, prenom, image, email, MDP , discr);
        this.Annee_experience = Annee_experience;
        this.Certificat_valide = Certificat_valide;
        this.Specialite = Specialite;

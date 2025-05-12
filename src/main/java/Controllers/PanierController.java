@@ -1,5 +1,4 @@
 package Controllers;
-
 import Models.*;
 import Services.*;
 import Utils.Session;
@@ -7,19 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.geometry.Pos;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -95,71 +91,83 @@ public class PanierController {
     }
     @FXML
     public void initialize() throws Exception {
-        // Initialiser la ComboBox avec des plages de prix et un texte par défaut
+        // 1) Préparation de la comboBox filtrer
         filtrer.getItems().addAll("Filtrer par prix", "0 - 100", "100 - 200", "200 - 300", "300 - 400");
-        filtrer.setValue("Filtrer par prix");  // Valeur initiale affichée comme "Filtrer par prix"
-
-        // Ajouter un listener sur la ComboBox
+        filtrer.setValue("Filtrer par prix");
         filtrer.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                // Vérifier si l'élément sélectionné n'est pas "Filtrer par prix"
                 if (!newValue.equals("Filtrer par prix")) {
-                    filterProductsByPriceRange(newValue);  // Appliquer le filtre
+                    filterProductsByPriceRange(newValue);
                 } else {
-                    resetProductGrid();  // Réinitialiser la vue
+                    resetProductGrid();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-        // Obtenir les catégories depuis le service
+
+        // 2) Récupération des catégories
         List<Categorie> categories = categService.getAll();
-        int col = 0;  // Compteur pour les colonnes du GridPane
+        double largeurCarte = 190; // Largeur d'une carte
+        double espacement = 10;    // Espacement entre cartes
 
-        // Créer les cartes pour chaque catégorie et les ajouter dans le GridPane
+        // 3) HBox pour aligner les cartes horizontalement
+        HBox hbox = new HBox(espacement);
+
         for (Categorie categorie : categories) {
-            final Categorie catTemp = categorie;  // Utiliser une variable temporaire finale
-            // Créer un texte pour le nom de la catégorie
+            final Categorie catTemp = categorie;
             Text text = new Text(categorie.getNom());
-            text.setFont(Font.font("Arial", 12)); // Réduire la taille du texte
+            text.setFont(Font.font("Arial", 14));
 
-            // Charger l'image à partir du classpath
+            // Charger l'image
             InputStream imageStream = getClass().getResourceAsStream("/img/" + categorie.getImage());
-            Image image = new Image(imageStream);
-            ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(50); // Ajuster la taille de l'image (taille identique)
-            imageView.setFitWidth(50);  // Ajuster la taille de l'image (taille identique)
+            ImageView imageView;
+            if (imageStream != null) {
+                Image image = new Image(imageStream);
+                imageView = new ImageView(image);
+            } else {
+                System.err.println("⚠️ Image introuvable pour la catégorie : "
+                        + categorie.getNom() + " | " + categorie.getImage());
+                Image defaultImage = new Image(getClass().getResourceAsStream("/img/default.png"));
+                imageView = new ImageView(defaultImage);
+            }
+            // Augmenter la taille de l'image
+            imageView.setFitHeight(80);
+            imageView.setFitWidth(80);
 
-            // Créer un VBox pour chaque carte (texte en dessous de l'image)
-            VBox card = new VBox(10, imageView, text); // Espacement de 10 entre l'image et le texte
-            card.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 10;-fx-background-color: white;");
-            card.setPrefWidth(40);  // Largeur fixe pour chaque carte
-            card.setPrefHeight(40); // Hauteur fixe pour chaque carte
-            card.setAlignment(Pos.CENTER); // Centrer les éléments dans la carte
+            // Créer la carte (VBox) avec l'image et le texte
+            VBox card = new VBox(10, imageView, text);
+            card.setStyle("-fx-border-color: black; -fx-border-radius: 5px; -fx-padding: 10; -fx-background-color: white;");
+            card.setPrefWidth(largeurCarte);
+            card.setPrefHeight(160); // Augmente la hauteur de la carte
+            card.setAlignment(Pos.CENTER);
 
-            // Ajouter un EventHandler pour le clic (afficher les produits de cette catégorie)
             card.setOnMouseClicked(e -> {
                 try {
-                    // Utiliser une méthode pour affecter la catégorie sélectionnée
-                    selectCategory(catTemp);  // Catégorie sélectionnée temporairement
+                    selectCategory(catTemp);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
             });
 
-            // Ajouter chaque carte dans le GridPane à la position (col, 0)
-            gridPane.add(card, col, 0);  // Toujours dans la première ligne (row = 0)
-            col++;
+            hbox.getChildren().add(card);
         }
 
-        // Mettre les autres configurations de votre gridPane ici
-        gridPane.setHgap(10);
-        scrollPane.setContent(gridPane);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Toujours afficher la barre de défilement horizontale
+        // 4) Largeur totale de la HBox
+        double totalWidth = categories.size() * (largeurCarte + espacement);
+        hbox.setPrefWidth(totalWidth);
+
+        // 5) Configuration du ScrollPane
+        scrollPane.setContent(hbox);
+        scrollPane.setFitToWidth(false);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        double largeurCarte = 120; // Largeur approximative de chaque carte + marges
-        gridPane.setPrefWidth(categories.size() * largeurCarte);
+
+        // 6) Limiter physiquement la largeur du ScrollPane (affichage de 4 cartes)
+        double scrollWidth = 3.75 * (largeurCarte + espacement);
+        scrollPane.setPrefWidth(scrollWidth);
+        scrollPane.setMaxWidth(scrollWidth);
+        scrollPane.setMinWidth(Region.USE_PREF_SIZE);
     }
     private void resetProductGrid()throws Exception {
         List<produit> allProducts = getCurrentProducts();
@@ -606,9 +614,13 @@ public class PanierController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PopUpRecommendation.fxml"));
             Parent root = loader.load();
 
-            ((Node) event.getSource()).getScene().setRoot(root);
-
-        } catch (IOException e) {
+            // Création d'une nouvelle fenêtre (Stage)
+            Stage stage = new Stage();
+            stage.setTitle("Recommandation"); // Titre de la fenêtre
+            stage.setScene(new Scene(root)); // Définir la scène avec le contenu du popup
+            stage.initModality(Modality.APPLICATION_MODAL); // Modalité pour empêcher l'interaction avec la fenêtre principale
+            stage.show(); // Affichage du popup
+        }catch (IOException e) {
             e.printStackTrace();
         }
     }

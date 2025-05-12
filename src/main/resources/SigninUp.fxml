@@ -49,11 +49,11 @@
             </AnchorPane>
             <AnchorPane fx:id="login_form" layoutX="600.0" prefHeight="800.0" prefWidth="600.0" styleClass="right-form" stylesheets="@css/SignInDesign.css" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label layoutX="68.0" layoutY="202.0" text="Mot de passe">
+                  <Label layoutX="59.0" layoutY="257.0" text="Mot de passe">
                      <font>
                         <Font size="15.0" />
                      </font></Label>
-                  <Label layoutX="68.0" layoutY="104.0" prefHeight="26.0" prefWidth="36.0" text="Email">
+                  <Label layoutX="57.0" layoutY="145.0" prefHeight="26.0" prefWidth="36.0" text="Email">
                      <font>
                         <Font size="15.0" />
                      </font></Label>
@@ -62,7 +62,7 @@
                         <Font name="System Bold" size="29.0" />
                      </font>
                   </Label>
-                  <Button fx:id="si_boutonseconnecter" layoutX="132.0" layoutY="623.0" mnemonicParsing="false" onAction="#login" prefHeight="43.0" prefWidth="375.0" styleClass="login-btn" text="Se connecter">
+                  <Button fx:id="si_boutonseconnecter" layoutX="123.0" layoutY="541.0" mnemonicParsing="false" onAction="#login" prefHeight="43.0" prefWidth="375.0" styleClass="login-btn" text="Se connecter">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -73,15 +73,15 @@
                         <URL value="@css/SignInDesign.css" />
                      </stylesheets>
                   </Button>
-                  <TextField fx:id="si_email" layoutX="68.0" layoutY="140.0" prefHeight="40.0" prefWidth="486.0" promptText="Email" styleClass="textfield" stylesheets="@css/SignInDesign.css" AnchorPane.leftAnchor="68.0" AnchorPane.rightAnchor="46.39999999999998" />
-                  <PasswordField fx:id="si_mdp" layoutX="67.0" layoutY="238.0" prefHeight="40.0" prefWidth="486.0" promptText="Mot de passe" styleClass="textfield" stylesheets="@css/SignInDesign.css" />
-                  <Label layoutX="254.0" layoutY="685.0" text="Mot de passe oublié?" textFill="#f58400">
+                  <TextField fx:id="si_email" layoutX="57.0" layoutY="190.0" prefHeight="40.0" prefWidth="486.0" promptText="Email" styleClass="textfield" stylesheets="@css/SignInDesign.css" AnchorPane.leftAnchor="57.0" AnchorPane.rightAnchor="57.39999999999998" />
+                  <PasswordField fx:id="si_mdp" layoutX="57.0" layoutY="298.0" prefHeight="40.0" prefWidth="486.0" promptText="Mot de passe" styleClass="textfield" stylesheets="@css/SignInDesign.css" />
+                  <Label layoutX="252.0" layoutY="640.0" text="Mot de passe oublié?" textFill="#f58400">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Button fx:id="recoverbtn" layoutX="132.0" layoutY="721.0" mnemonicParsing="false" onAction="#ouvrirResetPassword" prefHeight="43.0" prefWidth="375.0" style="-fx-background-color: #c96060;" styleClass="recover-password-btn" stylesheets="@css/SignInDesign.css" text="Récupérer mon compte" textFill="WHITE" />
-                  <WebView fx:id="captchaWebView" layoutX="132.0" layoutY="287.0" prefHeight="319.0" prefWidth="375.0" />
+                  <Button fx:id="recoverbtn" layoutX="123.0" layoutY="693.0" mnemonicParsing="false" onAction="#ouvrirResetPassword" prefHeight="43.0" prefWidth="375.0" style="-fx-background-color: #c96060;" styleClass="recover-password-btn" stylesheets="@css/SignInDesign.css" text="Récupérer mon compte" textFill="WHITE" />
+                  <WebView fx:id="captchaWebView" layoutX="123.0" layoutY="363.0" prefHeight="130.0" prefWidth="375.0" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="sup" prefHeight="40.0" prefWidth="1200.0">

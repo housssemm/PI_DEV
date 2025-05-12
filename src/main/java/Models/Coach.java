@@ -11,8 +11,8 @@ public class Coach extends User {
     public Coach() {
     }
 
-    public Coach(int id, String nom, String prenom, String image, String email, String MDP, byte certificat_valide, SpecialiteC specialite, int note, int annee_experience ) {
-        super(id, nom, prenom, image, email, MDP);
+    public Coach(int id, String nom, String prenom, String image, String email, String MDP,String discr, byte certificat_valide, SpecialiteC specialite, int note, int annee_experience ) {
+        super(id, nom, prenom, image, email, MDP, discr);
         Certificat_valide = certificat_valide;
         Specialite = specialite;
         Note = note;
@@ -20,8 +20,8 @@ public class Coach extends User {
 
     }
 
-    public Coach(String nom, String prenom, String image, String email, String MDP, int Annee_experience, byte Certificat_valide, SpecialiteC Specialite, int Note ) {
-        super(nom, prenom, image, email, MDP );
+    public Coach(String nom, String prenom, String image, String email, String MDP,String discr, int Annee_experience, byte Certificat_valide, SpecialiteC Specialite, int Note ) {
+        super(nom, prenom, image, email, MDP , discr);
        this.Annee_experience = Annee_experience;
        this.Certificat_valide = Certificat_valide;
        this.Specialite = Specialite;
